@@ -65,7 +65,7 @@ function hookStorage(){
 }
 function schedule(ms){clearTimeout(flushT);flushT=setTimeout(flush,ms==null?2500:ms);}
 async function flush(){
-  if(!ME||flushing)return;const d=jGet('nh-dirty',{});const keys=Object.keys(d);
+  if(!ME)return;if(flushing){schedule(3000);return;}const d=jGet('nh-dirty',{});const keys=Object.keys(d);
   flushing=true;
   try{
     if(keys.length){
@@ -380,7 +380,11 @@ async function boot(){
     ME=jGet('nh-me',null);/* offline – działaj na tym, co jest w telefonie */
     if(!ME||ME.user_id!==session.user.id){loginScreen('Brak internetu. Połącz się i spróbuj ponownie.');return;}
   }
-  if(ME.role==='parent'){document.documentElement.classList.add('nh-par');parentHome();return;}
+  if(ME.role==='parent'){document.documentElement.classList.add('nh-par');parentHome();
+    /* widok taty: odśwież minuty po powrocie do aplikacji i co minutę (gdy połączenie na żywo się zerwie) */
+    const parentRefresh=()=>{if(!document.hidden&&document.querySelector('.nh-parent'))parentHome().catch(()=>{});};
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)parentRefresh();});
+    setInterval(parentRefresh,60000);return;}
   /* dziecko */
   show(E('p',{class:'hint',style:'text-align:center;margin-top:40vh'},'Wczytuję postępy…'));
   try{await pull();}catch(e){console.warn('pull',e);}
