@@ -1,0 +1,30 @@
+/* Nauka Hani – dodatki konta (monety, skarbonka, widok rodzica) */
+.share{display:none!important}
+.nh-login{margin-top:8px}
+.nh-coins{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin:-6px 0 16px}
+.nh-coinbtn{display:flex;align-items:center;gap:10px;background:var(--surface);border:2px solid var(--warn);border-radius:16px;padding:10px 14px;text-align:left;min-height:56px;position:relative}
+.nh-coin{font-size:1.6rem}
+.nh-coinbtn b{font-family:var(--display);font-size:1.5rem;font-variant-numeric:tabular-nums}
+.nh-coinbtn small{color:var(--muted)}
+.nh-lvl{margin-left:auto;font-size:.78rem;font-weight:600;color:var(--warn);white-space:nowrap}
+.nh-delta{position:absolute;top:-10px;left:44px;background:var(--t);color:#fff;font-weight:700;font-size:.8rem;border-radius:999px;padding:2px 8px;animation:nhpop 1.2s ease-out}
+@keyframes nhpop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.25);opacity:1}100%{transform:scale(1)}}
+.nh-chest{background:var(--warn);color:#fff;border:none;border-radius:16px;padding:10px 14px;font-weight:600;min-height:56px;animation:pulse 1.4s infinite}
+.nh-next{font-size:.78rem;color:var(--muted);max-width:150px;text-align:right}
+.nh-cheer{background:var(--a-soft);border:2px solid var(--a);border-radius:14px;padding:10px 12px;margin:-4px 0 14px;font-size:.95rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.nh-big{font-size:5rem;line-height:1;animation:nhpop .8s ease-out}
+.nh-rw{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.nh-price{color:var(--warn);font-weight:600}
+.nh-buy{background:var(--t);color:#fff;border-color:var(--t);font-weight:600;padding:10px 14px}
+.nh-badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.nh-badge{display:grid;justify-items:center;gap:4px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 4px;opacity:.4;filter:grayscale(1)}
+.nh-badge.on{opacity:1;filter:none;border-color:var(--warn)}
+.nh-badge span{font-size:1.6rem}.nh-badge small{font-size:.68rem;line-height:1.2}
+.nh-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;font-size:.92rem;border-top:1px solid var(--line);padding-top:8px}
+.nh-row span{flex:1 1 60%}
+.nh-btns{display:flex;flex-wrap:wrap;gap:8px}
+.nh-btns .fixbtn{padding:10px 12px;font-size:.9rem}
+.nh-parent .tcard small{display:block}
+.nh-toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:12px;z-index:50;max-width:90vw;font-size:.92rem}
+.nh-par .pt-tab{display:none}
+.nh-migrate{display:none!important}
