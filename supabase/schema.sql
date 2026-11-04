@@ -177,3 +177,4 @@ revoke execute on function private.claim_price() from authenticated;
 comment on table public.sent is 'Tylko dla funkcji powiadomień (service role) – celowo bez polityk.';
 alter table public.families alter column remind_times set default array['16:00','17:30','19:00'];
 -- Rodzina i zaproszenia (e-maile) wpisane osobno, nie są w repozytorium.
+alter table public.days add column if not exists overdue jsonb not null default '[]';

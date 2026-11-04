@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#7A4ED4">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="nh.css?v=02d50c15">
+<link rel="stylesheet" href="nh.css?v=e18d9eaa">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3447,13 +3447,23 @@ function pickFrom(pool,n){
   return sel;
 }
 
-function planBox(){const td=dayKey(Date.now()),WDS=['nd','pon','wt','śr','czw','pt','sob'];
+/* plan: punkt jest zrobiony, gdy od jego dnia była ukończona pasująca runda; zaległe punkty przechodzą na górę planu (nie przepadają) */
+function planStatus(id){const S=SUBJECTS[id];if(!S||!S.plan)return null;const td=dayKey(Date.now()),last=S.plan[S.plan.length-1][0];
+  const ses=tLoad().s.filter(x=>x.subj===id&&(x.act>=5000||x.ans>0));const tn={};S.topics.forEach(t=>tn[t.id]=t.name);
+  const done=(d,a)=>ses.some(x=>x.d>=d&&(a==='cards'?true:a==='exam'?x.kind==='exam'&&x.fin:a==='weak'?(x.kind==='weak'||x.kind==='k')&&x.fin:x.kind==='topic'&&x.fin&&x.name===tn[a]));
+  const items=S.plan.map(([d,a,txt])=>({d,a,txt,done:done(d,a)}));
+  return {items,over:last<td?[]:items.filter(x=>x.d<td&&!x.done),today:items.find(x=>x.d===td)||null,td};}
+function planBox(){const WDS=['nd','pon','wt','śr','czw','pt','sob'];
   const go=a=>a==='exam'?startRound('exam'):a==='cards'?startCards():a==='weak'?(weakList().length?startRound('weak'):startCards()):startRound(a);
-  const cur=SUBJ.plan.find(p=>p[0]===td);
+  const P=planStatus(SUBJ.id),td=P.td,cur=P.today;
+  const lab=d=>{const[y,m,dd]=d.split('-').map(Number);const dt=new Date(y,m-1,dd);return (d===td?'dziś ':WDS[dt.getDay()]+' ')+dd+'.'+m;};
   return h('section',{class:'plan'},h('h3',{},'Plan do sprawdzianu'),
-    SUBJ.plan.map(([d,a,txt])=>{const[y,m,dd]=d.split('-').map(Number);const dt=new Date(y,m-1,dd);
-      return h('div',{class:'prow'+(d===td?' today':d<td?' past':'')},h('span',{},(d===td?'dziś ':WDS[dt.getDay()]+' ')+dd+'.'+m),h('span',{},txt));}),
-    cur?btn('next','Zacznij dzisiejszy plan',()=>go(cur[1])):null);}
+    P.over.length?h('div',{class:'nudge',style:'margin:0'},h('b',{},'Do nadrobienia ('+P.over.length+'): '),'zrób te punkty przed dzisiejszym planem.'):null,
+    ...P.over.map(x=>h('button',{class:'prow',type:'button',onclick:()=>go(x.a),style:'width:100%;text-align:left;border:2px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:6px;color:var(--ink);font-weight:600'},h('span',{},'⏳ '+lab(x.d)),h('span',{},x.txt))),
+    P.items.filter(x=>!(x.d<td&&!x.done&&P.over.includes(x))).map(x=>x.d<=td||x.done?
+      h('button',{class:'prow'+(x.d===td?' today':x.done?' past':''),type:'button',onclick:()=>go(x.a),style:'width:100%;text-align:left;border:0;background:'+(x.d===td?'var(--t-soft)':'none')},h('span',{},(x.done?'✓ ':'')+lab(x.d)),h('span',{},x.txt)):
+      h('div',{class:'prow'},h('span',{},lab(x.d)),h('span',{},x.txt))),
+    P.over.length?btn('next','Nadrabiam: '+P.over[0].txt.replace(/\s*\(.*\)$/,''),()=>go(P.over[0].a)):cur?btn('next',cur.done?'Dzisiejszy plan zrobiony ✓ – jeszcze raz?':'Zacznij dzisiejszy plan',()=>go(cur.a)):null);}
 /* ---------- home ---------- */
 function home(){
   const total=ALL.length,done=TOPICS.reduce((s,t)=>s+mastered(t.id),0),weak=weakList(),examN=TOPICS.length*(SUBJ.examPer||4)+2;
@@ -4204,6 +4214,6 @@ function modelScreen(){
 /* start: nh.js po zalogowaniu */
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="nh.js?v=02d50c15"></script>
+<script src="nh.js?v=e18d9eaa"></script>
 
 </body></html>

@@ -72,7 +72,9 @@ async function run() {
           const body = done
             ? `${k.name}: ${done}/${goal} min ${done >= goal ? "✅" : "⏳"}${subj ? " · " + subj : ""}${d?.coins != null ? ` · 🪙 ${d.coins}` : ""}`
             : `${k.name} dziś się nie uczyła${dayoff ? " (dzień wolny)" : ""}.`;
-          await send(p.user_id, day, "report", { title: "Raport dnia", body, tag: "raport" }, log);
+          const ov = ((d?.overdue || []) as { s: string; t: string }[]);
+          const ovTxt = ov.length ? ` · ⏳ zaległe w planie: ${ov.length} (${ov.slice(0, 3).map((x) => x.s + ": " + x.t.replace(/\s*\(.*\)$/, "")).join("; ")})` : "";
+          await send(p.user_id, day, "report", { title: "Raport dnia", body: body + ovTxt, tag: "raport" }, log);
         }
       }
       const since = new Date(Date.now() - 2 * 864e5).toISOString();

@@ -111,13 +111,15 @@ function rawDayMs(){const by={};window.tLoad().s.filter(x=>x.act>=5000||x.ans>0)
 async function pushDay(){
   const k=dayKey(Date.now()),list=window.tLoad().s.filter(x=>x.d===k&&(x.act>=5000||x.ans>0));
   const subj={};list.forEach(x=>{const n=subjName(x.subj);subj[n]=(subj[n]||0)+Math.round(x.act/60000);});
-  const c=coins();
-  const row={user_id:ME.user_id,day:k,active_min:Math.floor(list.reduce((s,x)=>s+x.act,0)/60000),coins:c.balance,rounds:list.filter(x=>x.fin).length,subjects:subj,updated_at:new Date().toISOString()};
-  const sig=JSON.stringify([row.day,row.active_min,row.coins,row.rounds,row.subjects]);
+  const c=coins(),overdue=planOverdue();
+  const row={user_id:ME.user_id,day:k,overdue,active_min:Math.floor(list.reduce((s,x)=>s+x.act,0)/60000),coins:c.balance,rounds:list.filter(x=>x.fin).length,subjects:subj,updated_at:new Date().toISOString()};
+  const sig=JSON.stringify([row.day,row.active_min,row.coins,row.rounds,row.subjects,row.overdue]);
   if(sig===lsGet('nh-daysig'))return;
   const {error}=await sb.from('days').upsert(row);if(!error)lsSet('nh-daysig',sig);
 }
 
+/* zaległe punkty planów do sprawdzianów (dla taty i raportu) */
+function planOverdue(){const out=[];try{Object.keys(SUBJECTS).forEach(id=>{const P=window.planStatus&&window.planStatus(id);if(P)P.over.forEach(x=>out.push({s:SUBJECTS[id].subject,d:x.d,t:x.txt}));});}catch(e){}return out;}
 /* ---------- dane rodziny (nagrody, zgłoszenia, wydarzenia) – kopia w nh-fam ---------- */
 async function loadFamily(){
   const [rw,cl,ev,fm,mb]=await Promise.all([
@@ -133,7 +135,7 @@ async function loadFamily(){
 const FAM=()=>jGet('nh-fam',{rewards:[],claims:[],events:[],family:null,members:[]});
 
 /* ---------- monety ---------- */
-const G_KEY='gry-v1';
+const G_KEY='gry-v1',COIN_START='2026-11-04',START_BONUS=200;
 const gLoad=()=>Object.assign({d:{},ch:{},chestCoins:0,wk:null,beaten:0,jok:[],seen:0,cheers:[]},jGet(G_KEY,{}));
 const gSave=g=>{try{LS.setItem(G_KEY,JSON.stringify(g));}catch(e){}}; /* przez hook → też na serwer */
 const weekStart=k=>{const[y,m,d]=k.split('-').map(Number);const dt=new Date(y,m-1,d,12);dt.setDate(dt.getDate()-((dt.getDay()+6)%7));return dayKey(dt.getTime());};
@@ -152,11 +154,12 @@ function updateG(){
 }
 function coins(){
   const g=gLoad(),f=FAM();
-  const days=Object.values(g.d).reduce((s,o)=>s+o.c,0);
-  const weeks={};Object.entries(g.d).forEach(([k,o])=>{if(o.h){const w=weekStart(k);weeks[w]=(weeks[w]||0)+1;}});
+  /* monety liczone od startu konta (decyzja taty 4.11.2026: 200 monet na start, wcześniejsza nauka bez monet) */
+  const days=Object.entries(g.d).filter(([k])=>k>=COIN_START).reduce((s,[,o])=>s+o.c,0);
+  const weeks={};Object.entries(g.d).forEach(([k,o])=>{if(o.h&&k>=COIN_START){const w=weekStart(k);weeks[w]=(weeks[w]||0)+1;}});
   const cups=Object.values(weeks).filter(n=>n>=WEEK_GOAL).length;
   const bonus=f.events.filter(e=>e.kind==='bonus').reduce((s,e)=>s+(e.amount||0),0);
-  const earned=days+cups*50+g.beaten*5+g.chestCoins+bonus;
+  const earned=START_BONUS+days+cups*50+g.beaten*5+g.chestCoins+bonus;
   const spent=f.claims.filter(c=>c.status!=='declined').reduce((s,c)=>s+c.price,0);
   return {earned,spent,balance:earned-spent,cups,level:1+Math.floor(earned/200),toNext:200-earned%200,beaten:g.beaten};
 }
@@ -335,6 +338,9 @@ function renderParent(kid,days,live){
         ...['Brawo! 👏','Jestem z Ciebie dumny 💛','Super seria! 🔥'].map(m=>window.btn('fixbtn',m,act(async()=>{const {error}=await sb.from('events').insert({family_id:ME.family_id,author:ME.user_id,kind:'cheer',message:m});if(error)throw error;alertBox('Wysłane: '+m);}))),
         ...[10,20,50].map(a=>window.btn('fixbtn','+'+a+' 🪙',act(async()=>{const {error}=await sb.from('events').insert({family_id:ME.family_id,author:ME.user_id,kind:'bonus',amount:a,message:'Bonus od taty'});if(error)throw error;alertBox('Dodano '+a+' monet.');}))),
         window.btn('fixbtn','🌴 Dzień wolny dziś',act(async()=>{const {error}=await sb.from('events').insert({family_id:ME.family_id,author:ME.user_id,kind:'dayoff',day:today,message:'Dzień wolny'});if(error)throw error;alertBox('Dziś bez przypomnień, seria bezpieczna.');})))),
+    (()=>{const ov=planOverdue();return ov.length?E('section',{class:'weak'},E('h3',{},'⏳ Zaległe w planie ('+ov.length+')'),
+      E('p',{},'Te punkty planu przechodzą na kolejne dni – Hania widzi je na górze planu jako „do nadrobienia”.'),
+      E('div',{class:'wchips'},ov.map(x=>E('span',{class:'wchip'},x.s+': '+x.t.replace(/\s*\(.*\)$/,'')+' ('+x.d.slice(8)+'.'+x.d.slice(5,7)+')')))):null;})(),
     hard.length?E('section',{class:'weak'},E('h3',{},'⚠️ Z czym ma kłopot'),E('div',{class:'wchips'},hard.map(x=>E('span',{class:'wchip'},x.sub+': '+x.name)))):null,
     D?E('section',{class:'tcard'},E('span',{class:'label'},'Przedmioty'),...D.subs.map(x=>E('small',{},x.S.subject+': '+x.done+'/'+x.total+' opanowanych'+(x.exam?' · próbny: rekord '+x.exam+'%':'')))):null,
     E('section',{class:'plan'},E('h3',{},'🪙 Nagrody w skarbonce'),
