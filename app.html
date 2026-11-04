@@ -4042,7 +4042,7 @@ function hub(){
   );
 }
 /* przeniesienie postępów do nowej aplikacji z kontem (wszystkie klucze localStorage, gzip + base64url w #import=) */
-const NEW_APP='https://lukassk1892.github.io/nauka-hani/';
+const NEW_APP='https://lukassk1892.github.io/Nauka-Hani/';
 function migrateLink(){
   const a=h('a',{class:'tool nh-migrate',href:NEW_APP,target:'_blank',rel:'noopener',style:'display:grid;text-decoration:none;color:inherit;border-color:var(--a);background:var(--a-soft)'},
     h('span',{class:'label'},'Nowa aplikacja'),h('h3',{},'📦 Przenieś postępy'),h('span',{},'Otworzy nową aplikację z kontem. Wszystko, co tu zrobiłaś, przejdzie razem z Tobą.'));

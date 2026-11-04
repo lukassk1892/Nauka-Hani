@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
   const url = new URL(req.url);
   const k = await vapid();
   if (url.searchParams.has("vapid")) return json({ publicKey: k.publicKey });
-  webpush.setVapidDetails("https://lukassk1892.github.io/nauka-hani/", k.publicKey, k.privateKey);
+  webpush.setVapidDetails("https://lukassk1892.github.io/Nauka-Hani/", k.publicKey, k.privateKey);
   try { return json({ ok: true, log: await run() }); }
   catch (e) { return json({ ok: false, error: String(e) }, 500); }
 });

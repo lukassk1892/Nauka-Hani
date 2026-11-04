@@ -1,6 +1,6 @@
 # Nauka Hani – aplikacja z kontem
 
-Adres: https://lukassk1892.github.io/nauka-hani/ (GitHub Pages z gałęzi `main`, katalog główny).
+Adres: https://lukassk1892.github.io/Nauka-Hani/ (GitHub Pages z gałęzi `main`, katalog główny).
 
 ## Pliki
 - `app.html` – dokładna kopia aplikacji z artifactu https://claude.ai/artifact/U1dU7xbAjiyWWNGrL63oXS (przedmioty, pytania, rundy).
