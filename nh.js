@@ -133,7 +133,7 @@ async function loadFamily(){
 const FAM=()=>jGet('nh-fam',{rewards:[],claims:[],events:[],family:null,members:[]});
 
 /* ---------- monety ---------- */
-const G_KEY='gry-v1';
+const G_KEY='gry-v1',COIN_START='2026-11-04',START_BONUS=200;
 const gLoad=()=>Object.assign({d:{},ch:{},chestCoins:0,wk:null,beaten:0,jok:[],seen:0,cheers:[]},jGet(G_KEY,{}));
 const gSave=g=>{try{LS.setItem(G_KEY,JSON.stringify(g));}catch(e){}}; /* przez hook → też na serwer */
 const weekStart=k=>{const[y,m,d]=k.split('-').map(Number);const dt=new Date(y,m-1,d,12);dt.setDate(dt.getDate()-((dt.getDay()+6)%7));return dayKey(dt.getTime());};
@@ -152,11 +152,12 @@ function updateG(){
 }
 function coins(){
   const g=gLoad(),f=FAM();
-  const days=Object.values(g.d).reduce((s,o)=>s+o.c,0);
-  const weeks={};Object.entries(g.d).forEach(([k,o])=>{if(o.h){const w=weekStart(k);weeks[w]=(weeks[w]||0)+1;}});
+  /* monety liczone od startu konta (decyzja taty 4.11.2026: 200 monet na start, wcześniejsza nauka bez monet) */
+  const days=Object.entries(g.d).filter(([k])=>k>=COIN_START).reduce((s,[,o])=>s+o.c,0);
+  const weeks={};Object.entries(g.d).forEach(([k,o])=>{if(o.h&&k>=COIN_START){const w=weekStart(k);weeks[w]=(weeks[w]||0)+1;}});
   const cups=Object.values(weeks).filter(n=>n>=WEEK_GOAL).length;
   const bonus=f.events.filter(e=>e.kind==='bonus').reduce((s,e)=>s+(e.amount||0),0);
-  const earned=days+cups*50+g.beaten*5+g.chestCoins+bonus;
+  const earned=START_BONUS+days+cups*50+g.beaten*5+g.chestCoins+bonus;
   const spent=f.claims.filter(c=>c.status!=='declined').reduce((s,c)=>s+c.price,0);
   return {earned,spent,balance:earned-spent,cups,level:1+Math.floor(earned/200),toNext:200-earned%200,beaten:g.beaten};
 }
