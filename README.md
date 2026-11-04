@@ -18,3 +18,5 @@ Adres: https://lukassk1892.github.io/Nauka-Hani/ (GitHub Pages z gałęzi `main`
 - Klucze postępów w localStorage są te same co w artifakcie – synchronizacja kopiuje je 1:1 do tabeli `kv`.
 - Klucze `nh-*` i `sb-*` są tylko lokalne. `gry-v1` (monety, skrzynki, jokery) synchronizuje się jak postępy.
 - Supabase: projekt `nauka-hani` (ref `pzzfpqrlauljsxrbpnxd`), plan Free.
+
+Strona działa od 4.11.2026.
