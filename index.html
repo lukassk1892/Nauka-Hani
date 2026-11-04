@@ -4044,8 +4044,8 @@ function hub(){
       h('div',{class:'helix','aria-hidden':'true'},['A','G','C','T'].map((b,i)=>h('span',{style:`background:${BASES[b]};height:${[36,52,30,44][i]}px`}))),
       h('div',{},h('h1',{},'Nauka Hani'),h('p',{},'Wybierz przedmiot. Krótkie rundy, a potem przerwa.'))),
     goalCard(),
-    h('div',{class:'subjs'},card('pt'),card('geo'),card('chem'),card('esp')),
-    (()=>{const arch=['wos','ang','fiz','pl','his','edb','bio'];const d=h('details',{class:'arch'},
+    h('div',{class:'subjs'},card('pt'),card('geo'),card('esp')),
+    (()=>{const arch=['chem','wos','ang','fiz','pl','his','edb','bio'];const d=h('details',{class:'arch'},
       h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
       h('div',{class:'subjs'},...arch.map(card)),
       h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
