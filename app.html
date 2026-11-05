@@ -3899,6 +3899,28 @@ function sciaga(){
 }
 const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ł/g,'l').replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
 function lev(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length];}
+/* literówki: odległość z zamianą sąsiednich liter (1 błąd), limit zależny od długości, cyfry zawsze dokładnie */
+function osa(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);}return d[a.length][b.length];}
+const tolMax=n=>{const L=n.replace(/ /g,'').length;return L<=3?0:L<=7?1:L<=19?2:3;};
+const VOCAB={};
+function subjVocab(){const id=SUBJ?SUBJ.id:'';if(VOCAB[id])return VOCAB[id];const set=new Set(),seen=new Set();
+  const walk=x=>{if(typeof x==='string'){norm(x).split(' ').forEach(w=>{if(w.length>1)set.add(w);});}else if(x&&typeof x==='object'&&!seen.has(x)){seen.add(x);(Array.isArray(x)?x:Object.values(x)).forEach(walk);}};
+  if(SUBJ){walk(SUBJ.topics);walk(SUBJ.cards);}return VOCAB[id]=set;}
+/* {ok, exact, a: dopasowana odpowiedź, form: true gdy to nie literówka, tylko inne słowo/forma} */
+function typoMatch(input,answers,lang){const v=norm(input);let form=false;
+  for(const a of answers)if(norm(a)===v)return {ok:true,exact:true,a};
+  if(!v)return {ok:false};
+  const digs=s=>(s.match(/\d+/g)||[]).join(' '),voc=subjVocab(),acc=new Set(answers.map(norm));
+  let best=null;
+  for(const a of answers){const n=norm(a);if(digs(n)!==digs(v))continue;const d=osa(n,v);if(d>tolMax(n))continue;
+    if(d>=2&&n[0]!==v[0]){form=true;continue;}
+    const nw=n.split(' '),vw=v.split(' ');let bad=false;
+    if(lang&&n.replace(/ /g,'')===v.replace(/ /g,'')){}else if(lang){if(nw.length===vw.length){bad=nw.some((w,i)=>w!==vw[i]&&(w.slice(-1)!==vw[i].slice(-1)||voc.has(vw[i])));}else bad=n.slice(-1)!==v.slice(-1);}
+    if(!bad&&(lang||d>=2)&&!acc.has(v)&&voc.has(v))bad=true;
+    if(!bad&&!lang&&d>=2&&nw.length===vw.length&&nw.some((w,i)=>w!==vw[i]&&voc.has(vw[i])&&osa(w,vw[i])>=2))bad=true;
+    if(bad){form=true;continue;}
+    if(!best||d<best.d)best={d,a};}
+  return best?{ok:true,exact:false,a:best.a}:{ok:false,form};}
 
 /* pick n questions: never-seen first, then ones answered wrong, then the longest-unseen; skip last round's questions */
 function pickFrom(pool,n){
@@ -4329,14 +4351,17 @@ function rType(q,done){
   const go=btn('check','Sprawdź',submit);
   function submit(){
     const v=norm(inp.value);if(!v||go.disabled)return;go.disabled=true;inp.readOnly=true;
-    const exact=q.ans.some(a=>norm(a)===v),strict=q.strict||(SUBJ&&SUBJ.strict);
-    const near=q.ans.some(a=>{const n=norm(a);return n===v||(n.length>=5&&lev(n,v)<=1);});
-    let ok=strict?exact:near;
-    if(q.nm){const kk=s=>norm(s).replace(/ /g,''),rm=s=>(s.toLowerCase().match(/(iii|ii|iv|vi|v|i)\s*\)?\s*$/)||[])[1]||'',v2=kk(inp.value);ok=q.ans.some(a=>kk(a)===v2||(lev(kk(a),v2)<=1&&rm(a)===rm(inp.value)));}
+    const strict=q.strict||(SUBJ&&SUBJ.strict),m=typoMatch(inp.value,q.ans,strict);
+    let ok=m.ok,exact=!!m.exact;
+    if(q.nm){const kk=s=>norm(s).replace(/ /g,''),rm=s=>(s.toLowerCase().match(/(iii|ii|iv|vi|v|i)\s*\)?\s*$/)||[])[1]||'',v2=kk(inp.value);
+      const hit=q.ans.find(a=>kk(a)===v2)||q.ans.find(a=>{const d=osa(kk(a),v2);return d<=Math.max(1,tolMax(kk(a)))&&(d<2||kk(a)[0]===v2[0])&&rm(a)===rm(inp.value);});
+      ok=!!hit;exact=!!hit&&kk(hit)===v2;m.a=hit;}
     const na=s=>s.toLowerCase().normalize('NFC').replace(/[^a-z0-9áéíóúüñ ]/g,'').replace(/\s+/g,' ').trim();
-    const accMiss=ok&&exact&&SUBJ&&SUBJ.acc&&!q.ans.some(a=>na(a)===na(inp.value));
+    const good=m.a||q.ans[0],accMiss=ok&&SUBJ&&SUBJ.acc&&!q.ans.some(a=>na(a)===na(inp.value));
     inp.classList.add(ok?'ok':'bad');
-    done(ok?0:1,accMiss?`Dobrze, ale pilnuj akcentów i ñ – poprawnie: „${q.ans.find(a=>norm(a)===v)}”.`:ok?(exact?null:`Prawie dobra pisownia – poprawnie: „${q.ans[0]}”.`):(near?`Prawie! Ale na sprawdzianie liczy się każda litera. Poprawnie: „${q.ans[0]}”.`:`Poprawna odpowiedź: „${q.ans[0]}”.`));
+    done(ok?0:1,ok?(exact?(accMiss?`Dobrze, ale pilnuj akcentów i ñ – poprawnie: „${good}”.`:null)
+        :(strict?`Uznaję, ale to literówka – na sprawdzianie liczy się każda litera${SUBJ&&SUBJ.acc?' i akcent':''}. Poprawnie: „${good}”.`:`Dobrze! Mała literówka – poprawnie: „${good}”.`))
+      :(m.form?`To już nie literówka – zmienia się słowo albo jego forma (np. końcówka). Poprawnie: „${q.ans[0]}”.`:`Poprawna odpowiedź: „${q.ans[0]}”.`));
   }
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submit();}});
   setTimeout(()=>inp.focus({preventScroll:true}),50);
