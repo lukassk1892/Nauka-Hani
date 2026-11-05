@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#7A4ED4">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="stylesheet" href="nh.css?v=8cb84465">
+<link rel="stylesheet" href="nh.css?v=025ee3e0">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3627,7 +3627,7 @@ function lessonBody(c){
   return h('div',{class:'lesson'},kids);
 }
 function lessonScreen(c,back){
-  const L=LESSONS[c];const x=btn('x','×',back||home);x.setAttribute('aria-label','Wróć');
+  const L=LESSONS[c];if(L.story)return storyScreen(c,back);const x=btn('x','×',back||home);x.setAttribute('aria-label','Wróć');
   const w=store.k[c]&&store.k[c].weak;
   screen(h('div',{},
     h('div',{class:'top'},x,h('span',{class:'label'},TOPIC[L.tid].name),h('span')),
@@ -3638,6 +3638,128 @@ function lessonScreen(c,back){
       btn('next','Przećwicz to (5 zadań)',()=>startRound('k:'+c)),
       btn('ghost','Wróć',back||home))));
 }
+/* ---------- ANIMOWANE LEKCJE (karty z dźwiękiem, od 5.11.2026). Lekcja z polem story:[...] otwiera się jako karty.
+   Typy kart: sound {say, snd:'mod'|'cont', after, note}; quiz {say, play?, o:[poprawna,...], e}; listen {say, n}; order {say, items:[[emoji,tekst],...]}; end {say}.
+   Następna karta pojawia się dopiero po działaniu – nie da się przewinąć. ---------- */
+const STORY_CSS=`
+.story{display:flex;flex-direction:column;min-height:calc(100vh - 40px)}
+.sdots{display:flex;gap:6px;justify-content:center;margin:6px 0 14px}
+.sdots i{width:26px;height:6px;border-radius:3px;background:var(--line);transition:background .3s}
+.sdots i.on{background:var(--t)}
+.scard{animation:rise .35s ease-out;flex:1;display:flex;flex-direction:column}
+.ssay{font-family:var(--display);font-size:25px;line-height:1.25;font-weight:700;margin:6px 0 14px;color:var(--ink)}
+.ssay b{color:var(--g)}
+.snote{font-size:16px;color:var(--muted);margin:4px 0 10px}
+.sfact{font-size:19px;line-height:1.35;background:var(--t-soft);border-left:6px solid var(--t);border-radius:10px;padding:12px 14px;margin:10px 0;animation:rise .4s ease-out}
+.sfact.bad{background:var(--g-soft);border-left-color:var(--g)}
+.sirenw{display:flex;justify-content:center;margin:18px 0 8px}
+.siren{width:150px;height:150px;border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#ff8a80,#d32f2f 60%,#8e1b1b);color:#fff;font-size:64px;position:relative;box-shadow:0 8px 24px rgba(211,47,47,.35);cursor:pointer}
+.siren.small{width:110px;height:110px;font-size:46px}
+.siren::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:4px solid #e53935;opacity:0}
+.siren.play.mod::after{animation:wave 1.2s ease-out infinite}
+.siren.play.mod{animation:wob 1.6s ease-in-out infinite}
+.siren.play.cont::after{animation:wave .6s linear infinite}
+.siren.play.cont{animation:none;transform:scale(1.05)}
+@keyframes wave{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.5)}}
+@keyframes wob{0%,100%{transform:scale(.94)}50%{transform:scale(1.1)}}
+.sbar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin:6px 30px}
+.sbar i{display:block;height:100%;width:0;background:var(--g)}
+.sopts{display:grid;gap:10px;margin-top:6px}
+.sopts .opt{font-size:18px;min-height:58px}
+.sord{display:grid;gap:10px}
+.sord .opt{display:flex;align-items:center;gap:12px;font-size:18px}
+.sord .em{font-size:30px}
+.sord .num{margin-left:auto;font-weight:800;color:var(--t)}
+.sfoot{margin-top:auto;padding-top:14px;display:grid;gap:10px}
+.sspk{background:none;border:0;font-size:24px;padding:4px;cursor:pointer;align-self:flex-end;margin-bottom:-4px}
+.sstar{font-size:90px;text-align:center;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(0) rotate(-40deg)}}
+@media (prefers-reduced-motion: reduce){.siren.play.mod,.siren.play.mod::after,.siren.play.cont::after,.sstar{animation:none}}
+`;
+try{document.head.append(h('style',{},STORY_CSS));}catch(e){}
+let AC=null;
+function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){AC=null;}return AC;}
+function tone(f,dur,type,vol,when){const C=ac();if(!C)return;const t=C.currentTime+(when||0),o=C.createOscillator(),g=C.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol||.2,t+.02);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(C.destination);o.start(t);o.stop(t+dur+.05);}
+function sDing(){tone(880,.18,'sine',.25);tone(1320,.3,'sine',.22,.12);}
+function sBuzz(){tone(150,.28,'square',.08);}
+function sTada(){[523,659,784,1047].forEach((f,i)=>tone(f,.35,'triangle',.18,i*.11));}
+/* syrena: mod = dźwięk modulowany (raz wyżej, raz niżej), cont = dźwięk ciągły. Skrócona do sec sekund. */
+function sSiren(kind,sec,onEnd){const C=ac();if(!C){onEnd&&setTimeout(onEnd,sec*1000);return ()=>{};}
+  const t=C.currentTime,o=C.createOscillator(),g=C.createGain(),f=C.createBiquadFilter();o.type='sawtooth';f.type='lowpass';f.frequency.value=1800;
+  if(kind==='mod'){const l=C.createOscillator(),lg=C.createGain();l.frequency.value=.33;lg.gain.value=260;o.frequency.value=640;l.connect(lg).connect(o.frequency);l.start(t);l.stop(t+sec+.2);}
+  else o.frequency.value=640;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.09,t+.6);g.gain.setValueAtTime(.09,t+sec-.6);g.gain.linearRampToValueAtTime(0,t+sec);
+  o.connect(f).connect(g).connect(C.destination);o.start(t);o.stop(t+sec+.1);
+  const tm=setTimeout(()=>onEnd&&onEnd(),sec*1000);
+  return ()=>{clearTimeout(tm);try{g.gain.cancelScheduledValues(C.currentTime);g.gain.setValueAtTime(0,C.currentTime);}catch(e){}};}
+let sStop=()=>{};
+function sSay(txt){try{const s=window.speechSynthesis;if(!s)return;s.cancel();const u=new SpeechSynthesisUtterance(txt.replace(/<[^>]+>/g,''));u.lang='pl-PL';u.rate=1.02;const v=s.getVoices().find(v=>/^pl/i.test(v.lang));if(v)u.voice=v;s.speak(u);}catch(e){}}
+function sHtml(tag,cls,html){const e=h(tag,{class:cls});e.innerHTML=html;return e;}
+function storyScreen(c,back){
+  const L=LESSONS[c],S=L.story.map(x=>x);let i=0;back=back||home;
+  const done=()=>{store.story=store.story||{};store.story[c]=(store.story[c]||0)+1;save();};
+  function show(){
+    sStop();try{window.speechSynthesis&&speechSynthesis.cancel();}catch(e){}
+    const k=S[i],x=btn('x','×',()=>{sStop();back();});x.setAttribute('aria-label','Wróć');
+    const dots=h('div',{class:'sdots'},S.map((_,j)=>h('i',{class:j<=i?'on':''})));
+    const foot=h('div',{class:'sfoot'});
+    const next=(lab)=>{foot.replaceChildren(btn('next',lab||'Dalej →',()=>{i++;show();}));foot.scrollIntoView({behavior:'smooth',block:'end'});};
+    const card=h('div',{class:'scard'});
+    const spk=h('button',{class:'sspk',type:'button','aria-label':'Przeczytaj na głos',onclick:()=>sSay(k.say)},'🔊');
+    card.append(spk,sHtml('div','ssay',k.say));
+    if(k.t==='sound'){
+      const s=btn('siren '+k.snd,'📢',()=>{if(s.classList.contains('play'))return;s.classList.add('play');bar.firstChild.style.transition=`width ${k.sec||6}s linear`;bar.firstChild.style.width='100%';
+        sStop=sSiren(k.snd,k.sec||6,()=>{s.classList.remove('play');th.remove();if(!card.querySelector('.sfact')){card.append(sHtml('div','sfact',k.after));if(k.note)card.append(sHtml('p','snote',k.note));}next();});});
+      const bar=h('div',{class:'sbar'},h('i'));
+      const th=h('p',{class:'snote',style:'text-align:center'},'Dotknij syreny');card.append(h('div',{class:'sirenw'},s),bar,th);
+    }
+    if(k.t==='quiz'||k.t==='listen'){
+      let snd=k.play;if(k.t==='listen')snd=Math.random()<.5?'mod':'cont';
+      const opts=k.t==='listen'?[['📢 Ogłoszenie alarmu – idę do schronu','mod'],['✅ Odwołanie alarmu – zagrożenie minęło','cont']]:shuffle(k.o.map((o,j)=>[o,j]));
+      const right=k.t==='listen'?snd:0;
+      const box=h('div',{class:'sopts'});let heard=!snd;
+      if(snd){const s=btn('siren small '+snd,'▶',()=>{if(s.classList.contains('play'))return;s.classList.add('play');sStop=sSiren(snd,4,()=>{s.classList.remove('play');heard=true;box.style.opacity=1;card.querySelector('.snote')&&(card.querySelector('.snote').textContent='Co to było?');});});
+        const hint=h('p',{class:'snote',style:'text-align:center'},'Najpierw dotknij ▶ i posłuchaj');card.append(h('div',{class:'sirenw'},s),hint);box.style.opacity=.45;}
+      opts.forEach(([txt,val])=>{const b=btn('opt',txt,()=>{if(!heard||box.dataset.lock)return;box.dataset.lock=1;sStop();
+        const ok=val===right;[...box.children].forEach((el,j)=>{el.disabled=true;if(opts[j][1]===right)el.classList.add('ok');else if(el!==b)el.classList.add('dim');});
+        if(ok){sDing();card.append(sHtml('div','sfact',(k.t==='listen'?(snd==='mod'?'Tak! Dźwięk <b>modulowany</b> – raz wyżej, raz niżej – to ogłoszenie alarmu.':'Tak! Dźwięk <b>ciągły</b> – równy – to odwołanie alarmu.'):'✓ '+(k.e||''))));next();}
+        else{sBuzz();b.classList.add('bad','shake');card.append(sHtml('div','sfact bad',k.t==='listen'?(snd==='mod'?'To był dźwięk <b>modulowany</b> (falujący) – czyli <b>ogłoszenie</b> alarmu.':'To był dźwięk <b>ciągły</b> (równy) – czyli <b>odwołanie</b> alarmu.'):'✗ '+(k.e||'')));
+          /* po błędzie ta sama karta wraca jeszcze raz na końcu */
+          if(!k.again){S.splice(S.length-1,0,Object.assign({},k,{again:1}));dots.append(h('i'));}next();}});box.append(b);});
+      card.append(box);
+    }
+    if(k.t==='order'){
+      const items=shuffle(k.items.map((it,j)=>({it,j})));let n=0,err=0;const box=h('div',{class:'sord'});
+      items.forEach(o=>{const b=h('button',{class:'opt',type:'button',onclick:()=>{if(b.disabled)return;
+        if(o.j===n){b.disabled=true;b.classList.add('ok');b.append(h('span',{class:'num'},String(n+1)));tone(520+n*110,.15,'sine',.2);n++;
+          if(n===items.length){sDing();card.append(sHtml('div','sfact',err?'Udało się! Zapamiętaj kolejność: '+k.items.map(x=>x[0]).join(' → '):'Bezbłędnie! '+k.items.map(x=>x[0]).join(' → ')));next();}}
+        else{err++;sBuzz();b.classList.remove('shake');void b.offsetWidth;b.classList.add('bad','shake');setTimeout(()=>b.classList.remove('bad'),500);}}},
+        h('span',{class:'em'},o.it[0]),h('span',{},o.it[1]));box.append(b);});
+      card.append(h('p',{class:'snote'},'Dotykaj po kolei – od pierwszej czynności.'),box);
+    }
+    if(k.t==='end'){
+      sTada();confetti();done();
+      card.append(h('div',{class:'sstar'},'⭐'));
+      foot.append(btn('next','Przećwicz to (5 zadań)',()=>startRound('k:'+c)),btn('ghost','Obejrzyj jeszcze raz',()=>storyScreen(c,back)),btn('ghost','Wróć',back));
+    }
+    screen(h('div',{class:'story'},h('div',{class:'top'},x,h('span',{class:'label'},'🎬 '+L.name),h('span')),dots,card,foot));
+  }
+  show();
+}
+
+/* EDB: animowana lekcja „Sygnały alarmowe” (prototyp 5.11.2026) */
+EDB_LESSONS.sygn.storyTag='Posłuchaj syren i sprawdź się – ok. 2 minuty.';
+EDB_LESSONS.sygn.story=[
+ {t:'sound',snd:'mod',say:'Dotknij syreny i posłuchaj 👂',after:'To jest <b>ogłoszenie alarmu</b>: dźwięk <b>modulowany</b> – raz wyżej, raz niżej.',note:'Naprawdę trwa 3 minuty. Tu słyszysz 6 sekund.'},
+ {t:'sound',snd:'cont',say:'A teraz drugi sygnał.',after:'To jest <b>odwołanie alarmu</b>: dźwięk <b>ciągły</b> – cały czas równy.',note:'Też trwa 3 minuty.'},
+ {t:'listen',say:'Posłuchaj. Co to za sygnał?'},
+ {t:'listen',say:'Jeszcze raz! Co to za sygnał?'},
+ {t:'quiz',say:'Ile trwa sygnał syreny?',o:['3 minuty','30 sekund','10 minut'],e:'Oba sygnały trwają 3 minuty. Różnią się dźwiękiem, a nie długością.'},
+ {t:'quiz',say:'Syrena wyje. Co robisz <b>najpierw</b>?',o:['Włączam radio lub telewizor','Wychodzę na ulicę zobaczyć, co się dzieje','Dzwonię pod 112 zapytać, co się stało'],e:'W radiu i telewizji jest komunikat: co się stało i co robić. Numeru 112 nie blokuje się pytaniami.'},
+ {t:'order',say:'Ogłoszono alarm. Ułóż, co robisz.',items:[['⏸️','Przerywam to, co robię'],['🔌','Wyłączam prąd i gaz'],['🎒','Pakuję dokumenty, leki, jedzenie'],['🔒','Zamykam okna i drzwi'],['🏠','Idę do schronu']]},
+ {t:'quiz',say:'Radio: „Uwaga! Uwaga! Ogłaszam alarm…”. Ile razy powtórzą ten komunikat?',o:['3 razy','1 raz','5 razy'],e:'Komunikat w radiu i telewizji powtarza się 3 razy.'},
+ {t:'end',say:'Brawo! Modulowany = <b>alarm</b>. Ciągły = <b>odwołanie</b>. Oba po 3 minuty.'}
+];
 function sciaga(){
   const x=btn('x','×',home);x.setAttribute('aria-label','Wróć do menu');
   screen(h('div',{},
@@ -3702,6 +3824,7 @@ function home(){
       h('div',{class:'bar'},h('i',{style:`width:${pct}%`})),
       h('small',{},'Zadanie jest opanowane, gdy ostatnio rozwiązałaś je bezbłędnie za pierwszym razem.')),
     SUBJ.plan?planBox():null,
+    ...Object.keys(LESSONS).filter(k=>LESSONS[k].story).map(k=>h('button',{class:'tool',type:'button',style:'border-color:var(--g);background:var(--g-soft)',onclick:()=>storyScreen(k,home)},h('span',{class:'label'},(store.story&&store.story[k]?'✓ ':'')+'🎬 Lekcja z dźwiękiem'),h('h3',{},LESSONS[k].name),h('span',{},LESSONS[k].storyTag||''))),
     weak.length?h('section',{class:'weak'},
       h('h3',{},`Moje słabe punkty (${weak.length})`),
       h('div',{class:'wchips'},weak.map(c=>btn('wchip',LESSONS[c].name,()=>lessonScreen(c)))),
@@ -4429,6 +4552,6 @@ function modelScreen(){
 /* start: nh.js po zalogowaniu */
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="nh.js?v=8cb84465"></script>
+<script src="nh.js?v=025ee3e0"></script>
 
 </body></html>

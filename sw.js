@@ -1,5 +1,5 @@
 /* Nauka Hani – praca offline i powiadomienia */
-const VER='c04a3bd3a6';
+const VER='2b89fe40b8';
 const CACHE='nauka-'+VER;
 const SHELL=['./','index.html','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));});
