@@ -297,6 +297,15 @@ async function parentHome(){
   if(!parentCh){parentCh=sb.channel('rodzic').on('postgres_changes',{event:'*',schema:'public',table:'days',filter:'user_id=eq.'+kid.user_id},p=>{if(p.new&&p.new.day){days[p.new.day]=p.new;if(document.querySelector('.nh-parent'))renderParent(kid,days,true);}})
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'claims'},()=>parentHome()).on('postgres_changes',{event:'INSERT',schema:'public',table:'rewards'},()=>parentHome()).subscribe();}
 }
+/* podgląd aplikacji Hani w widoku taty: kopia jej postępów jest już w telefonie (parentHome), synchronizacja u rodzica jest wyłączona,
+   więc nic nie trafia do konta Hani; po powrocie parentHome() wczytuje jej dane od nowa */
+function kidPreview(){
+  document.documentElement.classList.add('nh-prev');document.documentElement.classList.remove('nh-par');
+  if(!document.querySelector('.nh-prevbar'))document.body.append(E('button',{class:'nh-prevbar',type:'button',onclick:exitPreview},'👀 Podgląd aplikacji Hani · ← wróć do widoku taty'));
+  window.hub();
+}
+function exitPreview(){document.documentElement.classList.remove('nh-prev');document.documentElement.classList.add('nh-par');document.querySelectorAll('.nh-prevbar').forEach(b=>b.remove());
+  try{window.speechSynthesis&&speechSynthesis.cancel();}catch(e){}parentHome().catch(()=>{});}
 function renderParent(kid,days,live){
   const f=FAM(),today=dayKey(Date.now()),t=Object.assign({active_min:0,coins:0,rounds:0,subjects:{}},days[today]||{});
   let td=[];try{td=window.tDays(7);}catch(e){}
@@ -327,6 +336,7 @@ function renderParent(kid,days,live){
         E('div',{class:'col2'},E('i',{style:`height:${Math.round(d.m/max*100)}%;background:${d.m>=goal?'var(--t)':'var(--warn)'}`})),
         E('span',{},['Nd','Pn','Wt','Śr','Cz','Pt','Sb'][new Date(d.k+'T12:00').getDay()])))),
       E('small',{},'Razem '+wk.reduce((s,d)=>s+d.m,0)+' min · cel '+goal+' min dziennie'+(gi?' · ten tydzień '+gi.wHit+'/7 dni':''))),
+    E('button',{class:'tool nh-prevbtn',type:'button',onclick:kidPreview},E('span',{class:'label'},'Podgląd'),E('h3',{},'👀 Aplikacja Hani'),E('span',{},'Zobacz przedmioty, plany i lekcje tak, jak widzi je Hania. Twoje kliknięcia nie zmieniają jej postępów.')),
     pending.length||approved.length?E('section',{class:'plan'},E('h3',{},'🎁 Nagrody do decyzji'),
       ...pending.map(c=>E('div',{class:'nh-row'},E('span',{},rewardName(c.reward_id)+' · 🪙 '+c.price),
         window.btn('fixbtn','Zatwierdź',act(async()=>{const {error}=await sb.from('claims').update({status:'approved',decided_at:new Date().toISOString()}).eq('id',c.id);if(error)throw error;})),
