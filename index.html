@@ -2807,6 +2807,77 @@ const CHEM_TOPICS=[
  {k:'own',t:'open',q:'Zapisz równanie otrzymywania wodorotlenku miedzi(II) z chlorku miedzi(II) i zasady sodowej. Nazwij produkty.',pts:['CuCl₂ + 2NaOH → Cu(OH)₂↓ + 2NaCl','Cu(OH)₂ – wodorotlenek miedzi(II), osad (trudno rozpuszczalny)','NaCl – chlorek sodu','Schemat: sól + zasada → wodorotlenek↓ + sól']}
 ]}
 ];
+/* CHEMIA – uzupełnienie 6.11.2026: sprawdzian 18.11 z całego działu „Kwasy” (podręcznik s. 16–61) + właściwości wodorotlenków (powtórka s. 10–13). Nowe tematy na końcu listy – stare postępy bez zmian. */
+CHEM_TOPICS.push(
+{id:'wlk',base:'C',mark:'W',name:'Właściwości i zastosowania kwasów',pages:'podręcznik s. 19–42, 49–52',qs:[
+ {k:'wspk',t:'mc',q:'Co mają wspólnego wszystkie kwasy w roztworach wodnych?',o:['dysocjują na kationy wodoru i aniony reszty kwasowej','wszystkie mają tlen w cząsteczce','wszystkie są substancjami stałymi','barwią fenoloftaleinę na malinowo'],e:'Wspólne właściwości kwasów biorą się z kationów H⁺, które powstają podczas dysocjacji.'},
+ {k:'wspk',t:'multi',q:'Zaznacz WSZYSTKIE wspólne właściwości roztworów kwasów.',o:['przewodzą prąd elektryczny','zmieniają barwę oranżu metylowego z żółtej na czerwoną','barwią uniwersalny papierek wskaźnikowy na czerwono','barwią fenoloftaleinę na malinowo','wszystkie mają zapach zgniłych jaj'],c:[0,1,2],e:'Fenoloftaleina w kwasie jest bezbarwna (malinowa jest w zasadzie). Zapach zgniłych jaj ma tylko H₂S.'},
+ {k:'wspk',t:'mc',q:'Który kwas jest w temperaturze pokojowej substancją stałą?',o:['H₃PO₄','H₂SO₄','HNO₃','HCl'],e:'Kwas fosforowy(V) to bezbarwna, krystaliczna substancja stała. W sklepie jest jako 85-procentowy roztwór.'},
+ {k:'hcl',t:'mc',q:'Który kwas jest składnikiem soku żołądkowego?',o:['kwas chlorowodorowy HCl','kwas siarkowy(VI) H₂SO₄','kwas węglowy H₂CO₃','kwas azotowy(V) HNO₃'],e:'HCl w żołądku pomaga trawić i zabija bakterie z pokarmu.'},
+ {k:'hcl',t:'type',ph:'wpisz jedno słowo',q:'Potoczna nazwa kwasu chlorowodorowego to kwas…',ans:['solny'],e:'Kwas solny – bo można go otrzymać z soli kamiennej (NaCl).'},
+ {k:'hcl',t:'mc',q:'Dlaczego stężony kwas chlorowodorowy po otwarciu butelki „dymi”?',o:['chlorowodór tworzy z parą wodną z powietrza drobne kropelki kwasu','kwas się zapala w kontakcie z tlenem','kwas rozkłada się na wodór i chlor','kwas reaguje ze szkłem butelki'],e:'„Dym” to mgła z kropelek kwasu chlorowodorowego.'},
+ {k:'hcl',t:'mc',q:'Który kwas ma zapach zgniłych jaj i jest trujący?',o:['kwas siarkowodorowy H₂S','kwas chlorowodorowy HCl','kwas siarkowy(VI) H₂SO₄','kwas fosforowy(V) H₃PO₄'],e:'Siarkowodór powstaje przy gniciu białek – stąd zapach zepsutych jaj.'},
+ {k:'h2so4',t:'mc',q:'Co się stanie, gdy na cukier nałożymy kilka kropel stężonego kwasu siarkowego(VI)?',o:['cukier zwęgli się (sczernieje)','cukier rozpuści się bez zmian','wydzieli się wodór','cukier zabarwi się na żółto'],e:'Stężony H₂SO₄ zwęgla substancje organiczne: cukier, bibułę, tkaninę.'},
+ {k:'h2so4',t:'type',ph:'wpisz jedno słowo',q:'Substancja, która pochłania wodę (np. stężony H₂SO₄), to substancja…',ans:['higroskopijna'],e:'Higroskopijna = pochłania wodę. Dlatego stężony H₂SO₄ zwęgla nawet wilgotną skórę.'},
+ {k:'bhp',t:'mc',q:'Dlaczego rozcieńczając stężony H₂SO₄, wlewamy kwas do wody, a nie wodę do kwasu?',o:['wydziela się dużo ciepła – woda wlana do kwasu zawrze i kwas wypryśnie','kwas jest lżejszy od wody i zostałby na górze','wlewanie wody do kwasu daje trujący gaz','woda wlana do kwasu zamarza'],e:'Rozcieńczanie jest egzotermiczne. Kwas jest cięższy od wody, więc spływa na dno i ciepło rozchodzi się w całej wodzie.'},
+ {k:'h2so4',t:'type',ph:'wpisz jedno słowo',q:'Zjawisko, w którym energia wydziela się na sposób ciepła (np. rozcieńczanie H₂SO₄), to zjawisko…',ans:['egzotermiczne'],e:'Egzotermiczne – ciepło jest wydzielane, temperatura roztworu rośnie.'},
+ {k:'h2so4',t:'tf',q:'Kwas siarkowy(IV) jest trwały i nie ulega rozkładowi.',a:false,e:'H₂SO₃ jest nietrwały: H₂SO₃ → H₂O + SO₂↑. Dlatego czuć drażniący zapach SO₂.'},
+ {k:'h2so4',t:'mc',q:'Którą właściwość kwasu siarkowego(IV) i tlenku siarki(IV) wykorzystuje się do bielenia wełny i papieru?',o:['właściwości wybielające','właściwości higroskopijne','to, że są cięższe od wody','właściwości zwęglające'],e:'SO₂ i H₂SO₃ odbarwiają tkaniny, papier, a nawet kwiaty.'},
+ {k:'hno3',t:'mc',q:'Co się dzieje z białkiem jaja po dodaniu stężonego kwasu azotowego(V)?',o:['ścina się i żółknie','czernieje i się zwęgla','barwi się na niebiesko','rozpuszcza się bez zmian'],e:'To reakcja ksantoproteinowa – charakterystyczna reakcja białek.'},
+ {k:'hno3',t:'type',ph:'wpisz jedno słowo',q:'Reakcja charakterystyczna białek ze stężonym kwasem azotowym(V) to reakcja…',ans:['ksantoproteinowa'],e:'Reakcja ksantoproteinowa: białko + stężony HNO₃ → żółte zabarwienie.'},
+ {k:'hno3',t:'mc',q:'Dlaczego nie da się otrzymać stężonego roztworu kwasu węglowego?',o:['bo jest bardzo nietrwały i rozkłada się na wodę i tlenek węgla(IV)','bo jest substancją stałą','bo reaguje ze szkłem','bo tlenek węgla(IV) w ogóle nie rozpuszcza się w wodzie'],e:'H₂CO₃ → H₂O + CO₂↑. Tak „uciekają” bąbelki z wody gazowanej.'},
+ {k:'hno3',t:'multi',q:'Zaznacz WSZYSTKIE kwasy nietrwałe (łatwo ulegają rozkładowi).',o:['H₂SO₃','H₂CO₃','H₂SO₄','H₃PO₄','HNO₃'],c:[0,1],e:'Rozkładają się H₂SO₃ (na H₂O i SO₂) i H₂CO₃ (na H₂O i CO₂).'},
+ {k:'hno3',t:'tf',q:'Kwas azotowy(V) reaguje nawet z miedzią i srebrem, bo ma silne właściwości utleniające.',a:true,e:'HNO₃ to silny utleniacz – reaguje z miedzią, srebrem i rtęcią.'},
+ {k:'hcl',t:'sort',q:'Dotyczy HCl czy H₂S?',cats:['kwas chlorowodorowy','kwas siarkowodorowy'],items:[['składnik soku żołądkowego',0],['potocznie: kwas solny',0],['zapach zgniłych jaj',1],['składnik niektórych wód leczniczych',1],['stężony „dymi” w powietrzu',0],['trujący gaz zbierający się w szambach',1]],e:'HCl – żołądek i „dymienie”. H₂S – zapach jaj, wody lecznicze, trujący siarkowodór.'},
+ {k:'zast',t:'match',q:'Połącz kwas z jego zastosowaniem.',pairs:[['H₂SO₄','elektrolit w akumulatorach samochodowych'],['HNO₃','składnik paliw rakietowych'],['H₂CO₃','woda gazowana'],['H₃PO₄','napoje typu cola, preparaty dentystyczne']],e:'Akumulator – siarkowy(VI), rakieta – azotowy(V), bąbelki – węglowy, cola – fosforowy(V).'},
+ {k:'zast',t:'mc',q:'Który kwas jest w napojach typu cola i może przyczyniać się do próchnicy?',o:['kwas fosforowy(V)','kwas siarkowy(VI)','kwas chlorowodorowy','kwas azotowy(V)'],e:'H₃PO₄ (kwas ortofosforowy) rozpuszcza szkliwo zębów.'},
+ {k:'zast',t:'multi',q:'Zaznacz WSZYSTKIE kwasy, których używa się do produkcji nawozów sztucznych.',o:['kwas azotowy(V)','kwas fosforowy(V)','kwas siarkowy(VI)','kwas węglowy'],c:[0,1,2],e:'Nawozy robi się z HNO₃, H₃PO₄ i H₂SO₄. Kwas węglowy to woda gazowana.'},
+ {k:'opad',t:'mc',q:'Które tlenki są główną przyczyną kwaśnych opadów?',o:['SO₂ i NO₂','CO₂ i H₂O','Na₂O i CaO','O₂ i N₂'],e:'Tlenki siarki i azotu łączą się z parą wodną, np. SO₂ + H₂O → H₂SO₃.'},
+ {k:'opad',t:'mc',q:'Skąd w powietrzu biorą się tlenki siarki?',o:['ze spalania węgla, ropy naftowej i gazu ziemnego','z oddychania roślin','z parowania wody z mórz','z topnienia lodowców'],e:'Tlenki siarki – spalanie paliw kopalnych, tlenki azotu – spalanie benzyny.'},
+ {k:'bhp',t:'open',q:'Opisz, jak bezpiecznie rozcieńczyć stężony kwas siarkowy(VI), i wyjaśnij, dlaczego właśnie tak.',pts:['Wlewam powoli kwas do wody (po bagietce), ciągle mieszając','Nigdy nie wlewam wody do kwasu','Rozcieńczanie jest egzotermiczne – wydziela się dużo ciepła','Woda wlana do kwasu zawrzałaby i kwas by wyprysnął – poparzenie','Zakładam okulary ochronne i rękawice']},
+ {k:'hno3',t:'open',q:'Podaj po dwie właściwości stężonego kwasu azotowego(V) i stężonego kwasu siarkowego(VI).',pts:['HNO₃: bezbarwna ciecz o ostrym zapachu, żrący','HNO₃: barwi białko na żółto (ksantoproteinowa) lub silnie utlenia (reaguje z miedzią)','H₂SO₄: oleista, bezbarwna ciecz, cięższa od wody, żrący','H₂SO₄: higroskopijny lub zwęgla cukier, papier i tkaninę']}
+]},
+{id:'odc',base:'G',mark:'pH',name:'Odczyn roztworu i skala pH',pages:'podręcznik s. 53–57 i 13',qs:[
+ {k:'odcz',t:'mc',q:'Roztwór ma odczyn kwasowy, gdy…',o:['kationów H⁺ jest więcej niż anionów OH⁻','anionów OH⁻ jest więcej niż kationów H⁺','kationów H⁺ i anionów OH⁻ jest tyle samo','nie ma w nim żadnych jonów'],e:'Nadmiar H⁺ – kwasowy, nadmiar OH⁻ – zasadowy, tyle samo – obojętny.'},
+ {k:'odcz',t:'match',q:'Połącz stosunek jonów z odczynem.',pairs:[['H⁺ > OH⁻','odczyn kwasowy'],['H⁺ = OH⁻','odczyn obojętny'],['H⁺ < OH⁻','odczyn zasadowy']],e:'Wyobraź sobie wagę: przeważa H⁺ – kwas, przeważa OH⁻ – zasada.'},
+ {k:'skph',t:'type',ph:'wpisz liczbę',q:'Jakie pH ma roztwór o odczynie obojętnym?',ans:['7'],e:'pH = 7 – obojętny. Mniej – kwasowy, więcej – zasadowy.'},
+ {k:'skph',t:'mc',q:'Skala pH obejmuje wartości od…',o:['0 do 14','1 do 10','−7 do 7','0 do 100'],e:'Skala pH: od 0 do 14, środek (7) to odczyn obojętny.'},
+ {k:'skph',t:'mc',q:'Roztwór ma pH = 3. Jaki ma odczyn?',o:['kwasowy','zasadowy','obojętny','nie da się tego określić'],e:'3 < 7, więc odczyn kwasowy.'},
+ {k:'skph',t:'mc',q:'Roztwór ma pH = 12. Jaki ma odczyn?',o:['zasadowy','kwasowy','obojętny','nie da się tego określić'],e:'12 > 7, więc odczyn zasadowy.'},
+ {k:'skph',t:'mc',q:'Im niższe pH roztworu, tym…',o:['większe stężenie kationów H⁺ i bardziej kwasowy roztwór','mniejsze stężenie kationów H⁺','bardziej zasadowy roztwór','więcej anionów OH⁻'],e:'Niskie pH = dużo H⁺ = silnie kwasowo.'},
+ {k:'phot',t:'sort',q:'Odczyn kwasowy czy zasadowy?',cats:['kwasowy (pH < 7)','zasadowy (pH > 7)'],items:[['ocet',0],['sok żołądkowy',0],['czarna kawa',0],['mydło',1],['proszek do pieczenia',1],['wybielacz',1]],e:'Ocet pH 2,4–3,4, sok żołądkowy 1–3, kawa 5,5. Mydło 9–10, proszek do pieczenia 9–11, wybielacz 12–13.'},
+ {k:'phot',t:'mc',q:'Który płyn w organizmie człowieka ma odczyn silnie kwasowy (pH 1–3)?',o:['sok żołądkowy','krew','ślina','płyn mózgowo-rdzeniowy'],e:'Sok żołądkowy zawiera kwas solny. Krew ma pH 7,4–7,5.'},
+ {k:'phot',t:'mc',q:'Krew zdrowego człowieka ma pH około…',o:['7,4','2','10','13'],e:'pH krwi 7,4–7,5. Odchylenie już o 0,2 świadczy o chorobie.'},
+ {k:'skph',t:'tf',q:'Zmiana pH o 1 oznacza 10-krotną zmianę stężenia jonów H⁺.',a:true,e:'Roztwór o pH 3 ma 10 razy więcej H⁺ niż roztwór o pH 4.'},
+ {k:'wsk',t:'mc',q:'Jaką barwę ma oranż metylowy w roztworze kwasu?',o:['czerwoną','żółtą','malinową','niebieską'],e:'Oranż metylowy: w kwasie czerwony, w wodzie i w zasadzie żółty.'},
+ {k:'wsk',t:'mc',q:'Jaką barwę ma fenoloftaleina w roztworze o odczynie kwasowym?',o:['jest bezbarwna','malinową','czerwoną','żółtą'],e:'Fenoloftaleina zmienia barwę tylko w zasadzie (na malinowo). W kwasie i w wodzie jest bezbarwna.'},
+ {k:'wsk',t:'mc',q:'Jaką barwę ma uniwersalny papierek wskaźnikowy w roztworze o odczynie obojętnym?',o:['żółtą','czerwoną','niebieską','malinową'],e:'Papierek: kwas – pomarańczowy do czerwonego, obojętny – żółty, zasada – zielony do niebieskiego.'},
+ {k:'wsk',t:'tf',q:'Oranż metylowy w probówce z roztworem wodorotlenku potasu i w probówce z wodą pozostaje żółty.',a:true,e:'Oranż zmienia barwę (na czerwoną) tylko w kwasie.'},
+ {k:'odcz',t:'type',ph:'wpisz pojęcie',q:'Cecha roztworu, która mówi, czy jest w nim nadmiar kationów H⁺, anionów OH⁻, czy jest ich tyle samo, to…',ans:['odczyn','odczyn roztworu'],e:'Odczyn roztworu: kwasowy, obojętny albo zasadowy.'},
+ {k:'skph',t:'mc',q:'Które urządzenie najdokładniej mierzy pH roztworu?',o:['pehametr','termometr','barometr','areometr'],e:'Wskaźniki pozwalają tylko oszacować pH, dokładny pomiar daje pehametr.'},
+ {k:'odcz',t:'mc',q:'Woda dysocjuje w bardzo małym stopniu: H₂O ⇄ H⁺ + OH⁻. Jaki ma odczyn?',o:['obojętny, bo jonów H⁺ i OH⁻ jest tyle samo','kwasowy, bo są w niej jony H⁺','zasadowy, bo są w niej jony OH⁻','nie ma odczynu, bo nie przewodzi prądu'],e:'W wodzie jonów H⁺ i OH⁻ jest po równo – odczyn obojętny.'},
+ {k:'skph',t:'mc',q:'Do roztworu o pH = 5 dodano substancję i pH wzrosło do 11. Jaki odczyn miała dodana substancja?',o:['zasadowy','kwasowy','obojętny','nie da się tego określić'],e:'pH wzrosło powyżej 7 – dodano substancję o odczynie zasadowym.'},
+ {k:'skph',t:'type',ph:'wpisz liczbę',q:'Roztwór miał pH = 12. Po dodaniu substancji pH obniżyło się o 4. Jakie jest teraz pH?',ans:['8'],e:'12 − 4 = 8. To nadal odczyn zasadowy, bo 8 > 7.'},
+ {k:'phot',t:'multi',q:'Zaznacz WSZYSTKIE przykłady, w których znajomość pH jest ważna (według podręcznika).',o:['rolnictwo – dobór roślin i nawozów do gleby','medycyna – badanie krwi','przemysł farmaceutyczny – kapsułki z lekami','ustalanie pory dnia'],c:[0,1,2],e:'pH ważne jest w rolnictwie, medycynie, przemyśle farmaceutycznym i ochronie środowiska.'},
+ {k:'wsk',t:'multi',q:'Po dodaniu oranżu metylowego roztwór zabarwił się na czerwono. Zaznacz WSZYSTKO, co mogło być w probówce.',o:['kwas solny','sok z cytryny','woda gazowana','zasada potasowa','woda destylowana','woda wapienna'],c:[0,1,2],e:'Czerwony oranż = kwas: kwas solny, sok z cytryny, woda gazowana (kwas węglowy). Woda wapienna to roztwór Ca(OH)₂ – zasada.'},
+ {k:'skph',t:'open',q:'Wyjaśnij, czym jest skala pH, i podaj, jaki odczyn mają roztwory o pH 2, 7 i 10.',pts:['Skala pH to skala od 0 do 14, mówi o stężeniu kationów H⁺','pH = 2 – odczyn kwasowy','pH = 7 – odczyn obojętny','pH = 10 – odczyn zasadowy']}
+]},
+{id:'wlw',base:'A',mark:'Zs',name:'Właściwości i zastosowania wodorotlenków',pages:'podręcznik s. 10–13',qs:[
+ {k:'wlnaoh',t:'mc',q:'Jak wygląda wodorotlenek sodu?',o:['biała substancja stała','bezbarwna ciecz o ostrym zapachu','żółty proszek nierozpuszczalny w wodzie','niebieski galaretowaty osad'],e:'NaOH i KOH to białe substancje stałe, dobrze rozpuszczalne w wodzie.'},
+ {k:'wlnaoh',t:'tf',q:'Podczas rozpuszczania wodorotlenku sodu w wodzie wydziela się ciepło.',a:true,e:'Rozpuszczanie NaOH i KOH jest egzotermiczne – roztwór się ogrzewa.'},
+ {k:'wlnaoh',t:'type',ph:'wpisz jedno słowo',q:'NaOH i KOH pochłaniają wodę z powietrza. Mają właściwości…',ans:['higroskopijne'],e:'Higroskopijne – tak jak stężony kwas siarkowy(VI).'},
+ {k:'wlnaoh',t:'mc',q:'Jak wodorotlenek wapnia rozpuszcza się w wodzie?',o:['średnio','bardzo dobrze, tak jak NaOH','wcale – zawsze tworzy osad','tylko po zagotowaniu wody'],e:'Ca(OH)₂ jest średnio rozpuszczalny (w tabeli rozpuszczalności: S).'},
+ {k:'zasw',t:'match',q:'Połącz wodorotlenek z jego zastosowaniem.',pairs:[['NaOH','środki piorące, papier, mydła'],['KOH','mydła w płynie, wyroby kakaowe i czekolada'],['Ca(OH)₂','zaprawa wapienna, bielenie pni drzew']],e:'NaOH – papier i mydła, KOH – mydła w płynie i czekolada, Ca(OH)₂ – budownictwo i sady.'},
+ {k:'zasw',t:'mc',q:'Do bielenia pni drzew owocowych stosuje się wodny roztwór…',o:['wodorotlenku wapnia','wodorotlenku sodu','kwasu siarkowego(VI)','wodorotlenku miedzi(II)'],e:'Pnie drzew bieli się roztworem Ca(OH)₂.'},
+ {k:'zas',t:'mc',q:'Zasady to…',o:['wodorotlenki dobrze rozpuszczalne w wodzie','wszystkie wodorotlenki','kwasy zawierające grupę OH','wszystkie tlenki metali'],e:'Zasady to np. LiOH, NaOH, KOH i niektóre wodorotlenki metali 2. grupy, np. Ca(OH)₂, Ba(OH)₂.'},
+ {k:'wsk',t:'mc',q:'Jaką barwę ma fenoloftaleina w roztworze zasady?',o:['malinową','jest bezbarwna','żółtą','czerwoną jak w kwasie'],e:'Fenoloftaleina wykrywa zasady – barwi się na malinowo (różowoczerwono).'},
+ {k:'wsk',t:'mc',q:'Jaką barwę przyjmuje uniwersalny papierek wskaźnikowy w roztworze zasady sodowej?',o:['od zielonej do niebieskiej','od pomarańczowej do czerwonej','żółtą','pozostaje biały'],e:'Zasada – papierek zielony do niebieskiego, kwas – pomarańczowy do czerwonego.'},
+ {k:'wlnaoh',t:'tf',q:'Roztwory wodne NaOH, KOH i Ca(OH)₂ przewodzą prąd elektryczny – są elektrolitami.',a:true,e:'Zasady dysocjują na jony, dlatego przewodzą prąd.'},
+ {k:'wsk',t:'sort',q:'Kwas czy zasada? Oceń po barwie wskaźnika.',cats:['kwas','zasada'],items:[['oranż metylowy – czerwony',0],['fenoloftaleina – malinowa',1],['papierek – niebieski',1],['papierek – czerwony',0],['fenoloftaleina bezbarwna, oranż czerwony',0],['oranż żółty, fenoloftaleina malinowa',1]],e:'Czerwony oranż lub czerwony papierek – kwas. Malinowa fenoloftaleina lub niebieski papierek – zasada.'},
+ {k:'wlnaoh',t:'mc',lab:'Znajdź fałsz',q:'Które zdanie o wodorotlenku sodu i potasu jest FAŁSZYWE?',o:['są cieczami o ostrym zapachu','są białymi substancjami stałymi','dobrze rozpuszczają się w wodzie','mają właściwości higroskopijne'],e:'NaOH i KOH to białe ciała stałe, nie ciecze.'},
+ {k:'zasw',t:'mc',q:'Do czego w medycynie (stomatologii) stosuje się wodorotlenek wapnia?',o:['do past do wypełnień zębów','do produkcji perfum','do paliw rakietowych','do produkcji szkła wodnego'],e:'Ca(OH)₂ – pasty stomatologiczne. Szkło wodne robi się z NaOH.'},
+ {k:'wsk',t:'open',q:'Masz dwie probówki z bezbarwnymi cieczami: w jednej kwas, w drugiej zasada. Jak sprawdzisz, gdzie jest który roztwór?',pts:['Dodaję wskaźnik: fenoloftaleinę, oranż metylowy albo papierek uniwersalny','Fenoloftaleina: w zasadzie malinowa, w kwasie bezbarwna','Oranż metylowy: w kwasie czerwony, w zasadzie żółty (papierek: kwas czerwony, zasada niebieska)','Wniosek: np. malinowa fenoloftaleina = zasada, druga probówka = kwas']}
+]});
 const CHEM_KMAP=Object.fromEntries(CHEM_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
 const KW_TABLE={head:['Wzór','Nazwa','Reszta'],rows:KW.map(k=>[cf(k.f),k.n,cf(k.r)+' – '+ROM[k.v]])};
 const CHEM_LESSONS={
@@ -2856,6 +2927,44 @@ const CHEM_PLAN=[
  ['2026-11-02','otk','Otrzymywanie kwasów i wodorotlenków (po 1–2 rundy)'],
  ['2026-11-03','exam','Sprawdzian próbny i poprawa słabych punktów'],
  ['2026-11-04','cards','Rano tylko fiszki – powodzenia!']];
+/* CHEMIA – uzupełnienie 6.11.2026 (lekcje, fiszki, plan do 18.11) */
+Object.assign(CHEM_LESSONS,{
+ wspk:{tid:'wlk',name:'Wspólne właściwości kwasów',pts:['Większość kwasów w temperaturze pokojowej to ciecze. Wyjątek: kwas fosforowy(V) H₃PO₄ – substancja stała.','W wodzie dysocjują na kationy wodoru H⁺ i aniony reszty kwasowej.','Ich roztwory przewodzą prąd – to elektrolity.','Oranż metylowy zmienia barwę z żółtej na czerwoną, papierek uniwersalny barwi się na czerwono.','Stężone roztwory kwasów są żrące.'],trick:'Każdy kwas ma H⁺ – i to H⁺ barwi wskaźniki na czerwono.'},
+ hcl:{tid:'wlk',name:'HCl i H₂S',table:{head:['Kwas','Właściwości'],rows:[['HCl – kwas chlorowodorowy (solny)','ciecz, bezbarwny; stężony żrący i „dymi” w powietrzu; jest w soku żołądkowym'],['H₂S – kwas siarkowodorowy','ciecz, bezbarwny; zapach zgniłych jaj, trujący; jest w wodach leczniczych']]},pts:['Kwas solny – nazwa od soli kamiennej NaCl, z której można go otrzymać.','Siarkowodór (gaz) powstaje przy gniciu białek, zbiera się w szambach i studniach.'],trick:'H₂S – S jak smród zgniłych jaj.'},
+ h2so4:{tid:'wlk',name:'Kwasy siarki',table:{head:['Kwas','Właściwości'],rows:[['H₂SO₄ stężony','oleista, bezbarwna ciecz, cięższa od wody, bezwonna, higroskopijna, żrąca; zwęgla cukier, bibułę, tkaninę'],['H₂SO₃','bezbarwna ciecz, nietrwały (H₂SO₃ → H₂O + SO₂↑), drażniący zapach, wybielający']]},pts:['Rozcieńczanie stężonego H₂SO₄ to zjawisko egzotermiczne – wydziela się ciepło.','Higroskopijny = pochłania wodę.','Kwasu siarkowego(IV) nie da się zatężyć – rozkłada się.'],trick:'(VI) – mocny i trwały, (IV) – słabszy, rozpada się.'},
+ hno3:{tid:'wlk',name:'HNO₃, H₂CO₃ i H₃PO₄',table:{head:['Kwas','Właściwości'],rows:[['HNO₃ stężony','bezbarwna ciecz, ostry zapach, żrący, silnie utleniający (reaguje z miedzią i srebrem); białko żółknie'],['H₂CO₃','bezbarwna ciecz, bezwonny, bardzo nietrwały: H₂CO₃ → H₂O + CO₂↑'],['H₃PO₄','bezbarwna, krystaliczna substancja stała, dobrze rozpuszczalna; stężony roztwór żrący']]},pts:['Reakcja ksantoproteinowa: białko ze stężonym HNO₃ ścina się i barwi na żółto. Tak wykrywa się białka.','Woda gazowana to roztwór kwasu węglowego.'],trick:'KSANTOproteinowa – po grecku „ksantos” znaczy żółty.'},
+ zast:{tid:'wlk',name:'Zastosowania kwasów',table:{head:['Kwas','Zastosowania'],rows:[['HCl','przemysł chemiczny i metalurgiczny (oczyszczanie metali), tworzywa sztuczne'],['H₂S','wykrywanie metali w laboratorium, produkcja siarki, depilatory'],['H₂SO₃','bielenie wełny i papieru, dezynfekcja beczek, nawozy'],['H₂SO₄','akumulatory, nawozy, barwniki, leki, środki piorące, materiały wybuchowe'],['HNO₃','nawozy, materiały wybuchowe, paliwa rakietowe, lakiery, perfumy'],['H₂CO₃','napoje gazowane, kąpiele lecznicze'],['H₃PO₄','nawozy, napoje typu cola, preparaty dentystyczne, czyszczenie felg']]},pts:['Najważniejsze surowce przemysłu chemicznego to kwas siarkowy(VI) i kwas azotowy(V).'],trick:'Akumulator – siarkowy, rakieta – azotowy, cola – fosforowy, bąbelki – węglowy.'},
+ opad:{tid:'wlk',name:'Kwaśne opady',pts:['Spalanie węgla, ropy i gazu ziemnego daje tlenki siarki, a spalanie benzyny – tlenki azotu (SO₂, NO₂).','Tlenki łączą się z parą wodną, np. SO₂ + H₂O → H₂SO₃. Deszcz, mgła i śnieg mają odczyn lekko kwasowy.','Skutki: zakwaszone jeziora i gleba, niszczenie lasów, budynków i rzeźb.','Jak ograniczać: mniej spalać paliw, odsiarczać paliwa, filtry w fabrykach, energia słońca, wody i wiatru.'],trick:'SO₂ + deszcz = kwas z nieba.'},
+ odcz:{tid:'odc',name:'Odczyn roztworu',table:{head:['Odczyn','Jony','pH'],rows:[['kwasowy','H⁺ > OH⁻','< 7'],['obojętny','H⁺ = OH⁻','= 7'],['zasadowy','H⁺ < OH⁻','> 7']]},pts:['Odczyn roztworu – cecha mówiąca, czy w roztworze jest nadmiar kationów H⁺, anionów OH⁻, czy jest ich tyle samo.','Woda dysocjuje bardzo słabo: H₂O ⇄ H⁺ + OH⁻. Jonów jest po równo – odczyn obojętny.','Odczyn określa się wskaźnikami.'],trick:'Więcej H⁺ – kwas, więcej OH⁻ – zasada, remis – obojętny.'},
+ skph:{tid:'odc',name:'Skala pH',pts:['pH – miara kwasowości roztworu, zależy od stężenia jonów H⁺.','Skala pH ma wartości od 0 do 14: pH = 7 obojętny, pH < 7 kwasowy, pH > 7 zasadowy.','Im mniejsze pH, tym więcej H⁺ i tym bardziej kwasowy roztwór.','Zmiana pH o 1 = 10 razy więcej lub mniej jonów H⁺.','Wskaźniki pozwalają pH oszacować, dokładnie mierzy je pehametr.'],trick:'7 to środek. Poniżej – kwaśno, powyżej – zasadowo.'},
+ phot:{tid:'odc',name:'pH wokół nas',table:{head:['Substancja','pH'],rows:[['kwas w akumulatorze','< 1'],['sok żołądkowy','1–3'],['ocet','2,4–3,4'],['czarna kawa','5,5'],['mleko','6,3–6,6'],['krew','7,4–7,5'],['mydło','9–10'],['wybielacz','12–13'],['środek do czyszczenia piekarnika','13,8']]},pts:['pH jest ważne w rolnictwie (gleba i nawozy), medycynie (pH krwi), przemyśle farmaceutycznym (kapsułki z lekami) i ochronie środowiska.','Odchylenie pH krwi już o 0,2 świadczy o chorobie.'],trick:'Kuchnia kwaśna (ocet, cytryna), łazienka zasadowa (mydło, wybielacz).'},
+ wlnaoh:{tid:'wlw',name:'NaOH, KOH, Ca(OH)₂',table:{head:['Wodorotlenek','Właściwości'],rows:[['NaOH','biała substancja stała, dobrze rozpuszczalna (wydziela się ciepło), higroskopijna'],['KOH','biała substancja stała, dobrze rozpuszczalna (wydziela się ciepło), higroskopijna'],['Ca(OH)₂','biała substancja stała, średnio rozpuszczalna w wodzie']]},pts:['Ich roztwory przewodzą prąd – to elektrolity.','Roztwór NaOH to zasada sodowa, KOH – zasada potasowa, roztwór Ca(OH)₂ – woda wapienna.'],trick:'Sód i potas grzeją wodę i łapią wilgoć.'},
+ zasw:{tid:'wlw',name:'Zastosowania wodorotlenków',table:{head:['Wodorotlenek','Zastosowania'],rows:[['NaOH','środki piorące, barwniki, szkło wodne, papier, mydła i kosmetyki'],['KOH','mydła w płynie, kosmetyki myjące, wyroby kakaowe i czekolada'],['Ca(OH)₂','produkcja cukru, zaprawa wapienna, pasty do wypełnień zębów, usuwanie włosia ze skór, bielenie pni drzew']]},pts:['Wszystkie trzy są żrące – pracujemy w okularach i rękawicach.'],trick:'Na – mydło i papier, K – czekolada, Ca – budowa i drzewa.'}
+});
+CHEM_LESSONS.wsk.table={head:['Wskaźnik','kwas','obojętny','zasada'],rows:[['oranż metylowy','czerwony','żółty','żółty'],['fenoloftaleina','bezbarwna','bezbarwna','malinowa'],['papierek uniwersalny','pomarańczowy–czerwony','żółty','zielony–niebieski']]};
+CHEM_CARDS.push(
+ ['Kwas solny','potoczna nazwa kwasu chlorowodorowego HCl (jest w soku żołądkowym)'],['H₂S – zapach','zgniłych jaj, trujący'],['Stężony H₂SO₄','oleisty, cięższy od wody, higroskopijny, zwęgla cukier i papier'],
+ ['Higroskopijny','pochłania wodę (H₂SO₄, NaOH, KOH)'],['Zjawisko egzotermiczne','wydziela się energia na sposób ciepła (np. rozcieńczanie H₂SO₄)'],
+ ['Reakcja ksantoproteinowa','białko + stężony HNO₃ → żółte zabarwienie'],['Kwasy nietrwałe','H₂SO₃ → H₂O + SO₂, H₂CO₃ → H₂O + CO₂'],['Kwas – substancja stała','H₃PO₄ (kwas fosforowy(V))'],
+ ['Akumulator samochodowy','kwas siarkowy(VI)'],['Napoje typu cola','kwas fosforowy(V)'],['Kwaśne opady','SO₂ i NO₂ + para wodna → kwasy w deszczu'],
+ ['Odczyn roztworu','czy w roztworze jest nadmiar H⁺, OH⁻, czy tyle samo'],['Skala pH','od 0 do 14; 7 – obojętny, < 7 kwasowy, > 7 zasadowy'],['pH – zmiana o 1','10 razy więcej/mniej jonów H⁺'],
+ ['Pehametr','urządzenie do dokładnego pomiaru pH'],['Papierek uniwersalny','kwas: pomarańczowy–czerwony, obojętny: żółty, zasada: zielony–niebieski'],['Fenoloftaleina','w zasadzie malinowa, w kwasie i wodzie bezbarwna'],
+ ['pH krwi','7,4–7,5'],['NaOH, KOH','białe ciała stałe, dobrze rozpuszczalne, higroskopijne'],['Ca(OH)₂','średnio rozpuszczalny; zaprawa wapienna, bielenie pni drzew']
+);
+CHEM_PLAN.length=0;
+CHEM_PLAN.push(
+ ['2026-11-07','wlk','Nowe: właściwości i zastosowania kwasów (1 runda)'],
+ ['2026-11-08','odc','Nowe: odczyn i skala pH (1 runda)'],
+ ['2026-11-09','wlw','Właściwości wodorotlenków (1 runda – dziś kartkówka z polskiego)'],
+ ['2026-11-10','kwn','Wzory i nazwy kwasów – powtórka (1 runda)'],
+ ['2026-11-11','dys','Dysocjacja – powtórka (1 runda)'],
+ ['2026-11-12','otk','Otrzymywanie kwasów – powtórka (1 runda)'],
+ ['2026-11-13','otw','Otrzymywanie wodorotlenków – powtórka (1 runda)'],
+ ['2026-11-14','wlk','Właściwości kwasów – druga runda'],
+ ['2026-11-15','odc','Odczyn i pH – druga runda, potem słabe punkty'],
+ ['2026-11-16','cards','Krótko: fiszki (dziś sprawdzian z geografii)'],
+ ['2026-11-17','exam','Sprawdzian próbny i poprawa słabych punktów'],
+ ['2026-11-18','cards','Rano tylko fiszki – powodzenia!']);
 
 /* ---------- CHEMIA: wysuwany układ okresowy (wg podręcznika s. 266–267: symbol, liczba atomowa, nazwa, masa; kolory metale/niemetale) ---------- */
 const PT_RAW='H wodór 1,008|He hel 4,00|Li lit 6,94|Be beryl 9,01|B bor 10,81|C węgiel 12,01|N azot 14,01|O tlen 16,00|F fluor 19,00|Ne neon 20,18|Na sód 22,99|Mg magnez 24,31|Al glin 26,98|Si krzem 28,09|P fosfor 30,97|S siarka 32,06|Cl chlor 35,45|Ar argon 39,95|K potas 39,10|Ca wapń 40,08|Sc skand 44,96|Ti tytan 47,87|V wanad 50,94|Cr chrom 52,00|Mn mangan 54,94|Fe żelazo 55,85|Co kobalt 58,93|Ni nikiel 58,69|Cu miedź 63,55|Zn cynk 65,38|Ga gal 69,72|Ge german 72,63|As arsen 74,92|Se selen 78,97|Br brom 79,90|Kr krypton 83,80|Rb rubid 85,47|Sr stront 87,62|Y itr 88,91|Zr cyrkon 91,22|Nb niob 92,91|Mo molibden 95,95|Tc technet 97,91|Ru ruten 101,07|Rh rod 102,91|Pd pallad 106,42|Ag srebro 107,87|Cd kadm 112,41|In ind 114,82|Sn cyna 118,71|Sb antymon 121,76|Te tellur 127,60|I jod 126,90|Xe ksenon 131,29|Cs cez 132,91|Ba bar 137,33|La lantan 138,91|Ce cer 140,12|Pr prazeodym 140,91|Nd neodym 144,24|Pm promet 144,91|Sm samar 150,36|Eu europ 151,96|Gd gadolin 157,25|Tb terb 158,93|Dy dysproz 162,50|Ho holm 164,93|Er erb 167,26|Tm tul 168,93|Yb iterb 173,05|Lu lutet 174,97|Hf hafn 178,49|Ta tantal 180,95|W wolfram 183,84|Re ren 186,21|Os osm 190,23|Ir iryd 192,22|Pt platyna 195,08|Au złoto 196,97|Hg rtęć 200,59|Tl tal 204,38|Pb ołów 207,2|Bi bizmut 208,98|Po polon 208,98|At astat 209,99|Rn radon 222,02|Fr frans 223,02|Ra rad 226,03|Ac aktyn 227,03|Th tor 232,04|Pa protaktyn 231,04|U uran 238,03|Np neptun 237,05|Pu pluton 244,06|Am ameryk 243,06|Cm kiur 247,07|Bk berkel 247,07|Cf kaliforn 251,08|Es einstein 252,08|Fm ferm 257,10|Md mendelew 258,10|No nobel 259,10|Lr lorens 262,11|Rf rutherford 267,12|Db dubn 268,13|Sg seaborg 271,13|Bh bohr 272,14|Hs has 270,13|Mt meitner 276,15|Ds darmsztadt 281,16|Rg roentgen 280,17|Cn kopernik 285,18|Nh nihon 284,18|Fl flerow 289,19|Mc moskow 288,19|Lv liwermor 293,20|Ts tenes 292,21|Og oganeson 294,21';
@@ -3710,7 +3819,7 @@ const SUBJECTS={
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Na kartkówkę są tylko księgi I, II, IV, X, XI i XII. Najważniejsze: kto jest kim (Robak to Jacek Soplica, ojciec Tadeusza; Zosia to wnuczka Stolnika), opowieść Gerwazego, polowanie na niedźwiedzia, spowiedź Jacka, uczta i koncert Jankiela. Dzień przed kartkówką zrób Arkusz egzaminacyjny i kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  geo:{id:'geo',key:'geografia-azja-v1',title:'Azja',subject:'Geografia',sub:'sprawdzian pn. 16.11 · „Planeta Nowa 8”, rozdział 1',color:'var(--warn)',decor:['T','G','A','C'],topics:GEO_TOPICS,lessons:GEO_LESSONS,cards:GEO_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:GEO_PLAN,
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Najważniejsze do zapamiętania: rekordy Azji (Everest, Morze Martwe, Morze Kaspijskie, Bajkał), monsun letni i zimowy, Ognisty Pierścień Pacyfiku i dlaczego Japonia jest bogata mimo trudnych warunków. Zadania z plonami i amplitudą losują się za każdym razem od nowa. Dwa dni przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
- chem:{id:'chem',key:'chemia-kwasy-wodorotlenki-v1',title:'Kwasy i wodorotlenki',subject:'Chemia',sub:'sprawdzian śr. 4.11 · wzory, nazwy, dysocjacja, otrzymywanie',color:'var(--t)',decor:['T','C','A','G'],topics:CHEM_TOPICS,lessons:CHEM_LESSONS,cards:CHEM_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:CHEM_PLAN,
+ chem:{id:'chem',key:'chemia-kwasy-wodorotlenki-v1',title:'Kwasy i wodorotlenki',subject:'Chemia',sub:'sprawdzian śr. 18.11 · cały dział Kwasy + wodorotlenki',color:'var(--t)',decor:['T','C','A','G'],topics:CHEM_TOPICS,lessons:CHEM_LESSONS,cards:CHEM_CARDS,examName:'Sprawdzian próbny',examPer:2,plan:CHEM_PLAN,
    tip:'codziennie 15–20 minut według planu powyżej. Na sprawdzianie wszystko piszesz sama, więc tu też budujesz wzory i równania, a nie tylko wybierasz. Gdy utkniesz, dotknij „Pomóż” – dostaniesz tylko następny krok. Zapamiętaj: H i OH mają zawsze I, a ile atomów H w kwasie, tyle H⁺ po dysocjacji. Dzień przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
  bio:{id:'bio',hidden:true,key:'genetyka-powtorka-v2',title:'Powtórka z genetyki',subject:'Biologia',sub:'rozdziały 1–3',color:'var(--t)',decor:['A','T','C','G'],topics:BIO_TOPICS,lessons:BIO_LESSONS,cards:BIO_CARDS,examName:'Sprawdzian próbny',
    tip:'po 2–3 rundy z każdego tematu, aż paski dojdą do końca. Potem sprawdzian próbny. Jeśli wynik to 90% lub więcej, jesteś gotowa. Zadania z liczbami i DNA losują się za każdym razem od nowa.'},
@@ -3905,6 +4014,28 @@ function sciaga(){
 }
 const norm=s=>s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ł/g,'l').replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
 function lev(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length];}
+/* literówki: odległość z zamianą sąsiednich liter (1 błąd), limit zależny od długości, cyfry zawsze dokładnie */
+function osa(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);}return d[a.length][b.length];}
+const tolMax=n=>{const L=n.replace(/ /g,'').length;return L<=3?0:L<=7?1:L<=19?2:3;};
+const VOCAB={};
+function subjVocab(){const id=SUBJ?SUBJ.id:'';if(VOCAB[id])return VOCAB[id];const set=new Set(),seen=new Set();
+  const walk=x=>{if(typeof x==='string'){norm(x).split(' ').forEach(w=>{if(w.length>1)set.add(w);});}else if(x&&typeof x==='object'&&!seen.has(x)){seen.add(x);(Array.isArray(x)?x:Object.values(x)).forEach(walk);}};
+  if(SUBJ){walk(SUBJ.topics);walk(SUBJ.cards);}return VOCAB[id]=set;}
+/* {ok, exact, a: dopasowana odpowiedź, form: true gdy to nie literówka, tylko inne słowo/forma} */
+function typoMatch(input,answers,lang){const v=norm(input);let form=false;
+  for(const a of answers)if(norm(a)===v)return {ok:true,exact:true,a};
+  if(!v)return {ok:false};
+  const digs=s=>(s.match(/\d+/g)||[]).join(' '),voc=subjVocab(),acc=new Set(answers.map(norm));
+  let best=null;
+  for(const a of answers){const n=norm(a);if(digs(n)!==digs(v))continue;const d=osa(n,v);if(d>tolMax(n))continue;
+    if(d>=2&&n[0]!==v[0]){form=true;continue;}
+    const nw=n.split(' '),vw=v.split(' ');let bad=false;
+    if(lang&&n.replace(/ /g,'')===v.replace(/ /g,'')){}else if(lang){if(nw.length===vw.length){bad=nw.some((w,i)=>w!==vw[i]&&(w.slice(-1)!==vw[i].slice(-1)||voc.has(vw[i])));}else bad=n.slice(-1)!==v.slice(-1);}
+    if(!bad&&(lang||d>=2)&&!acc.has(v)&&voc.has(v))bad=true;
+    if(!bad&&!lang&&d>=2&&nw.length===vw.length&&nw.some((w,i)=>w!==vw[i]&&voc.has(vw[i])&&osa(w,vw[i])>=2))bad=true;
+    if(bad){form=true;continue;}
+    if(!best||d<best.d)best={d,a};}
+  return best?{ok:true,exact:false,a:best.a}:{ok:false,form};}
 
 /* pick n questions: never-seen first, then ones answered wrong, then the longest-unseen; skip last round's questions */
 function pickFrom(pool,n){
@@ -4335,14 +4466,17 @@ function rType(q,done){
   const go=btn('check','Sprawdź',submit);
   function submit(){
     const v=norm(inp.value);if(!v||go.disabled)return;go.disabled=true;inp.readOnly=true;
-    const exact=q.ans.some(a=>norm(a)===v),strict=q.strict||(SUBJ&&SUBJ.strict);
-    const near=q.ans.some(a=>{const n=norm(a);return n===v||(n.length>=5&&lev(n,v)<=1);});
-    let ok=strict?exact:near;
-    if(q.nm){const kk=s=>norm(s).replace(/ /g,''),rm=s=>(s.toLowerCase().match(/(iii|ii|iv|vi|v|i)\s*\)?\s*$/)||[])[1]||'',v2=kk(inp.value);ok=q.ans.some(a=>kk(a)===v2||(lev(kk(a),v2)<=1&&rm(a)===rm(inp.value)));}
+    const strict=q.strict||(SUBJ&&SUBJ.strict),m=typoMatch(inp.value,q.ans,strict);
+    let ok=m.ok,exact=!!m.exact;
+    if(q.nm){const kk=s=>norm(s).replace(/ /g,''),rm=s=>(s.toLowerCase().match(/(iii|ii|iv|vi|v|i)\s*\)?\s*$/)||[])[1]||'',v2=kk(inp.value);
+      const hit=q.ans.find(a=>kk(a)===v2)||q.ans.find(a=>{const d=osa(kk(a),v2);return d<=Math.max(1,tolMax(kk(a)))&&(d<2||kk(a)[0]===v2[0])&&rm(a)===rm(inp.value);});
+      ok=!!hit;exact=!!hit&&kk(hit)===v2;m.a=hit;}
     const na=s=>s.toLowerCase().normalize('NFC').replace(/[^a-z0-9áéíóúüñ ]/g,'').replace(/\s+/g,' ').trim();
-    const accMiss=ok&&exact&&SUBJ&&SUBJ.acc&&!q.ans.some(a=>na(a)===na(inp.value));
+    const good=m.a||q.ans[0],accMiss=ok&&SUBJ&&SUBJ.acc&&!q.ans.some(a=>na(a)===na(inp.value));
     inp.classList.add(ok?'ok':'bad');
-    done(ok?0:1,accMiss?`Dobrze, ale pilnuj akcentów i ñ – poprawnie: „${q.ans.find(a=>norm(a)===v)}”.`:ok?(exact?null:`Prawie dobra pisownia – poprawnie: „${q.ans[0]}”.`):(near?`Prawie! Ale na sprawdzianie liczy się każda litera. Poprawnie: „${q.ans[0]}”.`:`Poprawna odpowiedź: „${q.ans[0]}”.`));
+    done(ok?0:1,ok?(exact?(accMiss?`Dobrze, ale pilnuj akcentów i ñ – poprawnie: „${good}”.`:null)
+        :(strict?`Uznaję, ale to literówka – na sprawdzianie liczy się każda litera${SUBJ&&SUBJ.acc?' i akcent':''}. Poprawnie: „${good}”.`:`Dobrze! Mała literówka – poprawnie: „${good}”.`))
+      :(m.form?`To już nie literówka – zmienia się słowo albo jego forma (np. końcówka). Poprawnie: „${q.ans[0]}”.`:`Poprawna odpowiedź: „${q.ans[0]}”.`));
   }
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submit();}});
   setTimeout(()=>inp.focus({preventScroll:true}),50);
@@ -4515,8 +4649,8 @@ function hub(){
       h('div',{class:'helix','aria-hidden':'true'},['A','G','C','T'].map((b,i)=>h('span',{style:`background:${BASES[b]};height:${[36,52,30,44][i]}px`}))),
       h('div',{},h('h1',{},'Nauka Hani'),h('p',{},'Wybierz przedmiot. Krótkie rundy, a potem przerwa.'))),
     goalCard(),
-    h('div',{class:'subjs'},card('sjs'),card('pt'),card('geo'),card('edb'),card('esp')),
-    (()=>{const arch=['chem','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
+    h('div',{class:'subjs'},card('sjs'),card('pt'),card('geo'),card('chem'),card('edb'),card('esp')),
+    (()=>{const arch=['wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
       h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
       h('div',{class:'subjs'},...arch.map(card)),
       h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
