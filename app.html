@@ -3909,14 +3909,91 @@ const RO_PLAN=[
  ['2026-11-11','exam','Kartkówka próbna i słabe punkty'],
  ['2026-11-12','cards','Rano tylko fiszki – powodzenia!']];
 prep(RO_TOPICS,RO_KMAP);
+/* ---------- ANGIELSKI: Unit 10 Sport – Wordlist (kartkówka ze słówek wt. 10.11.2026). Źródło: zdjęcie strony „Wordlist” od Łukasza (Vocabulary s. 24–25, Reading s. 26, Listening s. 30, Other words). Wszystkie słówka ze zdjęcia są w A10_W.
+   Zadania generują się z A10_W (dla każdej grupy słówek: „połącz w pary”, potem „wpisz po angielsku” każde słowo), na końcu tematu są zadania pisane ręcznie (A10_X).
+   NIE zmieniaj A10_W (kolejność = postępy). Nowe zadania dopisuj tylko do A10_X na końcu tematu, z polem k. ---------- */
+const A10_W={
+ dys1:[['athletics','lekkoatletyka'],['baseball','baseball',0,'gra z kijem i piłką'],['boxing','boks'],['canoeing','kajakarstwo'],['climbing','wspinaczka'],['cricket','krykiet'],['cycling','kolarstwo'],['diving','nurkowanie'],['football','piłka nożna'],['golf','golf',0,'gra z kijem i dołkami'],['gymnastics','gimnastyka']],
+ dys2:[['horse-riding','jazda konna, jeździectwo',['horse riding','horseriding']],['ice hockey','hokej na lodzie',['ice-hockey']],['ice-skating','łyżwiarstwo',['ice skating','iceskating']],['rollerblading','jazda na łyżworolkach'],['rugby','rugby',0,'gra z jajowatą piłką'],['running','bieganie'],['skateboarding','jazda na deskorolce'],['skiing','narciarstwo'],['snowboarding','jazda na snowboardzie']],
+ dys3:[['squash','squash',0,'gra z rakietą, piłka odbija się od ściany'],['surfing','surfing'],['swimming','pływanie'],['table tennis','tenis stołowy',['table-tennis']],['tennis','tenis ziemny'],['volleyball','siatkówka'],['beach volleyball','siatkówka plażowa'],['weightlifting','podnoszenie ciężarów',['weight lifting','weight-lifting']],['wrestling','zapasy']],
+ spr1:[['ball','piłka'],['bat','kij (do baseballa, krykieta)'],['board','deska'],['boots','buty (np. korki)'],['club','kij golfowy',['golf club']],['costume','strój kąpielowy',['swimming costume']],['trunks','kąpielówki',['swimming trunks']],['goal','bramka']],
+ spr2:[['goggles','gogle, okulary ochronne'],['helmet','kask'],['net','siatka, kosz (w koszykówce)'],['racket','rakieta'],['skis','narty'],['strip','strój sportowca'],['wetsuit','pianka do nurkowania',['wet suit']]],
+ obi1:[['stadium','stadion (lekkoatletyczny / sportowy)',['athletics stadium','sports stadium']],['boxing ring','ring (bokserski)',['ring']],['ski slope','stok narciarski',['slope']],['dry ski slope','sztuczny stok narciarski',['dry slope']],['football pitch','boisko do piłki nożnej',['pitch']],['rugby pitch','boisko do rugby',['pitch']]],
+ obi2:[['sports centre','ośrodek sportowy',['sport centre']],['health and fitness centre','klub fitness',['fitness centre','health centre']],['ice-skating rink','lodowisko',['rink','ice skating rink']],['swimming pool','basen pływacki',['pool']],['Olympic-size pool','basen olimpijski',['Olympic-size swimming pool','Olympic size pool','Olympic size swimming pool']],['tennis court','kort tenisowy'],['basketball court','boisko do koszykówki']],
+ lud:[['athlete','lekkoatleta'],['boxer','bokser'],['cyclist','kolarz'],['diver','nurek'],['footballer','piłkarz'],['gymnast','gimnastyk'],['runner','biegacz'],['swimmer','pływak'],['weightlifter','sztangista',['weight lifter']]],
+ tre1:[['athletic','wysportowany'],['beat','pokonać, wygrać z kimś'],['captain','kapitan'],['catch','złapać'],['champion','mistrz'],['cheer','wiwatować, wznosić okrzyki'],['coach','trener (np. drużyny)',['trainer']],['compete','konkurować'],['draw','zremisować, remis'],['enter','brać udział (w zawodach)'],['hit','uderzyć'],['join','przyłączyć się']],
+ tre2:[['kick','kopnąć'],['lose','przegrać'],['miss','chybić, nie trafić'],['player','gracz'],['position','pozycja'],['practise','ćwiczyć'],['score goals','strzelać gole',['score a goal','score goal']],['support','kibicować'],['team','zespół, drużyna'],['throw','rzucać'],['train','trenować'],['trainer','instruktor (np. fitness), trener',['coach']],['win','wygrywać']],
+ rd:[['tournament','turniej'],['professional athlete','zawodowy sportowiec'],['supporter','kibic'],['referee','sędzia (np. w piłce nożnej)'],['get muddy','pobrudzić się błotem'],['kit','komplet, zestaw'],['lap','okrążenie (np. wokół stadionu)'],['protect','chronić'],['trip','potknąć się']],
+ oth1:[['break a record','pobić rekord',['break the record']],['bronze medal','brązowy medal'],['come second','zająć drugie miejsce'],['crash into sb','wpaść na kogoś',['crash into somebody','crash into someone','crash into']],['focused','skoncentrowany, skupiony',['focussed']],['get hurt','zranić się'],['highlight','ważny moment'],['incredible','niezwykły'],['involve','obejmować']],
+ oth2:[['opponent','przeciwnik'],['penalty','kara, punkty karne, karny'],['record holder','rekordzista',['record-holder']],['rule','reguła, zasada (gry)'],['sports camp','obóz sportowy',['sport camp']],['stage','etap'],['tactics','taktyka'],['take turns','zmieniać się (po kolei)',['take turn']]]
+};
+const A10_X={
+ dys:[
+  {k:'dys1',t:'mc',q:'„Nurkowanie” po angielsku to:',o:['diving','diver','swimming','canoeing'],e:'Diving – nurkowanie (sport), diver – nurek (osoba).'},
+  {k:'dys3',t:'mc',q:'„Tenis ziemny” po angielsku to:',o:['tennis','table tennis','squash','cricket'],e:'Tennis – tenis ziemny, table tennis – tenis stołowy.'},
+  {k:'dys2',t:'mc',q:'„Jazda na łyżworolkach” po angielsku to:',o:['rollerblading','ice-skating','skateboarding','skiing'],e:'Rollerblading – rolki, skateboarding – deskorolka, ice-skating – łyżwy.'},
+  {k:'dys2',t:'mc',q:'„Łyżwiarstwo” po angielsku to:',o:['ice-skating','ice hockey','skiing','snowboarding'],e:'Ice-skating – łyżwiarstwo, ice hockey – hokej na lodzie.'},
+  {k:'dys3',t:'mc',q:'„Zapasy” po angielsku to:',o:['wrestling','weightlifting','boxing','climbing'],e:'Wrestling – zapasy, weightlifting – podnoszenie ciężarów.'}],
+ sob:[
+  {k:'spr1',t:'sort',q:'Sprzęt czy obiekt sportowy?',cats:['Sprzęt','Obiekt'],items:[['helmet',0],['goggles',0],['racket',0],['rink',1],['pitch',1],['court',1]],e:'Sprzęt: helmet (kask), goggles (gogle), racket (rakieta). Obiekty: rink (lodowisko), pitch (boisko), court (kort, boisko).'},
+  {k:'spr1',t:'mc',q:'„Kij golfowy” po angielsku to:',o:['club','bat','racket','board'],e:'Club – kij golfowy, bat – kij do baseballa i krykieta, racket – rakieta.'},
+  {k:'spr2',t:'mc',q:'„Strój sportowca” (np. drużyny) po angielsku to:',o:['strip','trunks','wetsuit','costume'],e:'Strip – strój sportowca. Trunks – kąpielówki, costume – strój kąpielowy, wetsuit – pianka.'},
+  {k:'obi2',t:'mc',q:'Boisko do koszykówki to basketball…',o:['court','pitch','rink','ring'],e:'Basketball court, tennis court – court. Football pitch – pitch.'},
+  {k:'obi1',t:'mc',q:'Boisko do piłki nożnej to football…',o:['pitch','court','rink','slope'],e:'Football pitch, rugby pitch – pitch.'}],
+ tre:[
+  {k:'lud',t:'match',q:'Połącz sport ze sportowcem.',pairs:[['boxing','boxer'],['cycling','cyclist'],['diving','diver'],['weightlifting','weightlifter']],e:'Sport (-ing) → osoba (-er / -ist): boxer, cyclist, diver, weightlifter.'},
+  {k:'lud',t:'match',q:'Połącz sport ze sportowcem.',pairs:[['athletics','athlete'],['gymnastics','gymnast'],['running','runner'],['swimming','swimmer']],e:'Athletics → athlete, gymnastics → gymnast, running → runner, swimming → swimmer.'},
+  {k:'tre1',t:'mc',q:'We ___ the other team 3:1.',o:['beat','won','lost','missed'],e:'Beat kogoś – pokonać (beat the team). Win wygrywa się coś, np. win the match.'},
+  {k:'tre1',t:'mc',q:'„Remis” lub „zremisować” po angielsku to:',o:['draw','lose','miss','beat'],e:'Draw – zremisować, remis.'},
+  {k:'tre2',t:'mc',q:'„Kibicować” po angielsku to:',o:['support','cheer','compete','enter'],e:'Support – kibicować, cheer – wiwatować, compete – konkurować, enter – brać udział.'},
+  {k:'tre2',t:'mc',q:'Jak w podręczniku pisze się „ćwiczyć”?',o:['practise','practice','practis','practize'],e:'Czasownik „ćwiczyć” w brytyjskim angielskim to practise (z -se).'}],
+ inn:[
+  {k:'rd',t:'mc',q:'„Sędzia” (np. w piłce nożnej) po angielsku to:',o:['referee','supporter','opponent','coach'],e:'Referee – sędzia, supporter – kibic, opponent – przeciwnik.'},
+  {k:'oth2',t:'mc',q:'„Przeciwnik” po angielsku to:',o:['opponent','supporter','record holder','referee'],e:'Opponent – przeciwnik.'},
+  {k:'rd',t:'mc',q:'„Kibic” (osoba) po angielsku to:',o:['supporter','support','referee','player'],e:'Supporter – kibic (osoba). Support – kibicować (czasownik).'},
+  {k:'oth2',t:'mc',q:'Co znaczy „stage” w tym rozdziale (sport)?',o:['etap','stadion','start','kara'],e:'Stage – etap (np. wyścigu). W teatrze stage to scena.'},
+  {k:'oth1',t:'mc',q:'„Zająć drugie miejsce” po angielsku to:',o:['come second','take turns','get hurt','break a record'],e:'Come second – zająć drugie miejsce.'},
+  {k:'rd',t:'mc',q:'Co znaczy „trip” w tym rozdziale (Listening)?',o:['potknąć się','rzucać','okrążenie','kopnąć'],e:'Trip – potknąć się. Lap – okrążenie, throw – rzucać, kick – kopnąć.'}]
+};
+const A10_T=[
+ {id:'dys',base:'A',mark:'1',name:'Sporty',pages:'Vocabulary s. 24–25',ls:['dys1','dys2','dys3']},
+ {id:'sob',base:'T',mark:'2',name:'Sprzęt i obiekty sportowe',pages:'Vocabulary s. 24–25',ls:['spr1','spr2','obi1','obi2']},
+ {id:'tre',base:'C',mark:'3',name:'Sportowcy, trening i zawody',pages:'Vocabulary s. 24–25',ls:['lud','tre1','tre2']},
+ {id:'inn',base:'G',mark:'4',name:'Reading, Listening i Other words',pages:'s. 26, 30 i Other words',ls:['rd','oth1','oth2']}
+];
+const A10_TOPICS=A10_T.map(t=>{const qs=[];
+  t.ls.forEach(k=>{const ws=A10_W[k],g=Math.ceil(ws.length/4),sz=Math.ceil(ws.length/g);
+    for(let i=0;i<ws.length;i+=sz){const ch=ws.slice(i,i+sz);
+      qs.push({k,t:'match',q:'Połącz słówko z tłumaczeniem.',pairs:ch.map(w=>[w[0],w[1]]),e:ch.map(w=>w[0]+' – '+w[1]).join('; ')+'.'});
+      ch.forEach(w=>qs.push({k,t:'type',strict:true,q:'Wpisz po angielsku: '+w[1]+(w[3]?' ('+w[3]+')':''),ans:[w[0]].concat(w[2]||[]),ph:w[0].includes(' ')?'wpisz '+w[0].split(' ').length+' słowa':undefined,e:w[0]+' – '+w[1]+'.'}));}});
+  return {id:t.id,base:t.base,mark:t.mark,name:t.name,pages:t.pages,qs:qs.concat(A10_X[t.id]||[])};});
+const A10_KMAP=Object.fromEntries(A10_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
+const A10_LN={dys1:['dys','Sporty 1 (athletics – gymnastics)',['Większość sportów kończy się na -ing: boxing, canoeing, climbing, cycling, diving.','Athletics i gymnastics kończą się na -s, ale to jeden sport.'],'Piłka nożna to football (po brytyjsku, jak w podręczniku).'],
+ dys2:['dys','Sporty 2 (horse-riding – snowboarding)',['Z myślnikiem: horse-riding, ice-skating. Ice hockey – osobno.','Skiing ma dwa i: ski + ing.'],'Rollerblading – rolki, skateboarding – deskorolka, snowboarding – snowboard.'],
+ dys3:['dys','Sporty 3 (squash – wrestling)',['Tennis – tenis ziemny, table tennis – tenis stołowy.','Swimming – podwójne m: swim → swimming.','Weightlifting = weight (ciężar) + lifting (podnoszenie).'],'Wrestling – pierwszego w się nie czyta: /ˈres(ə)lɪŋ/.'],
+ spr1:['sob','Sprzęt sportowy 1',['Costume – strój kąpielowy, trunks – kąpielówki.','Boots – buty sportowe, np. korki.','Goal – bramka.'],'Bat – kij do baseballa i krykieta, club – kij golfowy, racket – rakieta.'],
+ spr2:['sob','Sprzęt sportowy 2',['Goggles – gogle (zawsze z -s).','Net – siatka, a w koszykówce kosz.','Strip – strój sportowca, wetsuit – pianka do nurkowania.'],'Skis – narty, skiing – narciarstwo.'],
+ obi1:['sob','Obiekty sportowe 1',['Pitch – boisko do piłki nożnej i do rugby.','Boxing ring – ring bokserski.','Dry ski slope – sztuczny stok (dry = suchy, bez śniegu).'],'Stadium – stadion, ale na końcu -ium.'],
+ obi2:['sob','Obiekty sportowe 2',['Court – kort tenisowy i boisko do koszykówki.','Rink – lodowisko, pool – basen.','Centre – brytyjska pisownia (-re).'],'Football → pitch, tennis i basketball → court.'],
+ lud:['tre','Sportowcy',['Sportowiec to często sport + -er: box → boxer, run → runner, swim → swimmer.','Cycling → cyclist, gymnastics → gymnast, athletics → athlete.','Podwójna litera: runner, swimmer.'],'Footballer – piłkarz, a football – piłka nożna.'],
+ tre1:['tre','Trening i zawody 1 (athletic – join)',['Beat kogoś (beat the team), win coś (win the match).','Draw – i remis, i zremisować.','Athletic – wysportowany, athlete – lekkoatleta, athletics – lekkoatletyka.'],'Coach – trener (np. drużyny), trainer – instruktor, trener.'],
+ tre2:['tre','Trening i zawody 2 (kick – win)',['Lose – przegrać (jedno o).','Practise – czasownik z -se (pisownia brytyjska).','Throw – rzucać, kick – kopnąć, hit – uderzyć, catch – złapać.'],'Win ↔ lose: wygrywać ↔ przegrać.'],
+ rd:['inn','Reading (s. 26) i Listening (s. 30)',['Supporter – kibic (osoba), support – kibicować.','Referee – sędzia (np. w piłce nożnej).','Trip – tu: potknąć się. Lap – okrążenie.'],'Get muddy – pobrudzić się błotem (mud = błoto).'],
+ oth1:['inn','Other words 1 (break a record – involve)',['Break a record – pobić rekord.','Come second – zająć drugie miejsce.','Crash into sb – sb = somebody (ktoś).'],'Get hurt – zranić się: get + słowo = „stać się”.'],
+ oth2:['inn','Other words 2 (opponent – take turns)',['Penalty – kara, rzut karny.','Record holder – rekordzista.','Take turns – zmieniać się (robić coś po kolei).'],'Tactics – zawsze z -s na końcu. Stage – tu: etap.']};
+const A10_LESSONS=Object.fromEntries(Object.entries(A10_LN).map(([k,[tid,name,pts,trick]])=>[k,{tid,name,table:{head:['English','Polski'],rows:A10_W[k].map(w=>[w[0],w[1]])},pts,trick}]));
+const A10_CARDS=Object.values(A10_W).flat().map(w=>[w[0],w[1]]);
+prep(A10_TOPICS,A10_KMAP);
 prep(SJS_TOPICS,SJS_KMAP);
 prep(BIO_TOPICS,BIO_KMAP);prep(PT_TOPICS,PT_KMAP);prep(GEO_TOPICS,GEO_KMAP);prep(PL_TOPICS,PL_KMAP);prep(HIS_TOPICS,HIS_KMAP);prep(EDB_TOPICS,EDB_KMAP);prep(FIZ_TOPICS,FIZ_KMAP);prep(WOS_TOPICS,WOS_KMAP);prep(ANG_TOPICS,ANG_KMAP);prep(ESP_TOPICS,ESP_KMAP);prep(CHEM_TOPICS,CHEM_KMAP);
 const SUBJECTS={
+ a10:{id:'a10',key:'angielski-unit10-v1',title:'Unit 10 – Sport (słówka)',subject:'Język angielski',sub:'kartkówka wt. 10.11 · Wordlist, wszystkie słówka',strict:true,color:'var(--warn)',decor:['T','A','G','C'],topics:A10_TOPICS,lessons:A10_LESSONS,cards:A10_CARDS,examName:'Kartkówka próbna',examPer:5,
+   tip:'najpierw przejrzyj Ściągę (tabelki ze wszystkimi słówkami), potem po 2 rundy z każdego tematu, na koniec fiszki. W każdej rundzie najpierw łączysz słówka w pary, potem wpisujesz je po angielsku – pisownia musi być dokładna, jak na kartkówce. Uważaj na pary: diving – diver, support – supporter, athletics – athlete – athletic. Przed snem zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  sjs:{id:'sjs',key:'polski-slownictwo-style-v1',title:'Słownictwo i style języka',subject:'Język polski',sub:'kartkówka pt. 6.11 (może być przełożona)',color:'var(--c)',decor:['C','A','T','G'],topics:SJS_TOPICS,lessons:SJS_LESSONS,cards:SJS_CARDS,examName:'Kartkówka próbna',examPer:3,
    tip:'zrób po 2 rundy z każdego tematu, potem fiszki. Najważniejsze: kto używa słowa (wszyscy – ogólnonarodowe, region – gwara, grupa – żargon, nauka – termin), archaizm = stary, neologizm = nowy, 5 stylów i gdzie się ich używa (kolega – potoczny, urząd – urzędowy, lekcja – naukowy, gazeta – publicystyczny, książka – artystyczny). Jeśli kartkówkę przełożą, rób codziennie 1–2 rundy. Wieczór przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  ro:{id:'ro',key:'polski-reduta-ordona-v1',title:'Reduta Ordona',subject:'Język polski',sub:'kartkówka czw. 12.11 · Adam Mickiewicz',color:'var(--g)',decor:['G','C','A','T'],topics:RO_TOPICS,lessons:RO_LESSONS,cards:RO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:RO_PLAN,
    tip:'codziennie jedna krótka runda według planu. Najważniejsze: tło (powstanie listopadowe, obrona Warszawy 1831), narrator-adiutant, przebieg obrony, Ordon i car oraz środki stylistyczne z przykładami. Przeczytaj też sam wiersz – jest krótki. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
- pt:{id:'pt',key:'polski-pan-tadeusz-v1',title:'Pan Tadeusz',subject:'Język polski',sub:'kartkówka pn. 9.11 · księgi I, II, IV, X, XI, XII',sheet:'tark',color:'var(--a)',decor:['A','G','T','C'],topics:PT_TOPICS,lessons:PT_LESSONS,cards:PT_CARDS,examName:'Kartkówka próbna',examPer:2,plan:PT_PLAN,
+ pt:{id:'pt',hidden:true,key:'polski-pan-tadeusz-v1',title:'Pan Tadeusz',subject:'Język polski',sub:'kartkówka pn. 9.11 · księgi I, II, IV, X, XI, XII',sheet:'tark',color:'var(--a)',decor:['A','G','T','C'],topics:PT_TOPICS,lessons:PT_LESSONS,cards:PT_CARDS,examName:'Kartkówka próbna',examPer:2,plan:PT_PLAN,
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Na kartkówkę są tylko księgi I, II, IV, X, XI i XII. Najważniejsze: kto jest kim (Robak to Jacek Soplica, ojciec Tadeusza; Zosia to wnuczka Stolnika), opowieść Gerwazego, polowanie na niedźwiedzia, spowiedź Jacka, uczta i koncert Jankiela. Dzień przed kartkówką zrób Arkusz egzaminacyjny i kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  geo:{id:'geo',key:'geografia-azja-v1',title:'Azja',subject:'Geografia',sub:'sprawdzian pn. 16.11 · „Planeta Nowa 8”, rozdział 1',color:'var(--warn)',decor:['T','G','A','C'],topics:GEO_TOPICS,lessons:GEO_LESSONS,cards:GEO_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:GEO_PLAN,
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Najważniejsze do zapamiętania: rekordy Azji (Everest, Morze Martwe, Morze Kaspijskie, Bajkał), monsun letni i zimowy, Ognisty Pierścień Pacyfiku i dlaczego Japonia jest bogata mimo trudnych warunków. Zadania z plonami i amplitudą losują się za każdym razem od nowa. Dwa dni przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
@@ -4750,8 +4827,8 @@ function hub(){
       h('div',{class:'helix','aria-hidden':'true'},['A','G','C','T'].map((b,i)=>h('span',{style:`background:${BASES[b]};height:${[36,52,30,44][i]}px`}))),
       h('div',{},h('h1',{},'Nauka Hani'),h('p',{},'Wybierz przedmiot. Krótkie rundy, a potem przerwa.'))),
     goalCard(),
-    h('div',{class:'subjs'},card('sjs'),card('pt'),card('ro'),card('geo'),card('chem'),card('edb'),card('esp')),
-    (()=>{const arch=['wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
+    h('div',{class:'subjs'},card('a10'),card('sjs'),card('ro'),card('geo'),card('chem'),card('edb'),card('esp')),
+    (()=>{const arch=['pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
       h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
       h('div',{class:'subjs'},...arch.map(card)),
       h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
