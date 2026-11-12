@@ -4261,12 +4261,144 @@ const AGR_PLAN=[
  ['2026-11-22','cz1','Powtórka: tryb 1 (1 runda)'],
  ['2026-11-23','exam','Sprawdzian próbny i słabe punkty'],
  ['2026-11-24','cards','Rano tylko fiszki – powodzenia!']];
+/* ---------- ANGIELSKI Grammar – uzupełnienie 12.11.2026 wieczorem (v48). Źródło: zdjęcia od Łukasza – podręcznik Unit 10 Sport str. 28–29 (Comparison of adjectives, as…as, too/enough, so/such, what/how), strona „Conditionals: type 0, 1” i notatka z zeszytu (passive: present, past, future simple; to be + V3).
+   Przysłówki (adverbs) i tryb 2 z tych stron POMINIĘTE – nie ma ich w zakresie sprawdzianu. Nowe tematy na końcu AGR_TOPICS, nowe zadania na końcach cz0 i cz1. ---------- */
+(()=>{const T=id=>AGR_TOPICS.find(t=>t.id===id);
+T('cz0').qs.push(
+ {k:'z0',t:'type',q:'(water / boil) ___ if you heat it to 100 degrees Celsius.',ans:['Water boils'],ph:'wpisz 2 słowa',e:'Tryb 0 – fakt: Water boils (it → -s).'},
+ {k:'z0u',t:'type',q:'When (Aunt Lucy / visit) ___ us, she always brings a large box of homemade cookies.',ans:['Aunt Lucy visits'],ph:'wpisz 3 słowa',e:'When = if w trybie 0: Aunt Lucy (she) → visits.'},
+ {k:'z0u',t:'type',q:'(They / usually / get) ___ sick when they travel by car or by bus.',ans:['They usually get'],ph:'wpisz 3 słowa',e:'Usually stoi przed czasownikiem: They usually get…'},
+ {k:'z0',t:'type',q:'How much (Mike / pay) ___ when he takes a taxi from school?',ans:['does Mike pay'],ph:'wpisz 3 słowa',e:'Pytanie w present simple: How much does Mike pay…?'},
+ {k:'z0',t:'type',q:'What equipment (you / need) ___ if you want to play hockey?',ans:['do you need'],ph:'wpisz 3 słowa',e:'Pytanie w present simple: What equipment do you need…?'},
+ {k:'z0',t:'mc',q:'The grass ___ wet if it rains.',o:['gets','will get','got','would get'],e:'Przykład z podręcznika – tryb 0: The grass gets wet if it rains.'}
+);
+T('cz1').qs.push(
+ {k:'z1',t:'type',q:'If I (manage) ___ to get the singer’s autograph, I’ll give it to you.',ans:['manage'],e:'Po if – present simple: If I manage…'},
+ {k:'z1',t:'type',q:'If I manage to get the singer’s autograph, I (give) ___ it to you.',ans:['will give','’ll give','ll give'],ph:'wpisz 2 słowa',e:'Zdanie główne – future simple: I will give.'},
+ {k:'z1n',t:'type',q:'If you (not be) ___ careful, you’ll have an accident.',ans:['aren’t','are not'],ph:'wpisz 1–2 słowa',e:'Po if przeczenie w present simple: If you aren’t careful…'},
+ {k:'z1',t:'type',q:'If the weather is nice, we (go) ___ out tonight.',ans:['will go','’ll go','ll go'],ph:'wpisz 2 słowa',e:'Zdanie główne: will go.'},
+ {k:'unl',t:'mc',q:'„Unless the weather is bad, we’ll have a picnic in the park tomorrow.” To znaczy:',o:['If the weather isn’t bad, we’ll have a picnic in the park tomorrow.','If the weather is bad, we’ll have a picnic in the park tomorrow.','When the weather is bad, we’ll have a picnic in the park.','If the weather won’t be bad, we’ll have a picnic in the park.'],e:'Unless = if not (przykład z podręcznika).'},
+ {k:'unl',t:'type',q:'Unless he (come) ___ on time, he will be in big trouble.',ans:['comes'],e:'Po unless – present simple: he comes.'},
+ {k:'z1n',t:'mc',q:'If it ___ rain tomorrow, we will go for a walk.',o:['doesn’t','won’t','didn’t','isn’t'],e:'Po if – present simple: If it doesn’t rain tomorrow…'}
+);
+AGR_TOPICS.push(
+{id:'adj',base:'G',mark:'6',name:'Stopniowanie przymiotników',pages:'str. 28',qs:[
+ {k:'as1',t:'match',q:'Połącz przymiotnik ze stopniem wyższym.',pairs:[['long','longer'],['nice','nicer'],['heavy','heavier'],['big','bigger']],e:'Long – longer, nice – nicer, heavy – heavier, big – bigger.'},
+ {k:'asn',t:'match',q:'Połącz przymiotnik ze stopniem najwyższym.',pairs:[['good','the best'],['bad','the worst'],['big','the biggest'],['heavy','the heaviest']],e:'Good – the best, bad – the worst, big – the biggest, heavy – the heaviest.'},
+ {k:'as1',t:'type',exact:true,q:'Stopień wyższy: hot',ans:['hotter'],e:'Hot – hotter (podwajamy t, jak big – bigger).'},
+ {k:'as1',t:'type',exact:true,q:'Stopień wyższy: heavy',ans:['heavier'],e:'Heavy – heavier (y → i).'},
+ {k:'as1',t:'type',exact:true,q:'Stopień najwyższy: big',ans:['the biggest'],ph:'wpisz 2 słowa',e:'Big – the biggest (podwójne g i the).'},
+ {k:'as1',t:'type',exact:true,q:'Stopień najwyższy: nice',ans:['the nicest'],ph:'wpisz 2 słowa',e:'Nice – the nicest (kończy się na -e, więc tylko -st).'},
+ {k:'as2',t:'type',q:'Stopień wyższy: expensive',ans:['more expensive'],ph:'wpisz 2 słowa',e:'Długi przymiotnik: more expensive.'},
+ {k:'as2',t:'type',q:'Stopień najwyższy: popular',ans:['the most popular'],ph:'wpisz 3 słowa',e:'Długi przymiotnik: the most popular.'},
+ {k:'asn',t:'type',exact:true,q:'Stopień wyższy: good',ans:['better'],e:'Nieregularny: good – better – the best.'},
+ {k:'asn',t:'type',exact:true,q:'Stopień najwyższy: bad',ans:['the worst'],ph:'wpisz 2 słowa',e:'Nieregularny: bad – worse – the worst.'},
+ {k:'ast',t:'type',exact:true,q:'In Poland, August is (hot) ___ than April.',ans:['hotter'],e:'Porównanie dwóch rzeczy + than → stopień wyższy: hotter.'},
+ {k:'asn',t:'type',q:'Jack is good at maths. Actually, he is (good) ___ in our class.',ans:['the best'],ph:'wpisz 2 słowa',e:'Najlepszy w klasie → the best.'},
+ {k:'as1',t:'type',exact:true,q:'I’m busy at the moment, so maybe we could meet at a (late) ___ time?',ans:['later'],e:'Late – later (kończy się na -e, więc tylko -r).'},
+ {k:'as2',t:'type',q:'I like this jacket, but it’s (expensive) ___ than I expected.',ans:['more expensive'],ph:'wpisz 2 słowa',e:'Than → stopień wyższy, długi przymiotnik: more expensive.'},
+ {k:'as2',t:'type',q:'For me, shopping is one of (exciting) ___ free time activities.',ans:['the most exciting'],ph:'wpisz 3 słowa',e:'One of + stopień najwyższy: the most exciting.'},
+ {k:'as2',t:'type',q:'Novak Djokovic is one of (talented) ___ tennis players in the world.',ans:['the most talented'],ph:'wpisz 3 słowa',e:'One of … in the world → the most talented.'},
+ {k:'asn',t:'type',q:'Unfortunately, it’s one of (bad) ___ meals I’ve ever had in a restaurant.',ans:['the worst'],ph:'wpisz 2 słowa',e:'Bad – worse – the worst.'},
+ {k:'as1',t:'type',exact:true,q:'These shoes don’t fit. I think I need a (big) ___ size.',ans:['bigger'],e:'Większy rozmiar – bigger (podwójne g).'},
+ {k:'as1',t:'type',q:'The Ice Cream Farm (UK) is (large) ___ ice cream centre in the world.',ans:['the largest'],ph:'wpisz 2 słowa',exact:true,e:'In the world → the largest (large kończy się na -e).'},
+ {k:'ast',t:'type',q:'Steve / fast / Stanley → Steve is ___ Stanley.',ans:['faster than'],ph:'wpisz 2 słowa',e:'Steve is faster than Stanley.'},
+ {k:'ast',t:'type',q:'Jake / strong / Bill → Jake is ___ Bill.',ans:['stronger than'],ph:'wpisz 2 słowa',e:'Jake is stronger than Bill.'},
+ {k:'as2',t:'mc',q:'Ski jumping is ___ cross-country skiing.',o:['more dangerous than','dangerouser than','more dangerous that','the most dangerous than'],e:'Długi przymiotnik: more dangerous + than (nie that).'},
+ {k:'asn',t:'mc',q:'Jill is a ___ sportswoman than Peggy.',o:['better','gooder','more good','best'],e:'Good – better – the best.'},
+ {k:'as1',t:'multi',q:'Zaznacz WSZYSTKIE poprawne formy.',o:['bigger','the heaviest','more expensive','gooder','the most nice','worse'],c:[0,1,2,5],e:'Gooder nie istnieje – better. Nice jest krótki: the nicest, nie the most nice.'},
+ {k:'as2',t:'sort',q:'-er / -est czy more / the most?',cats:['-er / -est','more / the most'],items:[['long',0],['cheap',0],['big',0],['expensive',1],['interesting',1],['colourful',1]],e:'Krótkie (1 sylaba): -er / -est. Dłuższe: more / the most.'},
+ {k:'ast',t:'mc',lab:'Znajdź błąd',q:'Które zdanie jest BŁĘDNE?',o:['‘Royal Mile’ is the more popular restaurant in the city.','This T-shirt is more colourful than the other one.','That’s the tallest building in the town centre.','This dress is shorter than the red one.'],e:'Najpopularniejsza w mieście → the most popular.'},
+ {k:'ast',t:'open',q:'Porównaj dwie dyscypliny sportu albo dwie osoby z rodziny: napisz 3 zdania – ze stopniem wyższym + than, ze stopniem najwyższym i z good/bad.',pts:['Stopień wyższy + than, np. Volleyball is more exciting than golf.','Stopień najwyższy z the, np. My brother is the tallest in our family.','Good/bad: better / the best / worse / the worst.']},
+ {k:'as2',t:'open',q:'Wyjaśnij po polsku: kiedy dodajemy -er / -est, a kiedy more / the most? Podaj po przykładzie.',pts:['Krótkie (jednosylabowe): -er / -est, np. long – longer – the longest.','Dłuższe: more / the most, np. expensive – more expensive – the most expensive.','Nieregularne: good – better – the best, bad – worse – the worst.']}
+]},
+{id:'adk',base:'C',mark:'7',name:'as…as, too/enough, so/such, what/how',pages:'str. 29',qs:[
+ {k:'asas',t:'mc',q:'These jeans aren’t ___ the other ones.',o:['as nice as','as nicer as','so nice than','nicer as'],e:'As + przymiotnik (bez -er) + as: as nice as.'},
+ {k:'asas',t:'type',q:'The red trainers cost £20. The blue ones cost the same. → The red trainers cost ___ the blue ones.',ans:['as much as'],ph:'wpisz 3 słowa',e:'Tyle samo pieniędzy → as much as.'},
+ {k:'asas',t:'type',q:'Jack is the strongest boy in our school. → No other boy in the school is ___ Jack is.',ans:['as strong as'],ph:'wpisz 3 słowa',e:'Nikt nie jest tak silny jak Jack → as strong as.'},
+ {k:'asas',t:'type',q:'I find learning English easier than learning Japanese. → Learning Japanese isn’t ___ learning English, in my opinion.',ans:['as easy as'],ph:'wpisz 3 słowa',e:'Japoński nie jest tak łatwy jak angielski → isn’t as easy as.'},
+ {k:'asas',t:'tf',q:'„as … as” znaczy „tak … jak”, a przymiotnik w środku jest bez -er.',a:true,e:'As nice as, as strong as – stopień równy.'},
+ {k:'asas',t:'mc',q:'Tom is 160 cm tall. Ben is 160 cm tall too. → Tom is ___ Ben.',o:['as tall as','taller than','as taller as','the tallest'],e:'Tak samo wysoki → as tall as.'},
+ {k:'toe',t:'mc',q:'He isn’t fast ___ to win the race.',o:['enough','too','so','as'],e:'Enough (wystarczająco) stoi PO przymiotniku: fast enough.'},
+ {k:'toe',t:'mc',q:'This smartphone is ___ expensive for me.',o:['too','enough','such','as'],e:'Too (zbyt) stoi PRZED przymiotnikiem: too expensive.'},
+ {k:'toe',t:'tf',q:'„Enough” stawiamy PRZED przymiotnikiem: „enough fast”.',a:false,e:'Enough po przymiotniku: fast enough. Przed przymiotnikiem stoi too.'},
+ {k:'toe',t:'type',q:'She didn’t want to buy the dress because she said it wasn’t (trendy) ___.',ans:['trendy enough'],ph:'wpisz 2 słowa',e:'Nie dość modna → trendy enough.'},
+ {k:'toe',t:'type',q:'The weather isn’t (warm) ___ for us to go jogging.',ans:['warm enough'],ph:'wpisz 2 słowa',e:'Nie dość ciepło → warm enough.'},
+ {k:'toe',t:'type',q:'The cake is (sweet) ___ to eat.',ans:['too sweet'],ph:'wpisz 2 słowa',e:'Za słodkie, żeby jeść → too sweet.'},
+ {k:'toe',t:'sort',q:'too czy enough?',cats:['too','enough'],items:[['The soup is ___ hot to eat.',0],['I’m not tall ___ to reach the shelf.',1],['This bag is ___ heavy for me.',0],['Is the water warm ___ to swim?',1]],e:'Too przed przymiotnikiem (zbyt). Enough po przymiotniku (wystarczająco).'},
+ {k:'sos',t:'mc',q:'The tea is ___ sweet.',o:['so','such','such a','what'],e:'So + sam przymiotnik: so sweet.'},
+ {k:'sos',t:'mc',q:'It was ___ amazing match.',o:['such an','so','such','so an'],e:'Such a/an + przymiotnik + rzeczownik policzalny: such an amazing match.'},
+ {k:'sos',t:'mc',q:'That was ___ excellent food.',o:['such','such an','so','so an'],e:'Food jest niepoliczalne → such (bez a/an).'},
+ {k:'sos',t:'type',q:'My friend has a wonderful sense of humour. He is ___ funny guy.',ans:['such a'],ph:'wpisz 2 słowa',e:'Funny guy – rzeczownik policzalny → such a.'},
+ {k:'sos',t:'type',q:'We decided to stay at home. It was ___ cold.',ans:['so'],e:'Sam przymiotnik (cold) → so.'},
+ {k:'sos',t:'type',q:'It was ___ easy test that we all wrote it in half an hour.',ans:['such an'],ph:'wpisz 2 słowa',e:'Easy test – policzalny, easy na samogłoskę → such an.'},
+ {k:'sos',t:'type',q:'The sweatshirt was ___ expensive that I couldn’t afford it.',ans:['so'],e:'Sam przymiotnik → so expensive.'},
+ {k:'sos',t:'type',q:'You’ve got ___ beautiful furniture in your room.',ans:['such'],e:'Furniture jest niepoliczalne → such (bez a).'},
+ {k:'sos',t:'type',q:'You shouldn’t read ___ magazines! There’s nothing interesting in them.',ans:['such'],e:'Magazines – liczba mnoga → such (bez a).'},
+ {k:'wh',t:'mc',q:'___ beautiful butterfly!',o:['What a','How','What','So'],e:'What a + przymiotnik + rzeczownik: What a beautiful butterfly!'},
+ {k:'wh',t:'mc',q:'___ interesting!',o:['How','What','What an','Such'],e:'How + sam przymiotnik: How interesting!'},
+ {k:'wh',t:'type',q:'___ great trip!',ans:['What a'],ph:'wpisz 2 słowa',e:'Great trip – rzeczownik policzalny → What a.'},
+ {k:'wh',t:'type',q:'___ amazing story!',ans:['What an'],ph:'wpisz 2 słowa',e:'Amazing na samogłoskę → What an.'},
+ {k:'wh',t:'type',q:'___ nice of you to bring the flowers!',ans:['How'],e:'How + przymiotnik: How nice of you!'},
+ {k:'wh',t:'type',q:'___ silly of me to ask him this question!',ans:['How'],e:'How + przymiotnik: How silly of me!'},
+ {k:'wh',t:'type',q:'___ mess!',ans:['What a'],ph:'wpisz 2 słowa',e:'Mess – policzalny → What a mess!'},
+ {k:'sos',t:'open',q:'Napisz 4 zdania o ostatnim meczu albo wycieczce: jedno z so, jedno z such a, jedno z too i jedno z enough.',pts:['So + przymiotnik, np. The match was so exciting.','Such a/an + przymiotnik + rzeczownik, np. It was such a great day.','Too + przymiotnik, np. It was too cold to swim.','Przymiotnik + enough, np. We weren’t fast enough to win.']},
+ {k:'wh',t:'open',q:'Napisz 2 okrzyki po angielsku o sporcie: jeden z What a…!, drugi z How…!',pts:['What a/an + przymiotnik + rzeczownik, np. What a great athlete!','How + przymiotnik, np. How exciting!']}
+]},
+{id:'pfu',base:'T',mark:'8',name:'Passive – future simple i 3 czasy razem',pages:'notatka z zeszytu',qs:[
+ {k:'pf',t:'mc',q:'The room ___ by me tomorrow.',o:['will be cleaned','will clean','is cleaned','will cleaned'],e:'Przyszłość → will be + V3: will be cleaned.'},
+ {k:'pf',t:'type',q:'The results (announce) ___ next week.',ans:['will be announced'],ph:'wpisz 3 słowa',e:'Next week → will be + announced.'},
+ {k:'pf',t:'type',q:'The new stadium (open) ___ next year.',ans:['will be opened'],ph:'wpisz 3 słowa',e:'Next year → will be opened.'},
+ {k:'pf',t:'type',q:'The match (show) ___ on TV tomorrow.',ans:['will be shown'],ph:'wpisz 3 słowa',e:'Show – showed – shown → will be shown.'},
+ {k:'p3',t:'sort',q:'Kiedy to się dzieje?',cats:['teraz / zwykle','przeszłość','przyszłość'],items:[['The room is cleaned every week.',0],['The room was cleaned yesterday.',1],['The room will be cleaned tomorrow.',2],['Cars are made here.',0],['The tickets were sold in an hour.',1],['The letter will be sent next Monday.',2]],e:'Is/are + V3 – teraz. Was/were + V3 – przeszłość. Will be + V3 – przyszłość.'},
+ {k:'p3',t:'match',q:'Połącz czas z budową strony biernej.',pairs:[['present simple','is / are + V3'],['past simple','was / were + V3'],['future simple','will be + V3'],['passive ogólnie','to be + III forma / -ed']],e:'Zawsze to be w odpowiednim czasie + 3. forma.'},
+ {k:'pf',t:'multi',q:'Zaznacz WSZYSTKIE poprawne zdania.',o:['The room will be cleaned tomorrow.','The cake will be eaten at the party.','The film will shown next week.','The letters will be send tomorrow.','The new school will be built next year.'],c:[0,1,4],e:'Brakuje be: will be shown. Send – sent: will be sent.'},
+ {k:'pf',t:'type',q:'Przeczenie: The homework (not / check) ___ today.',ans:['won’t be checked','will not be checked'],ph:'wpisz 3–4 słowa',e:'Przeczenie: won’t (will not) be checked.'},
+ {k:'pf',t:'type',q:'Pytanie: (the tickets / sell) ___ online?',ans:['Will the tickets be sold'],ph:'wpisz 5 słów',e:'Pytanie: Will + the tickets + be sold?'},
+ {k:'pf',t:'tf',q:'W future passive zawsze jest „be” – także przy he/she/it: It will be done.',a:true,e:'Will be + V3 dla każdej osoby.'},
+ {k:'pf',t:'mc',q:'Zamień na passive: They will finish the bridge next year.',o:['The bridge will be finished next year.','The bridge will finished next year.','The bridge is finished next year.','The bridge will be finish next year.'],e:'Will be + V3: will be finished.'},
+ {k:'pf',t:'type',q:'Zamień na passive: Someone will repair my bike tomorrow. → My bike ___ tomorrow.',ans:['will be repaired'],ph:'wpisz 3 słowa',e:'Will be repaired. „By someone” pomijamy.'},
+ {k:'p3',t:'type',q:'Z notatki: The room ___ by me every week. (clean)',ans:['is cleaned'],ph:'wpisz 2 słowa',e:'Every week → present simple: is cleaned.'},
+ {k:'p3',t:'type',q:'Z notatki: The room ___ by me yesterday. (clean)',ans:['was cleaned'],ph:'wpisz 2 słowa',e:'Yesterday → past simple: was cleaned.'},
+ {k:'p3',t:'type',q:'Z notatki: The room ___ by me tomorrow. (clean)',ans:['will be cleaned'],ph:'wpisz 3 słowa',e:'Tomorrow → future simple: will be cleaned.'},
+ {k:'p3',t:'mc',q:'Wybierz: The new library ___ next month.',o:['will be built','was built','is built','will build'],e:'Next month → przyszłość: will be built.'},
+ {k:'p3',t:'open',q:'Napisz jedno zdanie w stronie biernej w 3 czasach (present, past, future simple), np. o myciu samochodu.',pts:['Present: The car is washed every Saturday.','Past: The car was washed yesterday.','Future: The car will be washed tomorrow.']},
+ {k:'pf',t:'open',q:'Przetłumacz: 1) Mecz zostanie pokazany w telewizji. 2) Ten dom został zbudowany w 1990 roku. 3) Angielskiego uczy się w każdej szkole.',pts:['The match will be shown on TV.','This house was built in 1990.','English is taught in every school.']}
+]});
+['adj','adk','pfu','cz0','cz1'].forEach(id=>AGR_KMAP[id]=T(id).qs.map(q=>q.k).join(' '));
+Object.assign(AGR_LESSONS,{
+ as1:{tid:'adj',name:'Krótkie przymiotniki: -er, the -est',table:{head:['','Stopień wyższy','Stopień najwyższy'],rows:[['long','longer','the longest'],['nice','nicer','the nicest'],['heavy','heavier','the heaviest'],['big','bigger','the biggest'],['hot','hotter','the hottest'],['late','later','the latest']]},pts:['Krótki (jednosylabowy) przymiotnik: -er i the -est.','Na -e: tylko -r / -st (nice – nicer).','Spółgłoska + y: y → i (heavy – heavier).','Samogłoska + spółgłoska na końcu: podwajamy (big – bigger, hot – hotter).'],trick:'Big, hot – podwój literkę! Heavy – y zmienia się w i.'},
+ as2:{tid:'adj',name:'Dłuższe przymiotniki: more, the most',table:{head:['','Stopień wyższy','Stopień najwyższy'],rows:[['expensive','more expensive','the most expensive'],['colourful','more colourful','the most colourful'],['popular','more popular','the most popular'],['interesting','more interesting','the most interesting']]},pts:['Dwu- i wielosylabowe: more / the most przed przymiotnikiem.','Przymiotnik się nie zmienia: more expensive (NIE expensiver).','This T-shirt is more colourful than the other one.'],trick:'Długie słowo – nie doklejaj końcówki, tylko more / the most.'},
+ asn:{tid:'adj',name:'Nieregularne: good, bad',table:{head:['','Stopień wyższy','Stopień najwyższy'],rows:[['good','better','the best'],['bad','worse','the worst']]},pts:['Gooder i badder NIE istnieją.','Jack is the best in our class. It’s one of the worst meals I’ve ever had.'],trick:'Good – better – best. Bad – worse – worst.'},
+ ast:{tid:'adj',name:'Than i the – jak porównywać',pts:['Dwie osoby lub rzeczy: stopień wyższy + than – This jacket is nicer than the blue one.','Najlepszy z grupy: the + stopień najwyższy – That’s the tallest building in the town centre.','One of + stopień najwyższy + liczba mnoga: one of the most talented players.','Than, nie that!'],trick:'Dwie rzeczy → -er / more + than. Cała grupa → the -est / the most.'},
+ asas:{tid:'adk',name:'as … as – tak … jak',pts:['As + przymiotnik (zwykły, bez -er) + as.','These jeans aren’t as nice as the other ones. – Nie są tak ładne jak…','The red trainers cost as much as the blue ones. – Kosztują tyle samo.','Przekształcenia: Jack is the strongest → No other boy is as strong as Jack.'],trick:'As … as – w środku zwykły przymiotnik: as nice as, as easy as.'},
+ toe:{tid:'adk',name:'too i enough',table:{head:['','Gdzie stoi','Przykład'],rows:[['too (zbyt)','PRZED przymiotnikiem','This smartphone is too expensive for me.'],['enough (wystarczająco)','PO przymiotniku','He isn’t fast enough to win the race.']]},pts:['Too sweet to eat – za słodki, żeby zjeść.','Not warm enough – nie dość ciepło.'],trick:'TOO stoi z przodu, ENOUGH na końcu: too fast / fast enough.'},
+ sos:{tid:'adk',name:'so i such',table:{head:['','Kiedy','Przykład'],rows:[['so','przed samym przymiotnikiem','The tea is so sweet.'],['such','przymiotnik + rzeczownik niepoliczalny lub w liczbie mnogiej','That was such excellent food. / such magazines'],['such a / an','przymiotnik + rzeczownik policzalny (jeden)','It was such an amazing match.']]},pts:['So = tak, such = taki.','Przed samogłoską an: such an easy test, such an amazing match.'],trick:'Jest rzeczownik? → such (a/an). Sam przymiotnik? → so.'},
+ wh:{tid:'adk',name:'Okrzyki: What a…! How…!',table:{head:['Konstrukcja','Przykład'],rows:[['What a/an + przymiotnik + rzeczownik','What a great athlete! (Jaki świetny sportowiec!)'],['What + rzeczownik niepoliczalny / liczba mnoga','What beautiful weather!'],['How + przymiotnik','How interesting! (Ależ to ciekawe!)']]},pts:['How nice of you…! How silly of me…! – po How nie ma rzeczownika.','What a mess! – też bez przymiotnika.'],trick:'Jest rzeczownik → What (a). Tylko przymiotnik → How.'},
+ pf:{tid:'pfu',name:'Future simple passive: will be + V3',table:{head:['Podmiot','will be','V3','reszta'],rows:[['The room','will be','cleaned','by me tomorrow.'],['The match','will be','shown','on TV.'],['The results','will be','announced','next week.']]},pts:['Przyszłość (tomorrow, next week, next year) → will be + V3.','Przeczenie: won’t be + V3. Pytanie: Will + podmiot + be + V3?','Be jest zawsze – nie ma „will cleaned”.'],trick:'Przyszłość: WILL BE + V3, dla każdej osoby tak samo.'},
+ p3:{tid:'pfu',name:'Passive w 3 czasach (z notatki)',table:{head:['Czas','Przykład z zeszytu'],rows:[['present simple','The room is cleaned by me every week.'],['past simple','The room was cleaned by me yesterday.'],['future simple','The room will be cleaned by me tomorrow.']]},pts:['Passive voice = to be + III forma (regularne: -ed).','Zmienia się tylko to be: is/are → was/were → will be.','Słowo-klucz podpowiada czas: every week, yesterday, tomorrow.'],trick:'Every week – is. Yesterday – was. Tomorrow – will be.'}
+});
+AGR_CARDS.push(['long – stopień wyższy / najwyższy','longer, the longest'],['heavy – …','heavier, the heaviest'],['big – …','bigger, the biggest'],['expensive – …','more expensive, the most expensive'],['good – …','better, the best'],['bad – …','worse, the worst'],['as … as','tak … jak: as nice as'],['too','zbyt – przed przymiotnikiem: too expensive'],['enough','wystarczająco – po przymiotniku: fast enough'],['so','tak – przed samym przymiotnikiem: so sweet'],['such a / an','taki – przed przymiotnik + rzeczownik: such an amazing match'],['What a…!','What a great athlete! (z rzeczownikiem)'],['How…!','How interesting! (sam przymiotnik)'],['future passive','will be + V3: will be cleaned']);
+AGR_PLAN.splice(0,AGR_PLAN.length,
+ ['2026-11-13','pps','Passive – present simple (1 runda + lekcja z dźwiękiem)'],
+ ['2026-11-14','ppa','Passive – past simple (1 runda)'],
+ ['2026-11-15','adj','Stopniowanie przymiotników (1 runda)'],
+ ['2026-11-16','cards','Dzień sprawdzianu z geografii – tylko fiszki (5 minut)'],
+ ['2026-11-17','cz0','Tryb 0 (1 runda)'],
+ ['2026-11-18','cards','Dzień sprawdzianu z chemii – tylko fiszki (5 minut)'],
+ ['2026-11-19','adk','as…as, too/enough, so/such, what/how (1 runda)'],
+ ['2026-11-20','cz1','Tryb 1 i unless (1 runda)'],
+ ['2026-11-21','pfu','Passive – future i 3 czasy razem (1 runda)'],
+ ['2026-11-22','v3','Trzecia forma V3 (1 runda)'],
+ ['2026-11-23','exam','Sprawdzian próbny i słabe punkty'],
+ ['2026-11-24','cards','Rano tylko fiszki – powodzenia!']);
+})();
 prep(AGR_TOPICS,AGR_KMAP);
 prep(SJS_TOPICS,SJS_KMAP);
 prep(BIO_TOPICS,BIO_KMAP);prep(PT_TOPICS,PT_KMAP);prep(GEO_TOPICS,GEO_KMAP);prep(PL_TOPICS,PL_KMAP);prep(HIS_TOPICS,HIS_KMAP);prep(EDB_TOPICS,EDB_KMAP);prep(FIZ_TOPICS,FIZ_KMAP);prep(WOS_TOPICS,WOS_KMAP);prep(ANG_TOPICS,ANG_KMAP);prep(ESP_TOPICS,ESP_KMAP);prep(CHEM_TOPICS,CHEM_KMAP);
 const SUBJECTS={
- agr:{id:'agr',key:'angielski-grammar-v1',title:'Passive, conditionals, adjectives',subject:'Język angielski',sub:'sprawdzian wt. 24.11 · passive voice, conditionals 0 i 1, adjectives',strict:true,color:'var(--c)',decor:['C','G','A','T'],topics:AGR_TOPICS,lessons:AGR_LESSONS,cards:AGR_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:AGR_PLAN,
-   tip:'codziennie jedna krótka runda według planu. Zacznij od lekcji z dźwiękiem o stronie biernej. Najważniejsze: passive = is/are/was/were + 3. forma (V3), a po if i unless nigdy nie ma will. Formy V3 muszą być napisane dokładnie – jak na sprawdzianie. Dzień przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
+ agr:{id:'agr',key:'angielski-grammar-v1',title:'Passive, conditionals, adjectives',subject:'Język angielski',sub:'sprawdzian wt. 24.11 · Unit 10: passive, conditionals 0 i 1, przymiotniki',strict:true,color:'var(--c)',decor:['C','G','A','T'],topics:AGR_TOPICS,lessons:AGR_LESSONS,cards:AGR_CARDS,examName:'Sprawdzian próbny',examPer:2,plan:AGR_PLAN,
+   tip:'codziennie jedna krótka runda według planu. Zacznij od lekcji z dźwiękiem o stronie biernej. Najważniejsze: passive = to be (is/are, was/were, will be) + 3. forma (V3), po if i unless nigdy nie ma will, krótkie przymiotniki -er/-est, długie more/the most, good – better – the best. Too przed przymiotnikiem, enough po nim. Formy V3 muszą być napisane dokładnie – jak na sprawdzianie. Dzień przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
  a10:{id:'a10',hidden:true,key:'angielski-unit10-v1',title:'Unit 10 – Sport (słówka)',subject:'Język angielski',sub:'kartkówka wt. 10.11 · Wordlist, wszystkie słówka',strict:true,color:'var(--warn)',decor:['T','A','G','C'],topics:A10_TOPICS,lessons:A10_LESSONS,cards:A10_CARDS,examName:'Kartkówka próbna',examPer:5,
    tip:'najpierw przejrzyj Ściągę (tabelki ze wszystkimi słówkami), potem po 2 rundy z każdego tematu, na koniec fiszki. W każdej rundzie najpierw łączysz słówka w pary, potem wpisujesz je po angielsku – pisownia musi być dokładna, jak na kartkówce. Uważaj na pary: diving – diver, support – supporter, athletics – athlete – athletic. Przed snem zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  sjs:{id:'sjs',key:'polski-slownictwo-style-v1',title:'Słownictwo i style języka',subject:'Język polski',sub:'kartkówka pt. 6.11 (może być przełożona)',color:'var(--c)',decor:['C','A','T','G'],topics:SJS_TOPICS,lessons:SJS_LESSONS,cards:SJS_CARDS,examName:'Kartkówka próbna',examPer:3,
