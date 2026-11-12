@@ -4090,10 +4090,184 @@ const A10_LN={dys1:['dys','Sporty 1 (athletics – gymnastics)',['Większość s
 const A10_LESSONS=Object.fromEntries(Object.entries(A10_LN).map(([k,[tid,name,pts,trick]])=>[k,{tid,name,table:{head:['English','Polski'],rows:A10_W[k].map(w=>[w[0],w[1]])},pts,trick}]));
 const A10_CARDS=Object.values(A10_W).flat().map(w=>[w[0],w[1]]);
 prep(A10_TOPICS,A10_KMAP);
+/* ---------- ANGIELSKI: Grammar – passive voice, conditionals 0 i 1, adjectives (sprawdzian wt. 24.11.2026). Klucz postępów angielski-grammar-v1.
+   Zakres od Łukasza (12.11.2026): „Passive voice, conditionals 0,1, Adjectives”. Na razie bez zdjęć podręcznika – standardowy materiał 8 klasy (passive: present i past simple).
+   Pole k = klucz lekcji, AGR_KMAP liczy się z tych pól. Nowe zadania dopisuj TYLKO na końcu tematu (kolejność = postępy). ---------- */
+const AGR_TOPICS=[
+{id:'pps',base:'A',mark:'1',name:'Passive – present simple (is/are + V3)',pages:'strona bierna: teraz, zwykle',qs:[
+ {k:'pu',t:'mc',q:'Które zdanie jest w stronie biernej (passive)?',o:['English is spoken in many countries.','Many people speak English.','They are speaking English now.','English speaks in many countries.'],e:'Passive = be + 3. forma czasownika (V3): is spoken.'},
+ {k:'pu',t:'mc',lab:'Znajdź fałsz',q:'Które zdanie o stronie biernej jest FAŁSZYWE?',o:['W stronie biernej zawsze trzeba podać, kto wykonuje czynność.','Używamy jej, gdy ważniejsze jest to, co się dzieje, niż kto to robi.','Tworzymy ją z be i trzeciej formy czasownika (V3).','Wykonawcę czynności możemy dodać po słowie by.'],e:'Wykonawcę podajemy tylko wtedy, gdy jest ważny – często go pomijamy.'},
+ {k:'ps',t:'mc',q:'Football ___ all over the world.',o:['is played','plays','are played','is play'],e:'Football (to jedno – it) → is + played.'},
+ {k:'ps',t:'mc',q:'These cars ___ in Japan.',o:['are made','is made','are make','make'],e:'Cars (kilka – they) → are + made (make – made – made).'},
+ {k:'ps',t:'type',q:'The windows (clean) ___ every week.',ans:['are cleaned'],ph:'wpisz 2 słowa',e:'Windows – liczba mnoga → are cleaned.'},
+ {k:'ps',t:'type',q:'Rice (grow) ___ in China.',ans:['is grown'],ph:'wpisz 2 słowa',e:'Rice – niepoliczalny → is + grown (grow – grew – grown).'},
+ {k:'ps',t:'type',q:'Our classroom (paint) ___ every summer.',ans:['is painted'],ph:'wpisz 2 słowa',e:'Classroom – jedna → is painted.'},
+ {k:'ps',t:'type',q:'Breakfast (serve) ___ from 7 to 10 a.m.',ans:['is served'],ph:'wpisz 2 słowa',e:'Breakfast → is served.'},
+ {k:'ps',t:'multi',q:'Zaznacz WSZYSTKIE poprawne zdania w stronie biernej.',o:['Pizza is eaten all over the world.','The letters are sent every Monday.','The tickets is sold online.','This room is clean every day.','Spanish is taught at our school.'],c:[0,1,4],e:'Tickets – liczba mnoga → are sold. „Is clean” to nie passive – trzeba V3: is cleaned.'},
+ {k:'pn',t:'mc',q:'Wybierz przeczenie: Dogs ___ in this shop.',o:['aren’t allowed','don’t allowed','isn’t allowed','not are allowed'],e:'Przeczenie: are + not + V3 → aren’t allowed. W passive nie ma don’t/doesn’t.'},
+ {k:'pn',t:'mc',q:'___ the post delivered on Saturdays?',o:['Is','Does','Are','Do'],e:'Pytanie: Is + podmiot + V3? The post (jedna rzecz) → Is.'},
+ {k:'pn',t:'type',q:'Uzupełnij pytanie: Where (these phones / make) ___?',ans:['are these phones made'],ph:'wpisz 4 słowa',e:'Pytanie: Where + are + these phones + made?'},
+ {k:'pn',t:'type',q:'Przeczenie: Plastic bottles (not / recycle) ___ here.',ans:['aren’t recycled','are not recycled'],ph:'wpisz 2–3 słowa',e:'Bottles – liczba mnoga → are not (aren’t) recycled.'},
+ {k:'ps',t:'tf',q:'„The museum is visited by thousands of tourists every year.” – to zdanie jest w stronie biernej.',a:true,e:'Is visited = be + V3 → passive.'},
+ {k:'pu',t:'tf',q:'„My mum is cooking dinner.” – to zdanie jest w stronie biernej.',a:false,e:'Is cooking = be + -ing (present continuous), strona czynna. Passive to be + V3.'},
+ {k:'ps',t:'sort',q:'is czy are?',cats:['is','are'],items:[['The car ___ washed.',0],['The cars ___ washed.',1],['Milk ___ sold here.',0],['Eggs ___ sold here.',1],['The news ___ read at 8 o’clock.',0],['My jeans ___ washed every week.',1]],e:'Jedna rzecz i niepoliczalne (milk, news) → is. Liczba mnoga (cars, eggs, jeans) → are.'},
+ {k:'ps',t:'match',q:'Połącz początek zdania z końcem.',pairs:[['Coffee is','grown in Brazil.'],['Harry Potter books are','read by millions of children.'],['The Olympic Games are','held every four years.'],['English is','spoken in Australia.']],e:'Is/are zgadza się z podmiotem: coffee, English → is; books, Games → are.'},
+ {k:'ps',t:'type',q:'Zamień na passive: People speak French in Canada. → French ___ in Canada.',ans:['is spoken'],ph:'wpisz 2 słowa',e:'French – jeden język → is + spoken (speak – spoke – spoken).'},
+ {k:'pn',t:'type',q:'Zamień na passive: They don’t sell newspapers here. → Newspapers ___ here.',ans:['aren’t sold','are not sold'],ph:'wpisz 2–3 słowa',e:'Newspapers → are not (aren’t) + sold.'},
+ {k:'ps',t:'open',q:'Napisz 3 zdania w stronie biernej (present simple) o swojej szkole albo domu.',pts:['Zdanie 1: is/are + V3, np. Lessons are taught in English.','Zdanie 2 z dobrze dobranym is/are, np. The floor is cleaned every day.','Zdanie 3 – przeczenie albo pytanie, np. Phones aren’t allowed in class.']},
+ {k:'pu',t:'open',q:'Wyjaśnij po polsku: kiedy używamy strony biernej i jak ją budujemy? Podaj 1 przykład.',pts:['Gdy ważniejsza jest czynność albo przedmiot niż wykonawca (albo wykonawca jest nieznany).','Budowa: be (is/are) + 3. forma czasownika (V3).','Poprawny przykład, np. Paper is made from wood.']}
+]},
+{id:'ppa',base:'T',mark:'2',name:'Passive – past simple (was/were + V3, by)',pages:'strona bierna: przeszłość',qs:[
+ {k:'pp',t:'mc',q:'The Eiffel Tower ___ in 1889.',o:['was built','is built','were built','built'],e:'Przeszłość (1889) + jedna wieża → was + built.'},
+ {k:'pp',t:'mc',q:'These photos ___ by my grandfather many years ago.',o:['were taken','was taken','are taken','took'],e:'Photos – liczba mnoga, przeszłość → were taken.'},
+ {k:'pp',t:'type',q:'My bike (steal) ___ last night.',ans:['was stolen'],ph:'wpisz 2 słowa',e:'Last night → przeszłość, bike → was + stolen (steal – stole – stolen).'},
+ {k:'pp',t:'type',q:'The windows (break) ___ during the storm yesterday.',ans:['were broken'],ph:'wpisz 2 słowa',e:'Windows – liczba mnoga → were + broken.'},
+ {k:'pp',t:'type',q:'America (discover) ___ by Christopher Columbus in 1492.',ans:['was discovered'],ph:'wpisz 2 słowa',e:'America → was + discovered (regularny: -ed).'},
+ {k:'pp',t:'type',q:'The match (win) ___ by our school team last Friday.',ans:['was won'],ph:'wpisz 2 słowa',e:'Win – won – won → was won.'},
+ {k:'by',t:'mc',q:'„Romeo and Juliet” was written ___ William Shakespeare.',o:['by','from','of','with'],e:'Wykonawcę czynności dodajemy po by.'},
+ {k:'by',t:'mc',q:'W którym zdaniu „by …” jest NIEPOTRZEBNE, bo nic nie mówi?',o:['My wallet was stolen by someone.','The Mona Lisa was painted by Leonardo da Vinci.','The telephone was invented by Alexander Graham Bell.','This song was written by my favourite singer.'],e:'„By someone” nic nie mówi – takiego wykonawcę pomijamy: My wallet was stolen.'},
+ {k:'by',t:'tf',q:'„The Mona Lisa was painted by Leonardo da Vinci.” znaczy, że Leonardo namalował Mona Lisę.',a:true,e:'By + osoba = przez kogo. Leonardo jest wykonawcą.'},
+ {k:'tr',t:'type',q:'Zamień na passive: Someone cleaned the classroom yesterday. → The classroom ___ yesterday.',ans:['was cleaned'],ph:'wpisz 2 słowa',e:'Cleaned = przeszłość → was cleaned. „By someone” pomijamy.'},
+ {k:'tr',t:'type',q:'Zamień na passive: Marie Curie discovered radium. → Radium ___ by Marie Curie.',ans:['was discovered'],ph:'wpisz 2 słowa',e:'Discovered = przeszłość → was discovered.'},
+ {k:'tr',t:'mc',q:'Zamień na passive: Tom broke the window.',o:['The window was broken by Tom.','The window broke Tom.','The window is broken by Tom.','Tom was broken by the window.'],e:'The window idzie na początek, broke = przeszłość → was broken, a Tom po by.'},
+ {k:'tr',t:'order',q:'Ułóż zdanie w stronie biernej.',items:['The cake','was made','by','my grandma','yesterday.'],e:'Podmiot + was/were + V3 + by + wykonawca + kiedy.'},
+ {k:'ppn',t:'mc',q:'___ the letters sent yesterday?',o:['Were','Was','Did','Are'],e:'Letters – liczba mnoga, przeszłość → Were the letters sent? W passive nie ma did.'},
+ {k:'ppn',t:'type',q:'Przeczenie: The film (not / make) ___ in Hollywood.',ans:['wasn’t made','was not made'],ph:'wpisz 2–3 słowa',e:'Film → was not (wasn’t) + made.'},
+ {k:'ppn',t:'type',q:'Uzupełnij pytanie: When (the castle / build) ___?',ans:['was the castle built'],ph:'wpisz 4 słowa',e:'Pytanie: When + was + the castle + built?'},
+ {k:'pp',t:'sort',q:'Teraz (present) czy w przeszłości (past)?',cats:['teraz / zwykle','w przeszłości'],items:[['The rooms are cleaned every day.',0],['The rooms were cleaned yesterday.',1],['Milk is delivered every morning.',0],['The pyramids were built thousands of years ago.',1],['This song was recorded in 2020.',1],['Cars are washed here.',0]],e:'Is/are + V3 = teraz, regularnie. Was/were + V3 = przeszłość.'},
+ {k:'pp',t:'multi',q:'Zaznacz WSZYSTKIE poprawne zdania.',o:['The bridge was built in 1920.','The tickets were sold in an hour.','The letter were written in pencil.','My phone was find under the bed.','The thieves were caught by the police.'],c:[0,1,4],e:'Letter – jeden → was written. Find → found (V3): was found.'},
+ {k:'pp',t:'type',q:'Przetłumacz lukę: The party (została zorganizowana) ___ by our class.',ans:['was organised','was organized'],ph:'wpisz 2 słowa',e:'Została zorganizowana = was organised (albo organized).'},
+ {k:'tr',t:'open',q:'Zamień na passive: 1) Someone stole my bag. 2) My dad repaired the cars. 3) Picasso painted this picture.',pts:['My bag was stolen. (bez „by someone”)','The cars were repaired by my dad. (were, bo cars)','This picture was painted by Picasso.']},
+ {k:'pp',t:'open',q:'Napisz 2 zdania w passive (past simple) o historii albo wynalazkach: co i kiedy zbudowano, wynaleziono, napisano.',pts:['Zdanie 1: was/were + V3 + kiedy, np. This school was built in 1970.','Zdanie 2 z by + wykonawca, np. The telephone was invented by Alexander Graham Bell.','Was przy jednej rzeczy, were przy kilku.']}
+]},
+{id:'v3',base:'C',mark:'3',name:'Trzecia forma czasownika (V3)',pages:'potrzebna do passive',qs:[
+ {k:'v3a',t:'match',q:'Połącz czasownik z jego 3. formą (V3).',pairs:[['write','written'],['speak','spoken'],['steal','stolen'],['break','broken']],e:'Write – written, speak – spoken, steal – stolen, break – broken.'},
+ {k:'v3a',t:'match',q:'Połącz czasownik z jego 3. formą (V3).',pairs:[['take','taken'],['give','given'],['eat','eaten'],['choose','chosen']],e:'Take – taken, give – given, eat – eaten, choose – chosen.'},
+ {k:'v3b',t:'match',q:'Połącz czasownik z jego 3. formą (V3).',pairs:[['make','made'],['build','built'],['sell','sold'],['teach','taught']],e:'Make – made, build – built, sell – sold, teach – taught.'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): write',ans:['written'],e:'Write – wrote – written (dwa t!).'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): speak',ans:['spoken'],e:'Speak – spoke – spoken.'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): steal',ans:['stolen'],e:'Steal – stole – stolen.'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): eat',ans:['eaten'],e:'Eat – ate – eaten.'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): grow',ans:['grown'],e:'Grow – grew – grown.'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): see',ans:['seen'],e:'See – saw – seen.'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): do',ans:['done'],e:'Do – did – done.'},
+ {k:'v3a',t:'type',exact:true,q:'Wpisz 3. formę (V3): forget',ans:['forgotten'],e:'Forget – forgot – forgotten (dwa t!).'},
+ {k:'v3b',t:'type',exact:true,q:'Wpisz 3. formę (V3): buy',ans:['bought'],e:'Buy – bought – bought.'},
+ {k:'v3b',t:'type',exact:true,q:'Wpisz 3. formę (V3): find',ans:['found'],e:'Find – found – found.'},
+ {k:'v3b',t:'type',exact:true,q:'Wpisz 3. formę (V3): send',ans:['sent'],e:'Send – sent – sent.'},
+ {k:'v3b',t:'type',exact:true,q:'Wpisz 3. formę (V3): catch',ans:['caught'],e:'Catch – caught – caught.'},
+ {k:'v3b',t:'type',exact:true,q:'Wpisz 3. formę (V3): bring',ans:['brought'],e:'Bring – brought – brought.'},
+ {k:'v3b',t:'type',exact:true,q:'Wpisz 3. formę (V3): win',ans:['won'],e:'Win – won – won.'},
+ {k:'v3c',t:'type',exact:true,q:'Wpisz 3. formę (V3): stop',ans:['stopped'],e:'Krótki czasownik: samogłoska + spółgłoska → podwajamy: stopped.'},
+ {k:'v3c',t:'type',exact:true,q:'Wpisz 3. formę (V3): study',ans:['studied'],e:'Spółgłoska + y → -ied: studied.'},
+ {k:'v3c',t:'mc',q:'Która forma jest poprawna?',o:['planned','planed','planied','plant'],e:'Plan: krótki, kończy się samogłoska + spółgłoska → podwajamy n: planned.'},
+ {k:'v3b',t:'mc',lab:'Znajdź błąd',q:'W którym zdaniu jest ZŁA forma V3?',o:['The museum was build in 1900.','The thief was caught yesterday.','The tickets were sold online.','Spanish is taught at my school.'],e:'Build – built – built: The museum was built.'},
+ {k:'v3a',t:'mc',lab:'Znajdź błąd',q:'W którym zdaniu jest ZŁA forma V3?',o:['This book was wrote in 1950.','The window was broken.','The cake was eaten.','The letter was written in English.'],e:'Write – wrote – written: was written. „Wrote” to 2. forma (past simple).'},
+ {k:'v3c',t:'sort',q:'Czasownik regularny (V3 z -ed) czy nieregularny?',cats:['regularny: -ed','nieregularny'],items:[['clean – cleaned',0],['invent – invented',0],['paint – painted',0],['make – made',1],['take – taken',1],['teach – taught',1]],e:'Regularne dostają -ed. Nieregularnych trzeba nauczyć się na pamięć.'},
+ {k:'v3a',t:'type',exact:true,q:'Uzupełnij: Many letters (write) ___ by children to Santa every year. (wpisz V3)',ans:['written'],e:'Are written – V3 od write.'},
+ {k:'v3b',t:'type',exact:true,q:'Uzupełnij: These shoes were (buy) ___ in Italy. (wpisz V3)',ans:['bought'],e:'Were bought – V3 od buy.'}
+]},
+{id:'cz0',base:'G',mark:'4',name:'Zero conditional (tryb 0)',pages:'fakty: if + present, present',qs:[
+ {k:'z0',t:'mc',q:'If you heat ice, it ___.',o:['melts','will melt','melted','would melt'],e:'Tryb 0 – fakt: present simple + present simple.'},
+ {k:'z0',t:'mc',q:'If people ___ enough water, they get headaches.',o:['don’t drink','won’t drink','didn’t drink','not drink'],e:'Tryb 0: przeczenie w present simple – don’t drink.'},
+ {k:'z0',t:'type',q:'If you (mix) ___ red and white, you get pink.',ans:['mix'],e:'Tryb 0: If you mix…, you get…'},
+ {k:'z0',t:'type',q:'Plants (die) ___ if they don’t get any light.',ans:['die'],e:'Plants (they) → die. Fakt → present simple.'},
+ {k:'z0',t:'type',q:'If my sister (eat) ___ chocolate, she gets spots.',ans:['eats'],e:'She → eats (he/she/it + -s).'},
+ {k:'z0',t:'type',q:'If water (reach) ___ 0°C, it freezes.',ans:['reaches'],e:'Water (it) → reaches (po -ch dodajemy -es).'},
+ {k:'z0',t:'type',q:'If you (not / water) ___ flowers, they die.',ans:['don’t water','do not water'],ph:'wpisz 2–3 słowa',e:'Przeczenie: don’t water.'},
+ {k:'z0u',t:'mc',q:'When I’m tired, I always ___ to bed early.',o:['go','will go','went','would go'],e:'Coś, co zawsze się dzieje → tryb 0, present simple. When = if.'},
+ {k:'z0',t:'tf',q:'W trybie zerowym w obu częściach zdania jest present simple.',a:true,e:'If + present simple, present simple.'},
+ {k:'z0',t:'tf',q:'W trybie 0 po „if” używamy will.',a:false,e:'Po if nigdy nie ma will – ani w trybie 0, ani w trybie 1.'},
+ {k:'z0u',t:'mc',lab:'Znajdź fałsz',q:'Które zdanie o trybie 0 jest FAŁSZYWE?',o:['Używamy go do przewidywania, co może się stać jutro.','Mówi o faktach i prawach przyrody.','Mówi o tym, co zawsze się dzieje w danej sytuacji.','W trybie 0 „if” można zamienić na „when”.'],e:'Przewidywanie konkretnej przyszłości to tryb 1 (will).'},
+ {k:'z0u',t:'multi',q:'Zaznacz WSZYSTKIE zdania w trybie 0.',o:['If you press this button, the light goes on.','Ice melts if you leave it in the sun.','If it rains tomorrow, we will stay at home.','If you don’t sleep, you feel tired.','If I see Tom, I’ll tell him.'],c:[0,1,3],e:'Tryb 0 = present + present. Zdania z will to tryb 1.'},
+ {k:'z0',t:'match',q:'Połącz części zdań (tryb 0).',pairs:[['If you heat ice,','it melts.'],['If you drop an egg,','it breaks.'],['If you don’t eat,','you get hungry.'],['If plants don’t get water,','they die.']],e:'Tryb 0 – fakty, które zawsze są prawdą.'},
+ {k:'z0',t:'order',q:'Ułóż zdanie w trybie 0.',items:['If','you','press','this button,','the door','opens.'],e:'If + present simple, present simple.'},
+ {k:'z0u',t:'type',q:'Instrukcja: If the fire alarm (ring) ___, leave the building.',ans:['rings'],e:'Instrukcja: If + present simple, a potem polecenie (leave, call, tell).'},
+ {k:'z0',t:'mc',q:'Które zdanie ma dobrze postawiony przecinek?',o:['If you heat ice, it melts.','Ice melts, if you heat it.','If you heat ice it, melts.','Ice, melts if you heat it.'],e:'Przecinek stawiamy, gdy zdanie zaczyna się od If. Gdy if jest w środku – bez przecinka.'},
+ {k:'z0',t:'type',q:'If you (freeze) ___ water, it turns into ice.',ans:['freeze'],e:'You → freeze (present simple).'},
+ {k:'z0',t:'open',q:'Napisz 3 zdania w trybie 0: fakt z przyrody, coś o sobie i instrukcję.',pts:['Fakt, np. If you heat water to 100°C, it boils.','O sobie, np. If I don’t sleep enough, I feel tired.','Instrukcja, np. If you feel sick, tell the teacher.','W obu częściach present simple (he/she/it + -s), bez will.']},
+ {k:'z0u',t:'open',q:'Wyjaśnij po polsku różnicę: „If you heat ice, it melts.” i „If it’s sunny tomorrow, we’ll go to the beach.”',pts:['1. zdanie to tryb 0 – fakt, zawsze prawda; present + present.','2. zdanie to tryb 1 – realna sytuacja w przyszłości; present + will.','W żadnym z nich nie ma will po if.']}
+]},
+{id:'cz1',base:'A',mark:'5',name:'First conditional (tryb 1) i unless',pages:'if + present, will',qs:[
+ {k:'z1',t:'mc',q:'If it ___ tomorrow, we’ll stay at home.',o:['rains','will rain','rained','would rain'],e:'Po if – present simple (rains), nawet gdy mówimy o jutrze.'},
+ {k:'z1',t:'mc',q:'If you don’t hurry, you ___ the bus.',o:['will miss','miss','missed','would miss'],e:'Tryb 1: skutek w przyszłości → will miss.'},
+ {k:'z1',t:'type',q:'If I (see) ___ Kate, I’ll give her your message.',ans:['see'],e:'Po if – present simple: If I see…'},
+ {k:'z1n',t:'type',q:'If we (not / leave) ___ now, we’ll be late.',ans:['don’t leave','do not leave'],ph:'wpisz 2–3 słowa',e:'Po if przeczenie w present simple: don’t leave.'},
+ {k:'z1',t:'type',q:'She (be) ___ angry if you tell her the truth.',ans:['will be','’ll be','ll be'],ph:'wpisz 2 słowa',e:'Druga część trybu 1 → will be.'},
+ {k:'z1',t:'type',q:'If you study, you (get) ___ a good mark.',ans:['will get','’ll get','ll get'],ph:'wpisz 2 słowa',e:'Will + czasownik: will get.'},
+ {k:'z1',t:'type',q:'If it (be) ___ sunny on Saturday, we’ll have a picnic.',ans:['is'],e:'Po if – present simple: it is.'},
+ {k:'z1n',t:'type',q:'I (not / go) ___ to the party if Mark doesn’t come.',ans:['won’t go','will not go'],ph:'wpisz 2–3 słowa',e:'Przeczenie z will: won’t go (will not go).'},
+ {k:'z1n',t:'mc',q:'What ___ if you fail the test?',o:['will you do','do you do','would you do','you will do'],e:'Pytanie w trybie 1: What will you do if…?'},
+ {k:'z1n',t:'type',q:'Uzupełnij pytanie: (you / help) ___ me if I ask you?',ans:['Will you help'],ph:'wpisz 3 słowa',e:'Pytanie: Will + you + help…?'},
+ {k:'z1',t:'mc',lab:'Znajdź błąd',q:'Które zdanie jest BŁĘDNE?',o:['If you will come, I’ll be happy.','If you come, I’ll be happy.','I’ll be happy if you come.','If you don’t come, I’ll be sad.'],e:'Po if nie ma will: If you come…'},
+ {k:'z1',t:'multi',q:'Zaznacz WSZYSTKIE poprawne zdania (tryb 1).',o:['If I have time, I’ll call you.','We’ll go out if the weather is nice.','If he will win, he’ll get a medal.','If you don’t take an umbrella, you’ll get wet.','I call you if I will have time.'],c:[0,1,3],e:'Will jest tylko w części bez if: If he wins…; I’ll call you if I have time.'},
+ {k:'unl',t:'mc',q:'Unless you ___, you won’t pass the exam.',o:['study','don’t study','will study','studied'],e:'Unless = if not. Po unless czasownik bez not: unless you study.'},
+ {k:'unl',t:'mc',q:'„Unless it rains, we’ll play football.” To znaczy:',o:['If it doesn’t rain, we’ll play football.','If it rains, we’ll play football.','When it rains, we’ll play football.','We won’t play football if it doesn’t rain.'],e:'Unless = jeśli nie / chyba że.'},
+ {k:'unl',t:'type',q:'Zamień if not na unless: If you don’t hurry, you’ll miss the train. → ___ hurry, you’ll miss the train.',ans:['Unless you'],ph:'wpisz 2 słowa',e:'If you don’t hurry = Unless you hurry.'},
+ {k:'unl',t:'tf',q:'„Unless you hurry” znaczy to samo co „If you don’t hurry”.',a:true,e:'Unless = if not.'},
+ {k:'unl',t:'type',q:'I won’t go to the cinema unless you (come) ___ with me.',ans:['come'],e:'Po unless – present simple, bez not: unless you come.'},
+ {k:'z01',t:'sort',q:'Tryb 0 czy tryb 1?',cats:['tryb 0 – fakt','tryb 1 – realna przyszłość'],items:[['If you heat ice, it melts.',0],['If it snows tomorrow, we’ll build a snowman.',1],['If you mix blue and yellow, you get green.',0],['If I find your book, I’ll bring it.',1],['If you don’t eat, you get hungry.',0],['If she calls, I’ll tell you.',1]],e:'Present + present = tryb 0 (zawsze prawda). Present + will = tryb 1 (konkretna sytuacja w przyszłości).'},
+ {k:'z01',t:'mc',q:'Które zakończenie pasuje do trybu 1? If I pass the exam, …',o:['my parents will be proud.','my parents would be proud.','my parents were proud.','my parents have been proud.'],e:'Tryb 1: if + present simple, will + czasownik.'},
+ {k:'z1',t:'match',q:'Połącz części zdań (tryb 1).',pairs:[['If you eat too many sweets,','you’ll feel sick.'],['If we leave now,','we’ll catch the bus.'],['If it’s cold tomorrow,','I’ll wear my new coat.'],['If you lend me your notes,','I’ll give them back tomorrow.']],e:'Pierwsza część: if + present simple. Druga: will + czasownik.'},
+ {k:'z1',t:'type',q:'Przetłumacz lukę: (Jeśli będzie padać) ___, we’ll stay at home.',ans:['If it rains'],ph:'wpisz 3 słowa',e:'Po polsku „będzie padać”, ale po angielsku po if jest present simple: If it rains.'},
+ {k:'z1',t:'type',q:'Przetłumacz lukę: If I have time, (zadzwonię do ciebie) ___.',ans:['I’ll call you','I will call you'],ph:'wpisz 3–4 słowa',e:'Druga część trybu 1: I’ll (I will) call you.'},
+ {k:'unl',t:'open',q:'Napisz 3 zdania w trybie 1 o swoich planach na weekend. Jedno zdanie z „unless”.',pts:['If + present simple, will + czasownik, np. If the weather is nice, I’ll go cycling.','Po if nie ma will.','Zdanie z unless bez dodatkowego not, np. Unless it rains, I’ll meet my friends.']},
+ {k:'z1',t:'open',q:'Dokończ zdania (tryb 1): 1) If I get a good mark, … 2) If I don’t finish my homework, … 3) My mum will be happy if …',pts:['1) … I’ll / I will + czasownik, np. I’ll buy a pizza.','2) … I will / I won’t + czasownik, np. I won’t go out.','3) … if + present simple, np. if I clean my room.']}
+]}
+];
+const AGR_KMAP=Object.fromEntries(AGR_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
+const AGR_LESSONS={
+ pu:{tid:'pps',name:'Po co jest strona bierna?',pts:['Strona czynna: KTO coś robi – Mum makes pizza.','Strona bierna (passive): CO się dzieje z rzeczą – Pizza is made.','Używamy jej, gdy wykonawca jest nieważny, nieznany albo oczywisty: My bike was stolen. (nie wiem, kto ukradł)','Budowa zawsze ta sama: be + 3. forma czasownika (V3).','Uwaga: be + -ing (is cooking) to NIE passive, tylko present continuous.'],trick:'Passive = BE + V3. Widzisz is/are/was/were + V3? To strona bierna.'},
+ ps:{tid:'pps',name:'Present simple passive: is/are + V3',table:{head:['Podmiot','be','V3','reszta'],rows:[['English','is','spoken','in many countries.'],['These cars','are','made','in Japan.'],['Rice','is','grown','in China.'],['The windows','are','cleaned','every week.']]},pts:['Jedna rzecz i niepoliczalne (milk, rice, news) → is.','Liczba mnoga (cars, eggs, jeans) → are.','Czasownik regularny: V3 = -ed (cleaned). Nieregularny: z 3. kolumny (made, spoken, grown).'],trick:'Teraz / zwykle / regularnie → is albo are + V3.'},
+ pn:{tid:'pps',name:'Przeczenia i pytania (present)',table:{head:['','Przykład'],rows:[['przeczenie','Dogs aren’t (are not) allowed here.'],['przeczenie','Milk isn’t (is not) sold here.'],['pytanie','Is the post delivered on Saturdays?'],['pytanie z Where','Where are these phones made?']]},pts:['Przeczenie: is not / are not + V3.','Pytanie: Is / Are + podmiot + V3?','W passive NIE używamy do / does / don’t.'],trick:'Not stoi po is/are. W pytaniu is/are idzie na początek.'},
+ pp:{tid:'ppa',name:'Past simple passive: was/were + V3',table:{head:['Podmiot','be','V3','reszta'],rows:[['The Eiffel Tower','was','built','in 1889.'],['My bike','was','stolen','last night.'],['These photos','were','taken','many years ago.'],['The windows','were','broken','yesterday.']]},pts:['Przeszłość (yesterday, last week, in 1990, ago) → was / were.','Jedna rzecz → was. Kilka → were.','Przetłumacz: was built = został zbudowany; were taken = zostały zrobione.'],trick:'Polskie „został / została / zostały” = was / were + V3.'},
+ by:{tid:'ppa',name:'By – przez kogo?',pts:['Wykonawcę czynności dodajemy po by: The Mona Lisa was painted by Leonardo da Vinci.','By podajemy tylko wtedy, gdy wykonawca jest ważny albo ciekawy.','Gdy wykonawca jest nieznany albo oczywisty – pomijamy go: My wallet was stolen. (nie: by someone)','By, nie from: written by Shakespeare.'],trick:'By = przez kogo. „By someone”, „by people” – wyrzuć.'},
+ tr:{tid:'ppa',name:'Zamiana na stronę bierną krok po kroku',table:{head:['Krok','Tom broke the window.'],rows:[['1. Dopełnienie (co?) na początek','The window'],['2. Be w tym samym czasie (broke = przeszłość)','was'],['3. Czasownik w V3','broken'],['4. (Opcjonalnie) by + wykonawca','by Tom.']]},pts:['Present simple w zdaniu czynnym → is/are. Past simple → was/were.','People speak French in Canada. → French is spoken in Canada.','Someone cleaned the room. → The room was cleaned.'],trick:'Co? → be (w dobrym czasie) → V3 → (by kto).'},
+ ppn:{tid:'ppa',name:'Przeczenia i pytania (past)',table:{head:['','Przykład'],rows:[['przeczenie','The film wasn’t (was not) made in Hollywood.'],['przeczenie','The letters weren’t (were not) sent.'],['pytanie','Were the letters sent yesterday?'],['pytanie z When','When was the castle built?']]},pts:['Przeczenie: was not / were not + V3.','Pytanie: Was / Were + podmiot + V3?','W passive NIE używamy did.'],trick:'Was/were robi wszystko: przeczenie (wasn’t) i pytanie (Was…?).'},
+ v3a:{tid:'v3',name:'V3 inna niż 2. forma',table:{head:['Czasownik','2. forma','V3'],rows:[['write','wrote','written'],['speak','spoke','spoken'],['steal','stole','stolen'],['break','broke','broken'],['take','took','taken'],['give','gave','given'],['eat','ate','eaten'],['choose','chose','chosen'],['forget','forgot','forgotten'],['grow','grew','grown'],['know','knew','known'],['see','saw','seen'],['do','did','done'],['sing','sang','sung'],['drive','drove','driven'],['wear','wore','worn']]},pts:['Wiele z nich kończy się na -en albo -n: written, spoken, taken, grown.','Uwaga na podwójne litery: written, forgotten.'],trick:'Passive bierze 3. kolumnę! The book was written (nie wrote).'},
+ v3b:{tid:'v3',name:'V3 taka sama jak 2. forma',table:{head:['Czasownik','2. i 3. forma'],rows:[['make','made'],['build','built'],['buy','bought'],['bring','brought'],['catch','caught'],['teach','taught'],['find','found'],['sell','sold'],['send','sent'],['tell','told'],['hold','held'],['win','won'],['put','put'],['cut','cut']]},pts:['Bought, brought, caught, taught – wszystkie kończą się na -ght.','Put i cut się nie zmieniają.'],trick:'-ght: bought (buy), brought (bring), caught (catch), taught (teach).'},
+ v3c:{tid:'v3',name:'Czasowniki regularne: -ed i pisownia',table:{head:['Zasada','Przykład'],rows:[['zwykle + -ed','clean → cleaned, paint → painted, invent → invented'],['kończy się na -e → + -d','organise → organised, recycle → recycled'],['spółgłoska + y → -ied','study → studied, carry → carried'],['krótki: samogłoska + spółgłoska → podwój','stop → stopped, plan → planned']]},pts:['Play → played (samogłoska + y: zwykłe -ed).'],trick:'Stop → stopped, study → studied, play → played.'},
+ z0:{tid:'cz0',name:'Tryb 0: budowa',table:{head:['If + present simple','present simple'],rows:[['If you heat ice,','it melts.'],['If you mix red and white,','you get pink.'],['If my sister eats chocolate,','she gets spots.'],['If you don’t water flowers,','they die.']]},pts:['W obu częściach present simple – bez will.','He / she / it → -s: eats, gets, reaches.','Przecinek, gdy zaczynamy od If. Gdy if jest w środku – bez przecinka: Ice melts if you heat it.'],trick:'Tryb 0 = present + present. Zero will!'},
+ z0u:{tid:'cz0',name:'Tryb 0: kiedy go używamy',pts:['Fakty i prawa przyrody: If you heat water to 100°C, it boils.','To, co zawsze się dzieje w danej sytuacji: If I don’t sleep, I feel tired.','Instrukcje: If the alarm rings, leave the building.','W trybie 0 if = when (kiedykolwiek): When I’m tired, I go to bed early.'],trick:'Zawsze prawda? → tryb 0. Konkretne „jutro”, „w sobotę”? → tryb 1.'},
+ z1:{tid:'cz1',name:'Tryb 1: budowa',table:{head:['If + present simple','will + czasownik'],rows:[['If it rains tomorrow,','we’ll stay at home.'],['If you study,','you’ll get a good mark.'],['If I see Kate,','I’ll give her your message.'],['If it’s cold,','I’ll wear my coat.']]},pts:['Realna sytuacja w przyszłości – może się zdarzyć.','Po if NIE ma will, choć po polsku mówimy „jeśli będzie padać”.','Można zamienić kolejność: We’ll stay at home if it rains. (bez przecinka)'],trick:'If + teraz, will + potem. Will nigdy nie siedzi obok if.'},
+ z1n:{tid:'cz1',name:'Tryb 1: przeczenia i pytania',table:{head:['','Przykład'],rows:[['przeczenie po if','If we don’t leave now, we’ll be late.'],['przeczenie z will','I won’t go if Mark doesn’t come.'],['pytanie','Will you help me if I ask you?'],['pytanie z What','What will you do if you fail the test?']]},pts:['Won’t = will not.','Pytanie: Will + osoba + czasownik…? albo What will you do if…?'],trick:'Po if: don’t / doesn’t. W drugiej części: won’t.'},
+ unl:{tid:'cz1',name:'Unless = if not',pts:['Unless = jeśli nie / chyba że.','If you don’t hurry, you’ll miss the bus. = Unless you hurry, you’ll miss the bus.','Po unless czasownik twierdzący – bez not: unless you study (NIE unless you don’t study).','Po unless też nie ma will: unless it rains.'],trick:'Unless już ma „nie” w środku – nie dodawaj drugiego not.'},
+ z01:{tid:'cz1',name:'Tryb 0 czy tryb 1?',table:{head:['Tryb 0','Tryb 1'],rows:[['fakt, zawsze prawda','konkretna sytuacja w przyszłości'],['If + present, present','If + present, will + czasownik'],['If you heat ice, it melts.','If it snows tomorrow, we’ll build a snowman.']]},pts:['Pytaj siebie: czy to jest zawsze prawda? Tak → tryb 0.','Czy mówię o jednej konkretnej sytuacji, która może się zdarzyć? → tryb 1.'],trick:'Zawsze → 0. Może jutro → 1.'}
+};
+AGR_LESSONS.ps.storyTag='Strona bierna w 2 minuty – zgadnij, ułóż, sprawdź się.';
+AGR_LESSONS.ps.story=[
+ {t:'quiz',say:'Zgadnij! Co jest najważniejsze w zdaniu <b>„Pizza is made in this restaurant”</b>?',o:['Pizza i to, co się z nią dzieje','Kucharz, który ją robi','To, czy pizza jest smaczna'],e:'W stronie biernej najważniejsze jest TO, co się dzieje, a nie KTO to robi.'},
+ {t:'quiz',say:'Strona bierna to <b>be + …?</b>',o:['3. forma czasownika (V3)','czasownik z -ing','czasownik bez zmian'],e:'Is / are / was / were + V3: is made, are sold, was built.'},
+ {t:'order',say:'Ułóż zdanie w stronie biernej – od początku.',items:[['📦','The cake'],['🔗','is'],['3️⃣','made'],['👩‍🍳','by my mum.']]},
+ {t:'quiz',say:'<b>The cars ___ in Germany.</b>',o:['are made','is made','are make'],e:'Cars – kilka → are. Make → made (V3).'},
+ {t:'quiz',say:'Teraz przeszłość: <b>The bridge ___ in 1920.</b>',o:['was built','is built','were built'],e:'1920 = przeszłość. Jeden most → was + built.'},
+ {t:'quiz',say:'<b>„The picture was painted by my sister.”</b> Kto namalował obraz?',o:['Moja siostra','Ktoś inny, dla mojej siostry','Nie wiadomo'],e:'By + osoba = przez kogo. Obraz namalowała siostra.'},
+ {t:'quiz',say:'Które zdanie jest w stronie biernej?',o:['The window was broken.','Tom broke the window.','Tom is breaking the window.'],e:'Was broken = be + V3. Is breaking to be + -ing – to nie passive.'},
+ {t:'end',say:'Brawo! Passive = <b>is/are</b> (teraz) albo <b>was/were</b> (przeszłość) + <b>V3</b>. Kto to zrobił? → <b>by</b>.'}
+];
+const AGR_CARDS=[
+ ['strona bierna (passive) – budowa','be + 3. forma (V3)'],['present simple passive','is / are + V3: English is spoken…'],['past simple passive','was / were + V3: The tower was built…'],['został zbudowany','was built'],['zostały ukradzione','were stolen'],['by (w passive)','przez kogo: painted by Leonardo'],['write – wrote – …','written'],['speak – spoke – …','spoken'],['steal – stole – …','stolen'],['break – broke – …','broken'],['take – took – …','taken'],['eat – ate – …','eaten'],['forget – forgot – …','forgotten'],['grow – grew – …','grown'],['make – made – …','made'],['build – built – …','built'],['buy – bought – …','bought'],['teach – taught – …','taught'],['catch – caught – …','caught'],['sell – sold – …','sold'],['tryb 0 (zero conditional)','If + present simple, present simple – fakty'],['tryb 1 (first conditional)','If + present simple, will + czasownik – realna przyszłość'],['Po if…','nigdy will!'],['unless','= if not (jeśli nie, chyba że)'],['Unless you hurry…','= If you don’t hurry…'],['won’t','= will not']
+];
+const AGR_PLAN=[
+ ['2026-11-13','pps','Passive – present simple (1 runda + lekcja z dźwiękiem)'],
+ ['2026-11-14','ppa','Passive – past simple (1 runda)'],
+ ['2026-11-15','v3','Trzecia forma V3 (1 runda)'],
+ ['2026-11-16','cards','Dzień sprawdzianu z geografii – tylko fiszki (5 minut)'],
+ ['2026-11-17','cz0','Tryb 0 (1 runda)'],
+ ['2026-11-18','cards','Dzień sprawdzianu z chemii – tylko fiszki (5 minut)'],
+ ['2026-11-19','cz1','Tryb 1 i unless (1 runda)'],
+ ['2026-11-20','weak','Moje słabe punkty'],
+ ['2026-11-21','pps','Powtórka: passive present (1 runda)'],
+ ['2026-11-22','cz1','Powtórka: tryb 1 (1 runda)'],
+ ['2026-11-23','exam','Sprawdzian próbny i słabe punkty'],
+ ['2026-11-24','cards','Rano tylko fiszki – powodzenia!']];
+prep(AGR_TOPICS,AGR_KMAP);
 prep(SJS_TOPICS,SJS_KMAP);
 prep(BIO_TOPICS,BIO_KMAP);prep(PT_TOPICS,PT_KMAP);prep(GEO_TOPICS,GEO_KMAP);prep(PL_TOPICS,PL_KMAP);prep(HIS_TOPICS,HIS_KMAP);prep(EDB_TOPICS,EDB_KMAP);prep(FIZ_TOPICS,FIZ_KMAP);prep(WOS_TOPICS,WOS_KMAP);prep(ANG_TOPICS,ANG_KMAP);prep(ESP_TOPICS,ESP_KMAP);prep(CHEM_TOPICS,CHEM_KMAP);
 const SUBJECTS={
- a10:{id:'a10',key:'angielski-unit10-v1',title:'Unit 10 – Sport (słówka)',subject:'Język angielski',sub:'kartkówka wt. 10.11 · Wordlist, wszystkie słówka',strict:true,color:'var(--warn)',decor:['T','A','G','C'],topics:A10_TOPICS,lessons:A10_LESSONS,cards:A10_CARDS,examName:'Kartkówka próbna',examPer:5,
+ agr:{id:'agr',key:'angielski-grammar-v1',title:'Passive, conditionals, adjectives',subject:'Język angielski',sub:'sprawdzian wt. 24.11 · passive voice, conditionals 0 i 1, adjectives',strict:true,color:'var(--c)',decor:['C','G','A','T'],topics:AGR_TOPICS,lessons:AGR_LESSONS,cards:AGR_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:AGR_PLAN,
+   tip:'codziennie jedna krótka runda według planu. Zacznij od lekcji z dźwiękiem o stronie biernej. Najważniejsze: passive = is/are/was/were + 3. forma (V3), a po if i unless nigdy nie ma will. Formy V3 muszą być napisane dokładnie – jak na sprawdzianie. Dzień przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
+ a10:{id:'a10',hidden:true,key:'angielski-unit10-v1',title:'Unit 10 – Sport (słówka)',subject:'Język angielski',sub:'kartkówka wt. 10.11 · Wordlist, wszystkie słówka',strict:true,color:'var(--warn)',decor:['T','A','G','C'],topics:A10_TOPICS,lessons:A10_LESSONS,cards:A10_CARDS,examName:'Kartkówka próbna',examPer:5,
    tip:'najpierw przejrzyj Ściągę (tabelki ze wszystkimi słówkami), potem po 2 rundy z każdego tematu, na koniec fiszki. W każdej rundzie najpierw łączysz słówka w pary, potem wpisujesz je po angielsku – pisownia musi być dokładna, jak na kartkówce. Uważaj na pary: diving – diver, support – supporter, athletics – athlete – athletic. Przed snem zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  sjs:{id:'sjs',key:'polski-slownictwo-style-v1',title:'Słownictwo i style języka',subject:'Język polski',sub:'kartkówka pt. 6.11 (może być przełożona)',color:'var(--c)',decor:['C','A','T','G'],topics:SJS_TOPICS,lessons:SJS_LESSONS,cards:SJS_CARDS,examName:'Kartkówka próbna',examPer:3,
    tip:'zrób po 2 rundy z każdego tematu, potem fiszki. Najważniejsze: kto używa słowa (wszyscy – ogólnonarodowe, region – gwara, grupa – żargon, nauka – termin), archaizm = stary, neologizm = nowy, 5 stylów i gdzie się ich używa (kolega – potoczny, urząd – urzędowy, lekcja – naukowy, gazeta – publicystyczny, książka – artystyczny). Jeśli kartkówkę przełożą, rób codziennie 1–2 rundy. Wieczór przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
@@ -4848,12 +5022,13 @@ function rType(q,done){
     if(q.nm){const kk=s=>norm(s).replace(/ /g,''),rm=s=>(s.toLowerCase().match(/(iii|ii|iv|vi|v|i)\s*\)?\s*$/)||[])[1]||'',v2=kk(inp.value);
       const hit=q.ans.find(a=>kk(a)===v2)||q.ans.find(a=>{const d=osa(kk(a),v2);return d<=Math.max(1,tolMax(kk(a)))&&(d<2||kk(a)[0]===v2[0])&&rm(a)===rm(inp.value);});
       ok=!!hit;exact=!!hit&&kk(hit)===v2;m.a=hit;}
+    let exOnly=false;if(q.exact&&ok&&!exact){ok=false;exOnly=true;} /* q.exact: tylko dokładna pisownia (np. formy V3) */
     const na=s=>s.toLowerCase().normalize('NFC').replace(/[^a-z0-9áéíóúüñ ]/g,'').replace(/\s+/g,' ').trim();
     const good=m.a||q.ans[0],accMiss=ok&&SUBJ&&SUBJ.acc&&!q.ans.some(a=>na(a)===na(inp.value));
     inp.classList.add(ok?'ok':'bad');
     done(ok?0:1,ok?(exact?(accMiss?`Dobrze, ale pilnuj akcentów i ñ – poprawnie: „${good}”.`:null)
         :(strict?`Uznaję, ale to literówka – na sprawdzianie liczy się każda litera${SUBJ&&SUBJ.acc?' i akcent':''}. Poprawnie: „${good}”.`:`Dobrze! Mała literówka – poprawnie: „${good}”.`))
-      :(m.form?`To już nie literówka – zmienia się słowo albo jego forma (np. końcówka). Poprawnie: „${q.ans[0]}”.`:`Poprawna odpowiedź: „${q.ans[0]}”.`));
+      :exOnly?`Tu liczy się dokładna pisownia – to jest właśnie to, czego się uczysz. Poprawnie: „${q.ans[0]}”.`:(m.form?`To już nie literówka – zmienia się słowo albo jego forma (np. końcówka). Poprawnie: „${q.ans[0]}”.`:`Poprawna odpowiedź: „${q.ans[0]}”.`));
   }
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submit();}});
   setTimeout(()=>inp.focus({preventScroll:true}),50);
@@ -5056,7 +5231,7 @@ function hub(){
     goalCard(),
     h('div',{class:'sndrow',style:'margin:10px 0'},sndBtn(true)),
     h('div',{class:'subjs'},...HUB_IDS.map(card)),
-    (()=>{const arch=['pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
+    (()=>{const arch=['a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
       h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
       h('div',{class:'subjs'},...arch.map(card)),
       h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
@@ -5069,7 +5244,7 @@ function hub(){
   );
 }
 /* ---------- v44: ikony przedmiotów i przycisk „Zacznij” ---------- */
-const HUB_IDS=['a10','sjs','ro','inw','geo','chem','edb','esp'];
+const HUB_IDS=['agr','sjs','ro','inw','geo','chem','edb','esp'];
 const ICONS={'Język angielski':'🇬🇧','Język polski':'📖','Geografia':'🌏','Chemia':'🧪','EDB':'🚑','Język hiszpański':'🇪🇸','Biologia':'🧬','Historia':'🏛️','Fizyka':'🌡️','WOS':'👥'};
 function subjIco(S){return ICONS[S.subject]||'📚';}
 function testIn(S){const m=(S.sub||'').match(/(\d{1,2})\.(\d{1,2})/);if(!m)return null;const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);
