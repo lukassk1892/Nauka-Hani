@@ -377,6 +377,14 @@ details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;pa
 .goalmini{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;display:grid;gap:6px;text-align:left;font-size:.9rem}
 .goalmini.win{border:2px solid var(--t);background:var(--t-soft);font-size:1rem}
 .goalmini .bar i{background:var(--warn)}.goalmini.win .bar i{background:var(--t)}
+.memo{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px;font-size:1.08rem;line-height:1.75;position:relative}
+.mico{position:absolute;top:8px;right:12px;font-size:1.6rem}
+.mline{margin:0 0 6px;padding-right:28px}.mline small{color:var(--muted);font-size:.75rem}
+.mgap{border:0;border-bottom:2px solid var(--a);background:var(--a-soft);border-radius:5px;padding:0 3px;margin:0;font:inherit;line-height:1.3;color:var(--ink)}
+.mgap span{color:transparent}.mgap b{font-weight:600;color:var(--a)}.mgap.peek{background:var(--warn-soft);border-bottom-color:var(--warn)}.mgap.peek span{color:var(--ink)}
+.mdots{display:flex;gap:6px;margin:4px 0 8px}.mdots i{flex:1;height:6px;border-radius:3px;background:var(--line)}.mdots i.on{background:var(--a)}
+.mgrid{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;margin:8px 0}.mgrid i{height:14px;border-radius:4px;background:var(--soft)}.mgrid i.on{background:var(--a)}
+.mchips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.mchip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--ink)}.mchip.on{background:var(--a-soft);border-color:var(--a)}
 </style>
 
 <div id="app"></div>
@@ -3920,6 +3928,87 @@ const RO_PLAN=[
  ['2026-11-11','exam','Kartkówka próbna i słabe punkty'],
  ['2026-11-12','cards','Rano tylko fiszki – powodzenia!']];
 prep(RO_TOPICS,RO_KMAP);
+/* ---------- JĘZYK POLSKI: Inwokacja na pamięć (do pn. 30.11.2026). Tekst: „Pan Tadeusz”, Księga I, w. 1–22 (Wolne Lektury). 7 kawałków + 3 powtórki. Pytania budowane z danych w stałej kolejności – nowe dopisuj na końcu tematu. ---------- */
+const INW=['Litwo! Ojczyzno moja! ty jesteś jak zdrowie;','Ile cię trzeba cenić, ten tylko się dowie,','Kto cię stracił. Dziś piękność twą w całej ozdobie','Widzę i opisuję, bo tęsknię po tobie.','Panno święta, co Jasnej bronisz Częstochowy','I w Ostrej świecisz Bramie! Ty, co gród zamkowy','Nowogródzki ochraniasz z jego wiernym ludem!','Jak mnie dziecko do zdrowia powróciłaś cudem','(Gdy od płaczącej matki, pod Twoją opiekę','Ofiarowany, martwą podniosłem powiekę;','I zaraz mogłem pieszo, do Twych świątyń progu','Iść za wrócone życie podziękować Bogu),','Tak nas powrócisz cudem na Ojczyzny łono.','Tymczasem przenoś moją duszę utęsknioną','Do tych pagórków leśnych, do tych łąk zielonych,','Szeroko nad błękitnym Niemnem rozciągnionych;','Do tych pól malowanych zbożem rozmaitem,','Wyzłacanych pszenicą, posrebrzanych żytem;','Gdzie bursztynowy świerzop, gryka jak śnieg biała,','Gdzie panieńskim rumieńcem dzięcielina pała,','A wszystko przepasane jakby wstęgą, miedzą','Zieloną, na niej z rzadka ciche grusze siedzą.'];
+/* kawałki: [id, klucz lekcji, od, do (wersy 1–22), nazwa, obraz, sens, luki] ; luka: [wers, słowo/odpowiedź, rodzaj 'type' albo 'mc' z 3 złymi] */
+const INW_CH=[
+ ['iA','i1',1,4,'1. Litwa jak zdrowie','❤️‍🩹','Ojczyznę doceniamy dopiero, gdy ją stracimy – jak zdrowie. Poeta jest daleko i tęskni, więc opisuje Litwę.',[[1,'zdrowie','type'],[3,'stracił','mc',['opuścił','zgubił','porzucił']],[4,'tęsknię','type']]],
+ ['iB','i2',5,7,'2. Prośba do Matki Boskiej','🙏','Poeta zwraca się do Matki Boskiej z trzech miejsc: Jasnej Góry w Częstochowie, Ostrej Bramy w Wilnie i Nowogródka.',[[5,'Częstochowy','type'],[6,'Ostrej','mc',['Złotej','Starej','Wiernej']],[7,'Nowogródzki','type']]],
+ ['iC','i3',8,10,'3. Cud z dzieciństwa','👶','Gdy był małym, chorym dzieckiem, matka oddała go w opiekę Matce Boskiej i cudem wyzdrowiał – „otworzył oczy”.',[[8,'cudem','type'],[9,'płaczącej','mc',['kochającej','zmartwionej','modlącej']],[10,'powiekę','type']]],
+ ['iD','i4',11,13,'4. Podziękowanie i prośba','⛪','Zaraz poszedł pieszo do kościoła podziękować Bogu. Teraz prosi: tak jak mnie uzdrowiłaś, tak nas (Polaków) cudem przywróć do Ojczyzny.',[[11,'pieszo','type'],[12,'podziękować','mc',['pokłonić się','pomodlić się','zaśpiewać']],[13,'łono','type']]],
+ ['iE','i5',14,16,'5. Pagórki i łąki nad Niemnem','🌳','Na razie niech jego tęskniąca dusza „przeniesie się” do krajobrazu Litwy: leśne pagórki, zielone łąki nad niebieskim Niemnem.',[[14,'utęsknioną','type'],[15,'pagórków','mc',['lasów','wzgórzy','dolin']],[16,'Niemnem','type']]],
+ ['iF','i6',17,19,'6. Kolorowe pola','🌾','Pola jak namalowane: złota pszenica, srebrne żyto, żółty (bursztynowy) świerzop i biała jak śnieg gryka.',[[17,'malowanych','type'],[18,'pszenicą','mc',['żytem','słońcem','jęczmieniem']],[19,'świerzop','type']]],
+ ['iG','i7',20,22,'7. Miedza i grusze','🍐','Różowa dzięcielina (koniczyna), a wszystko przepasane zieloną miedzą jak wstążką, na której stoją ciche grusze.',[[20,'dzięcielina','type'],[21,'wstęgą','mc',['drogą','rzeką','ścieżką']],[22,'grusze','type']]]
+];
+const inwL=(a,b)=>INW.slice(a-1,b);
+const inwGap=(n,w)=>INW[n-1].replace(w,'_____');
+const inwNext=n=>({t:'mc',lab:'Co jest dalej?',q:'Co jest po wersie: „'+INW[n-1]+'”?',o:[INW[n],INW[(n+6)%22],INW[(n+12)%22],INW[(n+17)%22]].filter((x,i,a)=>a.indexOf(x)===i),e:'Po „'+INW[n-1].split(' ').slice(-2).join(' ')+'” jest: „'+INW[n]+'”.'});
+const inwSay=(a,b,k)=>({k,t:'open',say:1,lab:'Powiedz z pamięci',q:'Powiedz na głos z pamięci wersy '+a+'–'+b+(a===1?'':' (zaczyna się: „'+INW[a-1].split(' ').slice(0,2).join(' ')+'…”)')+'.',pts:inwL(a,b)});
+const INW_TOPICS=INW_CH.map(([id,k,a,b,name,ico,sens,gaps])=>{
+  const qs=[{k,t:'memo',lab:'Uczę się na pamięć',q:'Kawałek '+name,a,b,lines:inwL(a,b),ico}];
+  qs.push({k,t:'order',q:'Ułóż wersy '+a+'–'+b+' po kolei.',items:inwL(a,b),e:inwL(a,b).join(' / ')});
+  gaps.forEach(([n,w,ty,bad])=>qs.push(ty==='type'?{k,t:'type',ph:'wpisz brakujące słowo',q:'Uzupełnij wers '+n+': „'+inwGap(n,w)+'”',ans:[w],e:'„'+INW[n-1]+'”'}:{k,t:'mc',q:'Uzupełnij wers '+n+': „'+inwGap(n,w)+'”',o:[w].concat(bad),e:'„'+INW[n-1]+'”'}));
+  qs.push(Object.assign(inwNext(a),{k}));
+  if(a>1)qs.push(Object.assign(inwNext(a-1),{k,lab:'Przejście do kawałka '+name.split('.')[0]}));
+  qs.push({k,t:'mc',lab:'O czym to jest?',q:'O czym są wersy '+a+'–'+b+'?',o:[sens].concat([2,4,5].map(d=>INW_CH[(INW_CH.findIndex(c=>c[0]===id)+d)%7][6])),e:'Kiedy wiesz, o czym jest kawałek, łatwiej go zapamiętać.'});
+  qs.push(inwSay(a,b,k));
+  return {id,base:'ATCG'[INW_CH.findIndex(c=>c[0]===id)%4],mark:ico,name,pages:'wersy '+a+'–'+b,qs};});
+INW_TOPICS.push(
+ {id:'iP1',base:'A',mark:'10',name:'Powtórka: wersy 1–10',pages:'kawałki 1–3 razem',qs:[
+  {k:'imap',t:'order',q:'Ułóż początki wersów w kolejności (wersy 1–10).',items:[INW[0],INW[2],INW[4],INW[5],INW[7],INW[9]],e:'Litwa jak zdrowie → Matka Boska → cud z dzieciństwa.'},
+  Object.assign(inwNext(4),{k:'imap'}),Object.assign(inwNext(7),{k:'imap'}),
+  {k:'imap',t:'mc',q:'Do kogo zwraca się poeta w wersach 5–10?',o:['do Matki Boskiej („Panno święta”)','do swojej matki','do Litwy','do Tadeusza'],e:'„Panno święta, co Jasnej bronisz Częstochowy” – to Matka Boska.'},
+  {k:'imap',t:'type',ph:'wpisz brakujące słowo',q:'Uzupełnij wers 2: „Ile cię trzeba …, ten tylko się dowie,”',ans:['cenić'],e:'„Ile cię trzeba cenić, ten tylko się dowie,”'},
+  inwSay(1,10,'imap')]},
+ {id:'iP2',base:'T',mark:'16',name:'Powtórka: wersy 1–16',pages:'kawałki 1–5 razem',qs:[
+  {k:'imap',t:'order',q:'Ułóż kawałki w kolejności – po pierwszych wersach.',items:[INW[0],INW[4],INW[7],INW[10],INW[13]],e:'Zdrowie → Panno święta → cud → podziękowanie → dusza utęskniona.'},
+  Object.assign(inwNext(10),{k:'imap'}),Object.assign(inwNext(13),{k:'imap'}),
+  {k:'imap',t:'mc',q:'O co poeta prosi w wersie 13: „Tak nas powrócisz cudem na Ojczyzny łono”?',o:['żeby Polacy na emigracji mogli wrócić do wolnej ojczyzny','żeby wyzdrowiał z choroby','żeby mógł pojechać do Częstochowy','żeby Litwa była większa'],e:'Poeta pisał na emigracji w Paryżu i tęsknił za krajem.'},
+  {k:'imap',t:'type',ph:'wpisz brakujące słowo',q:'Uzupełnij wers 15: „Do tych pagórków leśnych, do tych łąk …,”',ans:['zielonych'],e:'„Do tych pagórków leśnych, do tych łąk zielonych,”'},
+  inwSay(11,16,'imap')]},
+ {id:'iCal',base:'G',mark:'22',name:'Całość: wersy 1–22',pages:'cała Inwokacja',qs:[
+  {k:'imap',t:'order',q:'Ułóż wszystkie 7 kawałków w kolejności – po pierwszych wersach.',items:INW_CH.map(c=>INW[c[2]-1]),e:'Zdrowie → Panno święta → cud → podziękowanie → dusza → pola → miedza z gruszami.'},
+  Object.assign(inwNext(16),{k:'imap'}),Object.assign(inwNext(19),{k:'imap'}),Object.assign(inwNext(21),{k:'imap'}),
+  {k:'islo',t:'multi',q:'Zaznacz WSZYSTKIE rośliny, które są w Inwokacji.',o:['pszenica','żyto','świerzop','gryka','dzięcielina','grusze','maki','owies'],c:[0,1,2,3,4,5],e:'Pszenica, żyto, świerzop, gryka, dzięcielina i grusze. Maków i owsa nie ma.'},
+  {k:'islo',t:'match',q:'Połącz roślinę z kolorem z Inwokacji.',pairs:[['pszenica','złota („wyzłacanych”)'],['żyto','srebrne („posrebrzanych”)'],['świerzop','bursztynowy'],['gryka','biała jak śnieg'],['dzięcielina','różowa („panieńskim rumieńcem”)']],e:'Pola wyglądają jak namalowane – stąd „pól malowanych”.'},
+  inwSay(1,22,'imap')]}
+);
+const INW_KMAP=Object.fromEntries(INW_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
+const INW_LESSONS=Object.assign(Object.fromEntries(INW_CH.map(([id,k,a,b,name,ico,sens])=>[k,{tid:id,name:ico+' '+name,quote:inwL(a,b),quoteSrc:'Inwokacja, wersy '+a+'–'+b,pts:[sens],trick:'Zobacz obraz '+ico+' i powiedz wersy na głos 3 razy: z tekstem, z lukami, bez tekstu.'}])),{
+ imap:{tid:'iCal',name:'Mapa Inwokacji – 7 obrazów',table:{head:['','Obraz','Pierwsze słowa'],rows:INW_CH.map(c=>[c[2]+'–'+c[3],c[5]+' '+c[4].replace(/^\d\. /,''),INW[c[2]-1].split(' ').slice(0,3).join(' ')+'…'])},pts:['Inwokacja to uroczysty wstęp do „Pana Tadeusza”: zwrot do Litwy i prośba do Matki Boskiej.','Ucz się po kolei obrazów: zdrowie → Matka Boska → cud → podziękowanie → dusza leci nad Niemen → kolorowe pola → miedza z gruszami.','Przejścia między kawałkami są najtrudniejsze – ćwicz ostatni wers kawałka razem z pierwszym następnego.'],trick:'Przejdź w myślach drogę: szpital (zdrowie) → kościół → pole → miedza z gruszami.'},
+ islo:{tid:'iCal',name:'Słowniczek do Inwokacji',table:{head:['Słowo','Co znaczy'],rows:[['Litwa','kraina, z której pochodził Mickiewicz (dawne Wielkie Księstwo Litewskie)'],['Panna święta','Matka Boska'],['Jasna Częstochowa','Jasna Góra w Częstochowie'],['Ostra Brama','brama w Wilnie z obrazem Matki Boskiej'],['gród zamkowy nowogródzki','Nowogródek – miasto z zamkiem, gdzie Mickiewicz chodził do szkoły'],['martwą podniosłem powiekę','otworzyłem oczy – wyzdrowiałem'],['Ojczyzny łono','ojczyzna, dom'],['Niemen','rzeka na Litwie'],['świerzop','roślina o żółtych kwiatach (gorczyca polna)'],['gryka','roślina o białych kwiatach (z niej jest kasza gryczana)'],['dzięcielina','koniczyna, różowe kwiaty'],['miedza','pas trawy między polami']]},pts:['Najpierw zrozum słowa – tekst, który rozumiesz, łatwiej zapamiętać.'],trick:'Świerzop – żółty, gryka – biała, dzięcielina – różowa.'}});
+const INW_CARDS=INW.slice(0,21).map((l,i)=>['„'+l+'” … co dalej?','„'+INW[i+1]+'”']).concat([
+ ['Panna święta','Matka Boska'],['Ostra Brama','brama w Wilnie z obrazem Matki Boskiej'],['martwą podniosłem powiekę','otworzyłem oczy – wyzdrowiałem'],['Ojczyzny łono','ojczyzna, dom'],['świerzop','roślina o żółtych kwiatach'],['gryka','roślina o białych kwiatach'],['dzięcielina','koniczyna o różowych kwiatach'],['miedza','pas trawy między polami']]);
+const INW_PLAN=[
+ ['2026-11-12','iA','Kawałek 1: Litwa jak zdrowie (w. 1–4)'],
+ ['2026-11-13','iB','Kawałek 2: Panno święta (w. 5–7)'],
+ ['2026-11-14','iC','Kawałek 3: Cud z dzieciństwa (w. 8–10)'],
+ ['2026-11-15','iP1','Powtórka: wersy 1–10'],
+ ['2026-11-16','iD','Kawałek 4: Podziękowanie (w. 11–13)'],
+ ['2026-11-17','iE','Kawałek 5: Pagórki i łąki (w. 14–16)'],
+ ['2026-11-18','iP2','Powtórka: wersy 1–16'],
+ ['2026-11-19','iF','Kawałek 6: Kolorowe pola (w. 17–19)'],
+ ['2026-11-20','iG','Kawałek 7: Miedza i grusze (w. 20–22)'],
+ ['2026-11-21','iCal','Całość 1–22 (1 runda)'],
+ ['2026-11-22','weak','Słabe punkty albo fiszki „Co dalej?”'],
+ ['2026-11-23','iCal','Całość 1–22'],
+ ['2026-11-24','exam','Próba generalna'],
+ ['2026-11-25','iCal','Całość 1–22'],
+ ['2026-11-26','weak','Słabe punkty albo fiszki „Co dalej?”'],
+ ['2026-11-27','iCal','Całość 1–22'],
+ ['2026-11-28','exam','Próba generalna'],
+ ['2026-11-29','iCal','Całość 1–22 – powiedz tacie!'],
+ ['2026-11-30','cards','Rano: raz na głos całość – powodzenia!']];
+prep(INW_TOPICS,INW_KMAP);
+/* „Umiem już X z 22 wersów”: wers jest opanowany, gdy ostatnie „Powiedz z pamięci” obejmujące go było bez błędu */
+function inwKnown(){const k=new Set();ALL.filter(q=>q.say&&store.h[q.id]&&store.h[q.id].ok).forEach(q=>{const a=INW.indexOf(q.pts[0]);q.pts.forEach((_,i)=>k.add(a+i));});return k;}
+function inwPanel(){const k=inwKnown(),n=k.size;
+  return h('section',{class:'overall'},
+    h('div',{class:'overall-top'},h('span',{class:'label'},'Umiem już na pamięć'),h('b',{},n+' / 22 wersów')),
+    h('div',{class:'mgrid','aria-hidden':'true'},INW.map((_,i)=>h('i',{class:k.has(i)?'on':''}))),
+    h('div',{class:'mchips'},INW_CH.map(c=>{const all=Array.from({length:c[3]-c[2]+1},(_,j)=>k.has(c[2]-1+j)).every(Boolean);
+      return h('button',{class:'mchip'+(all?' on':''),type:'button',onclick:()=>startRound(c[0])},(all?'✓ ':c[5]+' ')+c[4]);})),
+    h('small',{},'Wers liczy się, gdy powiesz go z pamięci bez błędu w zadaniu „Powiedz z pamięci”.'));}
 /* ---------- ANGIELSKI: Unit 10 Sport – Wordlist (kartkówka ze słówek wt. 10.11.2026). Źródło: zdjęcie strony „Wordlist” od Łukasza (Vocabulary s. 24–25, Reading s. 26, Listening s. 30, Other words). Wszystkie słówka ze zdjęcia są w A10_W.
    Zadania generują się z A10_W (dla każdej grupy słówek: „połącz w pary”, potem „wpisz po angielsku” każde słowo), na końcu tematu są zadania pisane ręcznie (A10_X).
    NIE zmieniaj A10_W (kolejność = postępy). Nowe zadania dopisuj tylko do A10_X na końcu tematu, z polem k. ---------- */
@@ -4004,6 +4093,8 @@ const SUBJECTS={
    tip:'zrób po 2 rundy z każdego tematu, potem fiszki. Najważniejsze: kto używa słowa (wszyscy – ogólnonarodowe, region – gwara, grupa – żargon, nauka – termin), archaizm = stary, neologizm = nowy, 5 stylów i gdzie się ich używa (kolega – potoczny, urząd – urzędowy, lekcja – naukowy, gazeta – publicystyczny, książka – artystyczny). Jeśli kartkówkę przełożą, rób codziennie 1–2 rundy. Wieczór przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  ro:{id:'ro',key:'polski-reduta-ordona-v1',title:'Reduta Ordona',subject:'Język polski',sub:'kartkówka czw. 12.11 · Adam Mickiewicz',color:'var(--g)',decor:['G','C','A','T'],topics:RO_TOPICS,lessons:RO_LESSONS,cards:RO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:RO_PLAN,news:{lesson:'rkto',label:'Nowa lekcja · 1 minuta',title:'Kim był Ordon?',text:'Prawdziwy bohater wiersza: kim był, co zrobił na Woli i co naprawdę się z nim stało.'},
    tip:'codziennie jedna krótka runda według planu. Najważniejsze: tło (powstanie listopadowe, obrona Warszawy 1831), narrator-adiutant, przebieg obrony, Ordon i car oraz środki stylistyczne z przykładami. Przeczytaj też sam wiersz – jest krótki. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
+ inw:{id:'inw',key:'polski-inwokacja-v1',title:'Inwokacja na pamięć',subject:'Język polski',sub:'na pamięć do pn. 30.11 · „Pan Tadeusz”, 22 wersy',color:'var(--a)',decor:['A','T','C','G'],topics:INW_TOPICS,lessons:INW_LESSONS,cards:INW_CARDS,examName:'Próba generalna',examPer:1,plan:INW_PLAN,panel:inwPanel,
+   tip:'jeden kawałek dziennie według planu: najpierw czytasz na głos, potem znikają słowa, a na końcu mówisz z pamięci. Codziennie powiedz też na głos wszystko, czego już się nauczyłaś. Fiszki „co dalej?” ćwiczą przejścia między wersami.'},
  pt:{id:'pt',hidden:true,key:'polski-pan-tadeusz-v1',title:'Pan Tadeusz',subject:'Język polski',sub:'kartkówka pn. 9.11 · księgi I, II, IV, X, XI, XII',sheet:'tark',color:'var(--a)',decor:['A','G','T','C'],topics:PT_TOPICS,lessons:PT_LESSONS,cards:PT_CARDS,examName:'Kartkówka próbna',examPer:2,plan:PT_PLAN,
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Na kartkówkę są tylko księgi I, II, IV, X, XI i XII. Najważniejsze: kto jest kim (Robak to Jacek Soplica, ojciec Tadeusza; Zosia to wnuczka Stolnika), opowieść Gerwazego, polowanie na niedźwiedzia, spowiedź Jacka, uczta i koncert Jankiela. Dzień przed kartkówką zrób Arkusz egzaminacyjny i kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  geo:{id:'geo',key:'geografia-azja-v1',title:'Azja',subject:'Geografia',sub:'sprawdzian pn. 16.11 · „Planeta Nowa 8”, rozdział 1',color:'var(--warn)',decor:['T','G','A','C'],topics:GEO_TOPICS,lessons:GEO_LESSONS,cards:GEO_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:GEO_PLAN,
@@ -4348,6 +4439,7 @@ function home(){
     h('header',{class:'hero'},
       h('div',{class:'helix','aria-hidden':'true'},SUBJ.decor.map((b,i)=>h('span',{style:`background:${BASES[b]};height:${[44,30,52,36][i]}px`}))),
       h('div',{},h('h1',{},SUBJ.title),h('p',{},`${SUBJ.subject} · ${SUBJ.sub} · ${total} zadań`))),
+    SUBJ.panel?SUBJ.panel():null,
     SUBJ.news?h('button',{class:'tool',type:'button',onclick:()=>lessonScreen(SUBJ.news.lesson,home)},h('span',{class:'label'},SUBJ.news.label),h('h3',{},SUBJ.news.title),h('span',{},SUBJ.news.text)):null,
     SUBJ.tools?h('button',{class:'tool',type:'button',onclick:()=>writer()},h('span',{class:'label'},'Narzędzie do kartkówki'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku, z gotowymi zwrotami, automatyczną listą kontrolną i wzorem.')):null,
     h('section',{class:'overall'},
@@ -4396,7 +4488,7 @@ function tStart(){const now=Date.now(),t=R.tid;
   R.lastT=now;R.paused=false;tPut();}
 document.addEventListener('visibilitychange',()=>{if(!R||!R.log||R.log.fin)return;if(document.hidden){tTick();R.paused=true;R.hidAt=Date.now();R.log.away=(R.log.away||0)+1;tPut();}else{if(R.hidAt){R.qHid=(R.qHid||0)+Date.now()-R.hidAt;R.hidAt=0;}R.lastT=Date.now();R.paused=false;}});
 /* focus: time per question. Over the limit = "zawieszenie" (stuck), below FAST = guess */
-const Q_LIM={mc:60,tf:45,open:180},Q_DEF=120,FB_LIM=120,FAST=3,FB_SHORT=6,FB_WAIT=4;
+const Q_LIM={mc:60,tf:45,open:180,memo:600},Q_DEF=120,FB_LIM=120,FAST=3,FB_SHORT=6,FB_WAIT=4;
 const qLim=q=>(Q_LIM[q.t]||Q_DEF)*1000;
 function qSpan(){const now=Date.now();return Math.max(0,now-(R.qT||now)-(R.qHid||0)-(R.hidAt?now-R.hidAt:0));}
 function fAdd(ms,lim){const L=R.log;L.work=(L.work||0)+Math.min(ms,lim);if(ms>lim){L.slow=(L.slow||0)+1;L.slowMs=(L.slowMs||0)+ms-lim;}}
@@ -4556,11 +4648,14 @@ function startRound(tid){
   if(sheet){const qs=TOPIC[SUBJ.sheet].qs,ix=q=>qs.indexOf(q);
     pool=pickFrom(qs.filter(q=>q.t!=='open'),10).sort((a,b)=>ix(a)-ix(b)).concat(pickFrom(qs.filter(q=>q.t==='open'),2).sort((a,b)=>ix(a)-ix(b)));
   }else if(exam){
-    pool=TOPICS.flatMap(t=>pickFrom(t.qs.filter(q=>q.t!=='open'),SUBJ.examPer||4));
+    pool=TOPICS.flatMap(t=>pickFrom(t.qs.filter(q=>q.t!=='open'&&q.t!=='memo'),SUBJ.examPer||4));
     pool=shuffle(pool).concat(pickFrom(ALL.filter(q=>q.t==='open'),2));
   }else if(tid==='weak'){const w=new Set(weakList());pool=shuffle(pickFrom(ALL.filter(q=>w.has(q.k)),ROUND));}
   else if(tid.startsWith('k:')){const c=tid.slice(2);pool=shuffle(pickFrom(ALL.filter(q=>q.k===c),5));}
   else pool=shuffle(pickFrom(TOPIC[tid].qs,ROUND));
+  if(!exam&&!sheet&&tid!=='weak'){const src=tid.startsWith('k:')?ALL.filter(q=>q.k===tid.slice(2)):TOPIC[tid]?TOPIC[tid].qs:[],must=src.filter(q=>q.t==='memo'||q.say);
+    if(must.length){const n=Math.max(pool.length,Math.min(src.length,tid.startsWith('k:')?5:ROUND));pool=must.concat(pool.filter(q=>!must.includes(q))).slice(0,n);}}
+  if(pool.some(q=>q.t==='memo'||q.say)){const rk=q=>q.t==='memo'?0:q.say?2:1;pool.sort((a,b)=>rk(a)-rk(b));}
   if(!pool.length)return home();
   store.tick=(store.tick||0)+1;
   store.last=pool.map(q=>q.id);save();
@@ -4569,7 +4664,7 @@ function startRound(tid){
   nextQ();
 }
 const qMax=q=>q.t==='open'?q.pts.length:1;
-const TYPES={pf:'Prawda czy fałsz – oceń każde zdanie',ab:'Wybierz odpowiedź i uzasadnienie',mc:'Wybierz odpowiedź',tf:'Prawda czy fałsz?',multi:'Zaznacz wszystkie poprawne',type:'Wpisz odpowiedź',open:'Pytanie otwarte',sort:'Przyporządkuj',match:'Połącz w pary',order:'Ułóż po kolei',dna:'Zbuduj nić DNA',build:'Zbuduj wzór',wz:'Napisz wzór',eq:'Ułóż równanie'};
+const TYPES={memo:'Na pamięć',pf:'Prawda czy fałsz – oceń każde zdanie',ab:'Wybierz odpowiedź i uzasadnienie',mc:'Wybierz odpowiedź',tf:'Prawda czy fałsz?',multi:'Zaznacz wszystkie poprawne',type:'Wpisz odpowiedź',open:'Pytanie otwarte',sort:'Przyporządkuj',match:'Połącz w pary',order:'Ułóż po kolei',dna:'Zbuduj nić DNA',build:'Zbuduj wzór',wz:'Napisz wzór',eq:'Ułóż równanie'};
 function nextQ(){
   if(!R.queue.length){if(R.log&&R.fbT){fbEnd();}return result();}
   const q=R.queue.shift();R.cur=q;if(R.log&&!R.log.fin)qShown(q);
@@ -4585,7 +4680,7 @@ function nextQ(){
   const body=h('div');
   const nudge=h('p',{class:'nudge',hidden:''},'Utknęłaś? Wybierz najlepszą odpowiedź, nawet jeśli nie masz pewności. Błąd to nic złego – zaraz zobaczysz wyjaśnienie.');
   const view=h('div',{},top,h('div',{class:'qtype label'+(q.lab&&!R.sheet?' hot':'')},lab),h('h2',{class:'q'},q.t==='tf'?'„'+q.q+'”':q.q),q.img?h('img',{class:'qimg',src:q.img,alt:'Zdjęcie do pytania'}):null,nudge,body);
-  body.append({pf:rPF,ab:rAB,mc:rMC,tf:rTF,multi:rMulti,type:rType,open:rOpen,sort:rSort,match:rMatch,order:rOrder,dna:rDNA,build:rBuild,wz:rWz,eq:rEq}[q.t](q,(err,extra)=>feedback(view,q,err,extra)));
+  body.append({pf:rPF,ab:rAB,mc:rMC,tf:rTF,multi:rMulti,type:rType,open:rOpen,memo:rMemo,sort:rSort,match:rMatch,order:rOrder,dna:rDNA,build:rBuild,wz:rWz,eq:rEq}[q.t](q,(err,extra)=>feedback(view,q,err,extra)));
   screen(view);
 }
 function answerText(q){
@@ -4598,6 +4693,7 @@ function answerText(q){
   if(q.t==='multi')return q.c.map(i=>q.o[i]).join(', ');
   if(q.t==='dna')return compOf(q.top);
   if(q.t==='open')return q.pts.join(' ');
+  if(q.t==='memo')return q.lines.join(' / ');
   if(q.t==='order')return q.items.join(' → ');
   return '';
 }
@@ -4612,6 +4708,7 @@ function corrText(q){
   if(q.t==='multi')return 'Poprawne: '+q.c.map(i=>q.o[i]).join(' · ');
   if(q.t==='match')return q.pairs.map(p=>p[0]+' – '+p[1]).join(' · ');
   if(q.t==='order')return q.items.join(' → ');
+  if(q.t==='memo')return q.lines.join(' / ');
   if(q.t==='sort')return q.cats.map((c,i)=>c+': '+q.items.filter(x=>x[1]===i).map(x=>x[0]).join(', ')).join(' · ');
   return '';}
 function feedback(view,q,errors,extra){
@@ -4757,17 +4854,37 @@ function rType(q,done){
   return h('form',{class:'typed',onsubmit:e=>{e.preventDefault();submit();}},inp,go);
 }
 
+/* ---------- Na pamięć: kawałek tekstu, z którego znikają słowa (5 kroków) ---------- */
+const MEMO_STEPS=['Przeczytaj na głos 2 razy','Powiedz na głos. Nie pamiętasz? Dotknij luki','Więcej luk – powiedz na głos','Zostały pierwsze litery – powiedz na głos','Bez tekstu – powiedz z pamięci'];
+function rMemo(q,done){let lvl=0,tries=0;const wrap=h('div');
+  const word=(tok,hide,first)=>{const m=tok.match(/^([(„]*)([^.,;:!?)”]+)([.,;:!?)”]*)$/u);if(!hide||!m)return h('span',{},tok+' ');
+    const g=h('button',{class:'mgap',type:'button','aria-label':'Pokaż słowo'},first?h('b',{},m[2][0]):null,h('span',{},first?m[2].slice(1):m[2]));
+    g.addEventListener('click',()=>{g.classList.add('peek');sTap();});return h('span',{},m[1],g,m[3]+' ');};
+  function show(){const box=h('div',{class:'memo'},h('div',{class:'mico','aria-hidden':'true'},q.ico),
+      lvl<4?q.lines.map((l,li)=>h('p',{class:'mline'},h('small',{},(q.a+li)+'.'),' ',l.split(' ').map((t,wi)=>word(t,lvl===3||(lvl===1&&(wi+li)%3===1)||(lvl===2&&(wi+li)%3!==0),lvl===3)))):
+      h('p',{class:'mline hint'},'Tekst jest schowany. Powiedz wersy '+q.a+'–'+q.b+' na głos, a potem sprawdź.'));
+    const dots=h('div',{class:'mdots','aria-hidden':'true'},MEMO_STEPS.map((_,i)=>h('i',{class:i<=lvl?'on':''})));
+    const kids=[dots,h('p',{class:'hint'},'Krok '+(lvl+1)+' z 5: '+MEMO_STEPS[lvl]),box];
+    if(lvl<4)kids.push(btn('check',lvl===0?'Przeczytałam ✓':'Powiedziałam – dalej',()=>{sTap();lvl++;tTick();show();}));
+    else{const rv=btn('check','Pokaż tekst',()=>{rv.remove();tTick();
+        box.replaceChildren(h('div',{class:'mico','aria-hidden':'true'},q.ico),...q.lines.map((l,li)=>h('p',{class:'mline'},h('small',{},(q.a+li)+'.'),' '+l)));
+        wrap.append(h('p',{class:'hint'},'Jak poszło? Bądź uczciwa.'),h('div',{class:'btns',style:'display:grid;gap:10px'},
+          btn('check','Bez błędu ⭐',()=>done(0,'Brawo! Teraz utrwal kawałek w zadaniach.')),
+          btn('ghost','Były pomyłki',()=>{if(!tries){tries++;lvl=3;show();}else done(1,'Nic nie szkodzi – na tym polega nauka. Ten kawałek wróci na końcu rundy.');})));});
+      kids.push(rv);}
+    wrap.replaceChildren(...kids);}
+  show();return wrap;}
 function rOpen(q,done){
   const wrap=h('div',{class:'open-steps'});
-  const reveal=btn('check','Pokaż wzorową odpowiedź',()=>{
+  const reveal=btn('check',q.say?'Pokaż tekst':'Pokaż wzorową odpowiedź',()=>{
     reveal.remove();
     const marks=q.pts.map(p=>({p,on:false}));
     const list=h('div',{class:'opts'},marks.map(m=>{const b=btn('opt','',()=>{if(b.disabled)return;sTap();m.on=!m.on;b.classList.toggle('sel',m.on);b.querySelector(".box").textContent=m.on?'✓':'';});b.append(h('span',{class:'box'},''),m.p);m.b=b;return b;}));
     const fin=btn('check','Gotowe',()=>{fin.disabled=true;let err=0;marks.forEach(m=>{m.b.disabled=true;m.b.classList.add(m.on?'ok':'miss');if(!m.on)err++;});
-      done(err,err?'Na sprawdzianie dopisz to, czego brakowało (linia przerywana).':'Pełna odpowiedź!');});
-    wrap.append(h('p',{class:'hint'},R&&R.sheet?'Kryteria oceniania: 1 pkt za każdy punkt, który był w Twojej odpowiedzi. Bądź uczciwa!':'Zaznacz każdy punkt, który był w Twojej odpowiedzi. Bądź uczciwa – to trening przed sprawdzianem.'),list,fin);
+      done(err,err?(q.say?'Wersy z linią przerywaną powtórz jeszcze raz na głos.':'Na sprawdzianie dopisz to, czego brakowało (linia przerywana).'):(q.say?'Całość bez błędu!':'Pełna odpowiedź!'));});
+    wrap.append(h('p',{class:'hint'},q.say?'Zaznacz każdy wers, który powiedziałaś bez błędu. Bądź uczciwa – to trening przed recytacją.':R&&R.sheet?'Kryteria oceniania: 1 pkt za każdy punkt, który był w Twojej odpowiedzi. Bądź uczciwa!':'Zaznacz każdy punkt, który był w Twojej odpowiedzi. Bądź uczciwa – to trening przed sprawdzianem.'),list,fin);
   });
-  wrap.append(h('div',{class:'model'},'Odpowiedz pełnymi zdaniami – na głos albo na kartce. Dopiero potem sprawdź.'),reveal);
+  wrap.append(h('div',{class:'model'},q.say?'Powiedz wersy na głos, nie patrząc na tekst. Dopiero potem sprawdź.':'Odpowiedz pełnymi zdaniami – na głos albo na kartce. Dopiero potem sprawdź.'),reveal);
   return wrap;
 }
 
@@ -4946,7 +5063,7 @@ function hub(){
   );
 }
 /* ---------- v44: ikony przedmiotów i przycisk „Zacznij” ---------- */
-const HUB_IDS=['a10','sjs','ro','geo','chem','edb','esp'];
+const HUB_IDS=['a10','sjs','ro','inw','geo','chem','edb','esp'];
 const ICONS={'Język angielski':'🇬🇧','Język polski':'📖','Geografia':'🌏','Chemia':'🧪','EDB':'🚑','Język hiszpański':'🇪🇸','Biologia':'🧬','Historia':'🏛️','Fizyka':'🌡️','WOS':'👥'};
 function subjIco(S){return ICONS[S.subject]||'📚';}
 function testIn(S){const m=(S.sub||'').match(/(\d{1,2})\.(\d{1,2})/);if(!m)return null;const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);
