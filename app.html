@@ -3973,30 +3973,47 @@ INW_TOPICS.push(
   {k:'islo',t:'match',q:'Połącz roślinę z kolorem z Inwokacji.',pairs:[['pszenica','złota („wyzłacanych”)'],['żyto','srebrne („posrebrzanych”)'],['świerzop','bursztynowy'],['gryka','biała jak śnieg'],['dzięcielina','różowa („panieńskim rumieńcem”)']],e:'Pola wyglądają jak namalowane – stąd „pól malowanych”.'},
   inwSay(1,22,'imap')]}
 );
+/* 13.11.2026: Hania umie wersy 1–12. Wersy 13–22 po 2 dziennie – nowe kawałki iH–iL na końcu listy. Stare kawałki iD–iG (3 wersy) są schowane (off), ich zapis zostaje. */
+const INW_CH2=[
+ ['iH','i8',13,14,'4. Powrót do Ojczyzny','🏠','Tak jak cudem uzdrowiłaś mnie, tak cudem przywróć nas do Ojczyzny. A na razie niech moja tęskniąca dusza…',[[13,'łono','type'],[14,'utęsknioną','mc',['ukochaną','zmęczoną','stęsknioną']]]],
+ ['iI','i9',15,16,'5. Pagórki i łąki nad Niemnem','🌳','Dusza „leci” nad krajobraz Litwy: leśne pagórki i zielone łąki, szeroko nad niebieskim Niemnem.',[[15,'pagórków','mc',['lasów','wzgórzy','dolin']],[15,'zielonych','type'],[16,'Niemnem','type']]],
+ ['iJ','i10',17,18,'6. Złote i srebrne pola','🌾','Pola jak namalowane różnym zbożem: złote od pszenicy, srebrne od żyta.',[[17,'malowanych','type'],[18,'pszenicą','mc',['żytem','słońcem','jęczmieniem']],[18,'żytem','type']]],
+ ['iK','i11',19,20,'7. Kwiaty na polach','🌼','Żółty jak bursztyn świerzop, biała jak śnieg gryka i różowa jak rumieniec dziewczyny dzięcielina.',[[19,'świerzop','type'],[19,'śnieg','mc',['mleko','chmura','mąka']],[20,'dzięcielina','type']]],
+ ['iL','i12',21,22,'8. Miedza i grusze','🍐','Wszystko przepasane zieloną miedzą jak wstążką, a na niej gdzieniegdzie stoją ciche grusze.',[[21,'wstęgą','mc',['drogą','rzeką','ścieżką']],[21,'miedzą','type'],[22,'grusze','type']]]
+];
+const INW_VIS=INW_CH.slice(0,3).concat(INW_CH2);
+INW_TOPICS.forEach(t=>{if(['iD','iE','iF','iG'].includes(t.id))t.off=true;});
+INW_CH2.forEach(([id,k,a,b,name,ico,sens,gaps],ci)=>{
+  const qs=[{k,t:'memo',lab:'Uczę się na pamięć',q:'Kawałek '+name,a,b,lines:inwL(a,b),ico}];
+  gaps.forEach(([n,w,ty,bad])=>qs.push(ty==='type'?{k,t:'type',ph:'wpisz brakujące słowo',q:'Uzupełnij wers '+n+': „'+inwGap(n,w)+'”',ans:[w],e:'„'+INW[n-1]+'”'}:{k,t:'mc',q:'Uzupełnij wers '+n+': „'+inwGap(n,w)+'”',o:[w].concat(bad),e:'„'+INW[n-1]+'”'}));
+  qs.push(Object.assign(inwNext(a),{k}));
+  qs.push(Object.assign(inwNext(a-1),{k,lab:'Przejście do kawałka '+name.split('.')[0]}));
+  qs.push({k,t:'mc',lab:'O czym to jest?',q:'O czym są wersy '+a+'–'+b+'?',o:[sens].concat([1,2,3].map(d=>INW_VIS[(3+ci+d*2)%INW_VIS.length][6])),e:'Kiedy wiesz, o czym jest kawałek, łatwiej go zapamiętać.'});
+  qs.push(inwSay(a,b,k));
+  qs.push(Object.assign(inwSay(1,b,k),{lab:'Powiedz wszystko od początku'}));
+  INW_TOPICS.push({id,base:'ATCG'[(ci+3)%4],mark:ico,name,pages:'wersy '+a+'–'+b,qs});});
 const INW_KMAP=Object.fromEntries(INW_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
-const INW_LESSONS=Object.assign(Object.fromEntries(INW_CH.map(([id,k,a,b,name,ico,sens])=>[k,{tid:id,name:ico+' '+name,quote:inwL(a,b),quoteSrc:'Inwokacja, wersy '+a+'–'+b,pts:[sens],trick:'Zobacz obraz '+ico+' i powiedz wersy na głos 3 razy: z tekstem, z lukami, bez tekstu.'}])),{
- imap:{tid:'iCal',name:'Mapa Inwokacji – 7 obrazów',table:{head:['','Obraz','Pierwsze słowa'],rows:INW_CH.map(c=>[c[2]+'–'+c[3],c[5]+' '+c[4].replace(/^\d\. /,''),INW[c[2]-1].split(' ').slice(0,3).join(' ')+'…'])},pts:['Inwokacja to uroczysty wstęp do „Pana Tadeusza”: zwrot do Litwy i prośba do Matki Boskiej.','Ucz się po kolei obrazów: zdrowie → Matka Boska → cud → podziękowanie → dusza leci nad Niemen → kolorowe pola → miedza z gruszami.','Przejścia między kawałkami są najtrudniejsze – ćwicz ostatni wers kawałka razem z pierwszym następnego.'],trick:'Przejdź w myślach drogę: szpital (zdrowie) → kościół → pole → miedza z gruszami.'},
+const INW_LESSONS=Object.assign(Object.fromEntries(INW_VIS.map(([id,k,a,b,name,ico,sens])=>[k,{tid:id,name:ico+' '+name,quote:inwL(a,b),quoteSrc:'Inwokacja, wersy '+a+'–'+b,pts:[sens],trick:'Zobacz obraz '+ico+' i powiedz wersy na głos 3 razy: z tekstem, z lukami, bez tekstu.'}])),{
+ imap:{tid:'iCal',name:'Mapa Inwokacji – 8 obrazów',table:{head:['','Obraz','Pierwsze słowa'],rows:INW_VIS.map(c=>[c[2]+'–'+c[3],c[5]+' '+c[4].replace(/^\d\. /,''),INW[c[2]-1].split(' ').slice(0,3).join(' ')+'…'])},pts:['Inwokacja to uroczysty wstęp do „Pana Tadeusza”: zwrot do Litwy i prośba do Matki Boskiej.','Ucz się po kolei obrazów: zdrowie → Matka Boska → cud → powrót do Ojczyzny → dusza leci nad Niemen → złote i srebrne pola → kwiaty → miedza z gruszami.','Przejścia między kawałkami są najtrudniejsze – ćwicz ostatni wers kawałka razem z pierwszym następnego.'],trick:'Przejdź w myślach drogę: szpital (zdrowie) → kościół → pole → miedza z gruszami.'},
  islo:{tid:'iCal',name:'Słowniczek do Inwokacji',table:{head:['Słowo','Co znaczy'],rows:[['Litwa','kraina, z której pochodził Mickiewicz (dawne Wielkie Księstwo Litewskie)'],['Panna święta','Matka Boska'],['Jasna Częstochowa','Jasna Góra w Częstochowie'],['Ostra Brama','brama w Wilnie z obrazem Matki Boskiej'],['gród zamkowy nowogródzki','Nowogródek – miasto z zamkiem, gdzie Mickiewicz chodził do szkoły'],['martwą podniosłem powiekę','otworzyłem oczy – wyzdrowiałem'],['Ojczyzny łono','ojczyzna, dom'],['Niemen','rzeka na Litwie'],['świerzop','roślina o żółtych kwiatach (gorczyca polna)'],['gryka','roślina o białych kwiatach (z niej jest kasza gryczana)'],['dzięcielina','koniczyna, różowe kwiaty'],['miedza','pas trawy między polami']]},pts:['Najpierw zrozum słowa – tekst, który rozumiesz, łatwiej zapamiętać.'],trick:'Świerzop – żółty, gryka – biała, dzięcielina – różowa.'}});
 const INW_CARDS=INW.slice(0,21).map((l,i)=>['„'+l+'” … co dalej?','„'+INW[i+1]+'”']).concat([
  ['Panna święta','Matka Boska'],['Ostra Brama','brama w Wilnie z obrazem Matki Boskiej'],['martwą podniosłem powiekę','otworzyłem oczy – wyzdrowiałem'],['Ojczyzny łono','ojczyzna, dom'],['świerzop','roślina o żółtych kwiatach'],['gryka','roślina o białych kwiatach'],['dzięcielina','koniczyna o różowych kwiatach'],['miedza','pas trawy między polami']]);
 const INW_PLAN=[
- ['2026-11-12','iA','Kawałek 1: Litwa jak zdrowie (w. 1–4)'],
- ['2026-11-13','iB','Kawałek 2: Panno święta (w. 5–7)'],
- ['2026-11-14','iC','Kawałek 3: Cud z dzieciństwa (w. 8–10)'],
- ['2026-11-15','iP1','Powtórka: wersy 1–10'],
- ['2026-11-16','iD','Kawałek 4: Podziękowanie (w. 11–13)'],
- ['2026-11-17','iE','Kawałek 5: Pagórki i łąki (w. 14–16)'],
- ['2026-11-18','iP2','Powtórka: wersy 1–16'],
- ['2026-11-19','iF','Kawałek 6: Kolorowe pola (w. 17–19)'],
- ['2026-11-20','iG','Kawałek 7: Miedza i grusze (w. 20–22)'],
- ['2026-11-21','iCal','Całość 1–22 (1 runda)'],
- ['2026-11-22','weak','Słabe punkty albo fiszki „Co dalej?”'],
+ ['2026-11-14','iH','Wersy 13–14: Powrót do Ojczyzny'],
+ ['2026-11-15','iI','Wersy 15–16: Pagórki i łąki'],
+ ['2026-11-16','iJ','Wersy 17–18: Złote i srebrne pola'],
+ ['2026-11-17','iK','Wersy 19–20: Kwiaty na polach'],
+ ['2026-11-18','iL','Wersy 21–22: Miedza i grusze'],
+ ['2026-11-19','iCal','Całość 1–22 (1 runda)'],
+ ['2026-11-20','weak','Słabe punkty albo fiszki „Co dalej?”'],
+ ['2026-11-21','iCal','Całość 1–22'],
+ ['2026-11-22','exam','Próba generalna'],
  ['2026-11-23','iCal','Całość 1–22'],
- ['2026-11-24','exam','Próba generalna'],
+ ['2026-11-24','cards','Fiszki „Co dalej?” (dziś sprawdzian z angielskiego)'],
  ['2026-11-25','iCal','Całość 1–22'],
  ['2026-11-26','weak','Słabe punkty albo fiszki „Co dalej?”'],
- ['2026-11-27','iCal','Całość 1–22'],
- ['2026-11-28','exam','Próba generalna'],
+ ['2026-11-27','exam','Próba generalna'],
+ ['2026-11-28','iCal','Całość 1–22'],
  ['2026-11-29','iCal','Całość 1–22 – powiedz tacie!'],
  ['2026-11-30','cards','Rano: raz na głos całość – powodzenia!']];
 prep(INW_TOPICS,INW_KMAP);
@@ -4006,7 +4023,7 @@ function inwPanel(){const k=inwKnown(),n=k.size;
   return h('section',{class:'overall'},
     h('div',{class:'overall-top'},h('span',{class:'label'},'Umiem już na pamięć'),h('b',{},n+' / 22 wersów')),
     h('div',{class:'mgrid','aria-hidden':'true'},INW.map((_,i)=>h('i',{class:k.has(i)?'on':''}))),
-    h('div',{class:'mchips'},INW_CH.map(c=>{const all=Array.from({length:c[3]-c[2]+1},(_,j)=>k.has(c[2]-1+j)).every(Boolean);
+    h('div',{class:'mchips'},INW_VIS.map(c=>{const all=Array.from({length:c[3]-c[2]+1},(_,j)=>k.has(c[2]-1+j)).every(Boolean);
       return h('button',{class:'mchip'+(all?' on':''),type:'button',onclick:()=>startRound(c[0])},(all?'✓ ':c[5]+' ')+c[4]);})),
     h('small',{},'Wers liczy się, gdy powiesz go z pamięci bez błędu w zadaniu „Powiedz z pamięci”.'));}
 /* ---------- ANGIELSKI: Unit 10 Sport – Wordlist (kartkówka ze słówek wt. 10.11.2026). Źródło: zdjęcie strony „Wordlist” od Łukasza (Vocabulary s. 24–25, Reading s. 26, Listening s. 30, Other words). Wszystkie słówka ze zdjęcia są w A10_W.
@@ -4399,8 +4416,8 @@ const SUBJECTS={
    tip:'zrób po 2 rundy z każdego tematu, potem fiszki. Najważniejsze: kto używa słowa (wszyscy – ogólnonarodowe, region – gwara, grupa – żargon, nauka – termin), archaizm = stary, neologizm = nowy, 5 stylów i gdzie się ich używa (kolega – potoczny, urząd – urzędowy, lekcja – naukowy, gazeta – publicystyczny, książka – artystyczny). Jeśli kartkówkę przełożą, rób codziennie 1–2 rundy. Wieczór przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  ro:{id:'ro',hidden:true,key:'polski-reduta-ordona-v1',title:'Reduta Ordona',subject:'Język polski',sub:'kartkówka czw. 12.11 · Adam Mickiewicz',color:'var(--g)',decor:['G','C','A','T'],topics:RO_TOPICS,lessons:RO_LESSONS,cards:RO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:RO_PLAN,news:{lesson:'rkto',label:'Nowa lekcja · 1 minuta',title:'Kim był Ordon?',text:'Prawdziwy bohater wiersza: kim był, co zrobił na Woli i co naprawdę się z nim stało.'},
    tip:'codziennie jedna krótka runda według planu. Najważniejsze: tło (powstanie listopadowe, obrona Warszawy 1831), narrator-adiutant, przebieg obrony, Ordon i car oraz środki stylistyczne z przykładami. Przeczytaj też sam wiersz – jest krótki. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
- inw:{id:'inw',key:'polski-inwokacja-v1',title:'Inwokacja na pamięć',subject:'Język polski',sub:'na pamięć do pn. 30.11 · „Pan Tadeusz”, 22 wersy',color:'var(--a)',decor:['A','T','C','G'],topics:INW_TOPICS,lessons:INW_LESSONS,cards:INW_CARDS,examName:'Próba generalna',examPer:1,plan:INW_PLAN,panel:inwPanel,
-   tip:'jeden kawałek dziennie według planu: najpierw czytasz na głos, potem znikają słowa, a na końcu mówisz z pamięci. Codziennie powiedz też na głos wszystko, czego już się nauczyłaś. Fiszki „co dalej?” ćwiczą przejścia między wersami.'},
+ inw:{id:'inw',key:'polski-inwokacja-v1',title:'Inwokacja na pamięć',subject:'Język polski',sub:'na pamięć do pn. 30.11 · „Pan Tadeusz”, 22 wersy',color:'var(--a)',decor:['A','T','C','G'],topics:['iA','iB','iC','iH','iI','iJ','iK','iL','iP1','iP2','iCal'].map(id=>INW_TOPICS.find(t=>t.id===id)),lessons:INW_LESSONS,cards:INW_CARDS,examName:'Próba generalna',examPer:1,plan:INW_PLAN,panel:inwPanel,
+   tip:'2 nowe wersy dziennie według planu: najpierw czytasz na głos, potem znikają słowa, a na końcu mówisz z pamięci. Codziennie powiedz też na głos wszystko, czego już się nauczyłaś. Fiszki „co dalej?” ćwiczą przejścia między wersami.'},
  pt:{id:'pt',hidden:true,key:'polski-pan-tadeusz-v1',title:'Pan Tadeusz',subject:'Język polski',sub:'kartkówka pn. 9.11 · księgi I, II, IV, X, XI, XII',sheet:'tark',color:'var(--a)',decor:['A','G','T','C'],topics:PT_TOPICS,lessons:PT_LESSONS,cards:PT_CARDS,examName:'Kartkówka próbna',examPer:2,plan:PT_PLAN,
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Na kartkówkę są tylko księgi I, II, IV, X, XI i XII. Najważniejsze: kto jest kim (Robak to Jacek Soplica, ojciec Tadeusza; Zosia to wnuczka Stolnika), opowieść Gerwazego, polowanie na niedźwiedzia, spowiedź Jacka, uczta i koncert Jankiela. Dzień przed kartkówką zrób Arkusz egzaminacyjny i kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  geo:{id:'geo',key:'geografia-azja-v1',title:'Azja',subject:'Geografia',sub:'sprawdzian pn. 16.11 · „Planeta Nowa 8”, rozdział 1',color:'var(--warn)',decor:['T','G','A','C'],topics:GEO_TOPICS,lessons:GEO_LESSONS,cards:GEO_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:GEO_PLAN,
