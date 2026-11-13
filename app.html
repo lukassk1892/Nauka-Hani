@@ -4089,7 +4089,7 @@ prep(A10_TOPICS,A10_KMAP);
    Pole k = klucz lekcji, AGR_KMAP liczy się z tych pól. Nowe zadania dopisuj TYLKO na końcu tematu (kolejność = postępy). ---------- */
 const AGR_TOPICS=[
 {id:'pps',base:'A',mark:'1',name:'Passive – present simple (is/are + V3)',pages:'strona bierna: teraz, zwykle',qs:[
- {k:'pu',t:'mc',q:'Które zdanie jest w stronie biernej (passive)?',o:['English is spoken in many countries.','Many people speak English.','They are speaking English now.','English speaks in many countries.'],e:'Passive = be + 3. forma czasownika (V3): is spoken.'},
+ {k:'pu',t:'mc',q:'Które zdanie jest w stronie biernej (passive)?',o:['English is spoken in many countries.','Many people speak English.','English spoken in many countries.','English speaks in many countries.'],e:'Passive = be + 3. forma czasownika (V3): is spoken. Bez is nie ma strony biernej.'},
  {k:'pu',t:'mc',lab:'Znajdź fałsz',q:'Które zdanie o stronie biernej jest FAŁSZYWE?',o:['W stronie biernej zawsze trzeba podać, kto wykonuje czynność.','Używamy jej, gdy ważniejsze jest to, co się dzieje, niż kto to robi.','Tworzymy ją z be i trzeciej formy czasownika (V3).','Wykonawcę czynności możemy dodać po słowie by.'],e:'Wykonawcę podajemy tylko wtedy, gdy jest ważny – często go pomijamy.'},
  {k:'ps',t:'mc',q:'Football ___ all over the world.',o:['is played','plays','are played','is play'],e:'Football (to jedno – it) → is + played.'},
  {k:'ps',t:'mc',q:'These cars ___ in Japan.',o:['are made','is made','are make','make'],e:'Cars (kilka – they) → are + made (make – made – made).'},
@@ -4103,7 +4103,7 @@ const AGR_TOPICS=[
  {k:'pn',t:'type',q:'Uzupełnij pytanie: Where (these phones / make) ___?',ans:['are these phones made'],ph:'wpisz 4 słowa',e:'Pytanie: Where + are + these phones + made?'},
  {k:'pn',t:'type',q:'Przeczenie: Plastic bottles (not / recycle) ___ here.',ans:['aren’t recycled','are not recycled'],ph:'wpisz 2–3 słowa',e:'Bottles – liczba mnoga → are not (aren’t) recycled.'},
  {k:'ps',t:'tf',q:'„The museum is visited by thousands of tourists every year.” – to zdanie jest w stronie biernej.',a:true,e:'Is visited = be + V3 → passive.'},
- {k:'pu',t:'tf',q:'„My mum is cooking dinner.” – to zdanie jest w stronie biernej.',a:false,e:'Is cooking = be + -ing (present continuous), strona czynna. Passive to be + V3.'},
+ {k:'pu',t:'tf',q:'„Many people speak English.” – to zdanie jest w stronie biernej.',a:false,e:'Ludzie mówią – to strona czynna. Biernie: English is spoken by many people.'},
  {k:'ps',t:'sort',q:'is czy are?',cats:['is','are'],items:[['The car ___ washed.',0],['The cars ___ washed.',1],['Milk ___ sold here.',0],['Eggs ___ sold here.',1],['The news ___ read at 8 o’clock.',0],['My jeans ___ washed every week.',1]],e:'Jedna rzecz i niepoliczalne (milk, news) → is. Liczba mnoga (cars, eggs, jeans) → are.'},
  {k:'ps',t:'match',q:'Połącz początek zdania z końcem.',pairs:[['Coffee is','grown in Brazil.'],['Harry Potter books are','read by millions of children.'],['The Olympic Games are','held every four years.'],['English is','spoken in Australia.']],e:'Is/are zgadza się z podmiotem: coffee, English → is; books, Games → are.'},
  {k:'ps',t:'type',q:'Zamień na passive: People speak French in Canada. → French ___ in Canada.',ans:['is spoken'],ph:'wpisz 2 słowa',e:'French – jeden język → is + spoken (speak – spoke – spoken).'},
@@ -4211,7 +4211,7 @@ const AGR_TOPICS=[
 ];
 const AGR_KMAP=Object.fromEntries(AGR_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
 const AGR_LESSONS={
- pu:{tid:'pps',name:'Po co jest strona bierna?',pts:['Strona czynna: KTO coś robi – Mum makes pizza.','Strona bierna (passive): CO się dzieje z rzeczą – Pizza is made.','Używamy jej, gdy wykonawca jest nieważny, nieznany albo oczywisty: My bike was stolen. (nie wiem, kto ukradł)','Budowa zawsze ta sama: be + 3. forma czasownika (V3).','Uwaga: be + -ing (is cooking) to NIE passive, tylko present continuous.'],trick:'Passive = BE + V3. Widzisz is/are/was/were + V3? To strona bierna.'},
+ pu:{tid:'pps',name:'Po co jest strona bierna?',pts:['Strona czynna: KTO coś robi – Mum makes pizza.','Strona bierna (passive): CO się dzieje z rzeczą – Pizza is made.','Używamy jej, gdy wykonawca jest nieważny, nieznany albo oczywisty: My bike was stolen. (nie wiem, kto ukradł)','Budowa zawsze ta sama: be + 3. forma czasownika (V3).','Trzy czasy: is/are + V3 (teraz), was/were + V3 (przeszłość), will be + V3 (przyszłość).'],trick:'Passive = BE + V3. Widzisz is/are/was/were + V3? To strona bierna.'},
  ps:{tid:'pps',name:'Present simple passive: is/are + V3',table:{head:['Podmiot','be','V3','reszta'],rows:[['English','is','spoken','in many countries.'],['These cars','are','made','in Japan.'],['Rice','is','grown','in China.'],['The windows','are','cleaned','every week.']]},pts:['Jedna rzecz i niepoliczalne (milk, rice, news) → is.','Liczba mnoga (cars, eggs, jeans) → are.','Czasownik regularny: V3 = -ed (cleaned). Nieregularny: z 3. kolumny (made, spoken, grown).'],trick:'Teraz / zwykle / regularnie → is albo are + V3.'},
  pn:{tid:'pps',name:'Przeczenia i pytania (present)',table:{head:['','Przykład'],rows:[['przeczenie','Dogs aren’t (are not) allowed here.'],['przeczenie','Milk isn’t (is not) sold here.'],['pytanie','Is the post delivered on Saturdays?'],['pytanie z Where','Where are these phones made?']]},pts:['Przeczenie: is not / are not + V3.','Pytanie: Is / Are + podmiot + V3?','W passive NIE używamy do / does / don’t.'],trick:'Not stoi po is/are. W pytaniu is/are idzie na początek.'},
  pp:{tid:'ppa',name:'Past simple passive: was/were + V3',table:{head:['Podmiot','be','V3','reszta'],rows:[['The Eiffel Tower','was','built','in 1889.'],['My bike','was','stolen','last night.'],['These photos','were','taken','many years ago.'],['The windows','were','broken','yesterday.']]},pts:['Przeszłość (yesterday, last week, in 1990, ago) → was / were.','Jedna rzecz → was. Kilka → were.','Przetłumacz: was built = został zbudowany; were taken = zostały zrobione.'],trick:'Polskie „został / została / zostały” = was / were + V3.'},
@@ -4236,7 +4236,7 @@ AGR_LESSONS.ps.story=[
  {t:'quiz',say:'<b>The cars ___ in Germany.</b>',o:['are made','is made','are make'],e:'Cars – kilka → are. Make → made (V3).'},
  {t:'quiz',say:'Teraz przeszłość: <b>The bridge ___ in 1920.</b>',o:['was built','is built','were built'],e:'1920 = przeszłość. Jeden most → was + built.'},
  {t:'quiz',say:'<b>„The picture was painted by my sister.”</b> Kto namalował obraz?',o:['Moja siostra','Ktoś inny, dla mojej siostry','Nie wiadomo'],e:'By + osoba = przez kogo. Obraz namalowała siostra.'},
- {t:'quiz',say:'Które zdanie jest w stronie biernej?',o:['The window was broken.','Tom broke the window.','Tom is breaking the window.'],e:'Was broken = be + V3. Is breaking to be + -ing – to nie passive.'},
+ {t:'quiz',say:'Które zdanie jest w stronie biernej?',o:['The window was broken.','Tom broke the window.','Tom will break the window.'],e:'Was broken = be + V3. Tom broke / Tom will break – to strona czynna (Tom coś robi).'},
  {t:'end',say:'Brawo! Passive = <b>is/are</b> (teraz) albo <b>was/were</b> (przeszłość) + <b>V3</b>. Kto to zrobił? → <b>by</b>.'}
 ];
 const AGR_CARDS=[
@@ -4395,9 +4395,9 @@ const SUBJECTS={
    tip:'codziennie jedna krótka runda według planu. Zacznij od lekcji z dźwiękiem o stronie biernej. Najważniejsze: passive = to be (is/are, was/were, will be) + 3. forma (V3), po if i unless nigdy nie ma will, krótkie przymiotniki -er/-est, długie more/the most, good – better – the best. Too przed przymiotnikiem, enough po nim. Formy V3 muszą być napisane dokładnie – jak na sprawdzianie. Dzień przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
  a10:{id:'a10',hidden:true,key:'angielski-unit10-v1',title:'Unit 10 – Sport (słówka)',subject:'Język angielski',sub:'kartkówka wt. 10.11 · Wordlist, wszystkie słówka',strict:true,color:'var(--warn)',decor:['T','A','G','C'],topics:A10_TOPICS,lessons:A10_LESSONS,cards:A10_CARDS,examName:'Kartkówka próbna',examPer:5,
    tip:'najpierw przejrzyj Ściągę (tabelki ze wszystkimi słówkami), potem po 2 rundy z każdego tematu, na koniec fiszki. W każdej rundzie najpierw łączysz słówka w pary, potem wpisujesz je po angielsku – pisownia musi być dokładna, jak na kartkówce. Uważaj na pary: diving – diver, support – supporter, athletics – athlete – athletic. Przed snem zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
- sjs:{id:'sjs',key:'polski-slownictwo-style-v1',title:'Słownictwo i style języka',subject:'Język polski',sub:'kartkówka pt. 6.11 (może być przełożona)',color:'var(--c)',decor:['C','A','T','G'],topics:SJS_TOPICS,lessons:SJS_LESSONS,cards:SJS_CARDS,examName:'Kartkówka próbna',examPer:3,
+ sjs:{id:'sjs',hidden:true,key:'polski-slownictwo-style-v1',title:'Słownictwo i style języka',subject:'Język polski',sub:'kartkówka pt. 6.11 (może być przełożona)',color:'var(--c)',decor:['C','A','T','G'],topics:SJS_TOPICS,lessons:SJS_LESSONS,cards:SJS_CARDS,examName:'Kartkówka próbna',examPer:3,
    tip:'zrób po 2 rundy z każdego tematu, potem fiszki. Najważniejsze: kto używa słowa (wszyscy – ogólnonarodowe, region – gwara, grupa – żargon, nauka – termin), archaizm = stary, neologizm = nowy, 5 stylów i gdzie się ich używa (kolega – potoczny, urząd – urzędowy, lekcja – naukowy, gazeta – publicystyczny, książka – artystyczny). Jeśli kartkówkę przełożą, rób codziennie 1–2 rundy. Wieczór przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
- ro:{id:'ro',key:'polski-reduta-ordona-v1',title:'Reduta Ordona',subject:'Język polski',sub:'kartkówka czw. 12.11 · Adam Mickiewicz',color:'var(--g)',decor:['G','C','A','T'],topics:RO_TOPICS,lessons:RO_LESSONS,cards:RO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:RO_PLAN,news:{lesson:'rkto',label:'Nowa lekcja · 1 minuta',title:'Kim był Ordon?',text:'Prawdziwy bohater wiersza: kim był, co zrobił na Woli i co naprawdę się z nim stało.'},
+ ro:{id:'ro',hidden:true,key:'polski-reduta-ordona-v1',title:'Reduta Ordona',subject:'Język polski',sub:'kartkówka czw. 12.11 · Adam Mickiewicz',color:'var(--g)',decor:['G','C','A','T'],topics:RO_TOPICS,lessons:RO_LESSONS,cards:RO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:RO_PLAN,news:{lesson:'rkto',label:'Nowa lekcja · 1 minuta',title:'Kim był Ordon?',text:'Prawdziwy bohater wiersza: kim był, co zrobił na Woli i co naprawdę się z nim stało.'},
    tip:'codziennie jedna krótka runda według planu. Najważniejsze: tło (powstanie listopadowe, obrona Warszawy 1831), narrator-adiutant, przebieg obrony, Ordon i car oraz środki stylistyczne z przykładami. Przeczytaj też sam wiersz – jest krótki. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  inw:{id:'inw',key:'polski-inwokacja-v1',title:'Inwokacja na pamięć',subject:'Język polski',sub:'na pamięć do pn. 30.11 · „Pan Tadeusz”, 22 wersy',color:'var(--a)',decor:['A','T','C','G'],topics:INW_TOPICS,lessons:INW_LESSONS,cards:INW_CARDS,examName:'Próba generalna',examPer:1,plan:INW_PLAN,panel:inwPanel,
    tip:'jeden kawałek dziennie według planu: najpierw czytasz na głos, potem znikają słowa, a na końcu mówisz z pamięci. Codziennie powiedz też na głos wszystko, czego już się nauczyłaś. Fiszki „co dalej?” ćwiczą przejścia między wersami.'},
@@ -5357,7 +5357,7 @@ function hub(){
     goalCard(),
     h('div',{class:'sndrow',style:'margin:10px 0'},sndBtn(true)),
     h('div',{class:'subjs'},...HUB_IDS.map(card)),
-    (()=>{const arch=['a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
+    (()=>{const arch=['ro','sjs','a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
       h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
       h('div',{class:'subjs'},...arch.map(card)),
       h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
@@ -5370,7 +5370,7 @@ function hub(){
   );
 }
 /* ---------- v44: ikony przedmiotów i przycisk „Zacznij” ---------- */
-const HUB_IDS=['agr','sjs','ro','inw','geo','chem','edb','esp'];
+const HUB_IDS=['agr','inw','geo','chem','edb','esp'];
 const ICONS={'Język angielski':'🇬🇧','Język polski':'📖','Geografia':'🌏','Chemia':'🧪','EDB':'🚑','Język hiszpański':'🇪🇸','Biologia':'🧬','Historia':'🏛️','Fizyka':'🌡️','WOS':'👥'};
 function subjIco(S){return ICONS[S.subject]||'📚';}
 function testIn(S){const m=(S.sub||'').match(/(\d{1,2})\.(\d{1,2})/);if(!m)return null;const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);
