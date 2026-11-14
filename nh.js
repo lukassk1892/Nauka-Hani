@@ -81,6 +81,7 @@ async function flush(){
 }
 /* łączenie zmian z dwóch urządzeń dla kluczy, gdzie da się to zrobić bez strat */
 const MERGE={
+  'rozowa-kartka-v1':(a,b)=>Object.assign({},b,a,{d:[...new Set([...(b.d||[]),...(a.d||[])])].sort()}),
   'czas-nauki-v1':(a,b)=>{const by={};[...(b.s||[]),...(a.s||[])].forEach(x=>{const o=by[x.id];if(!o||(x.en||0)>=(o.en||0))by[x.id]=x;});
     return Object.assign({},b,a,{s:Object.values(by).sort((x,y)=>x.st-y.st)});},
   'gry-v1':(a,b)=>{const ch={};[b.ch||{},a.ch||{}].forEach(o=>Object.entries(o).forEach(([k,n])=>ch[k]=Math.max(ch[k]||0,n)));
@@ -171,18 +172,13 @@ function badges(){
   return [['🌱','Pierwsze 60 minut',hits>=1],['🔥','Seria 3 dni',best>=3],['⚡','Seria 7 dni',best>=7],['🏆','Puchar tygodnia',c.cups>=1],
     ['🎯','Sprawdzian próbny ≥ 80%',exam],['💪','5 słabych punktów pokonanych',g.beaten>=5],['🎁','10 skrzynek',Object.values(g.ch).reduce((s,n)=>s+n,0)>=10],['⭐','Poziom 5',c.level>=5]];
 }
-/* jokery i dni wolne od taty liczą się do serii (ale nie dają monet za cel) */
-function protectedDays(){const g=gLoad(),f=FAM();return new Set([...g.jok,...f.events.filter(e=>e.kind==='dayoff'&&e.day).map(e=>e.day)]);}
-function patchStreak(){
-  const orig=window.gByDay;
-  window.gByDay=function(){const by=orig();protectedDays().forEach(k=>{by[k]=Math.max(by[k]||0,GOAL_MS);});return by;};
-}
-function jokerOffer(){
-  const g=gLoad(),y=dayKey(Date.now()-864e5),y2=dayKey(Date.now()-2*864e5),by=window.gByDay();
-  const wk=weekStart(dayKey(Date.now()));
-  if((by[y]||0)>=GOAL_MS)return null;if(!((by[y2]||0)>=GOAL_MS))return null;
-  if(g.jok.some(k=>weekStart(k)===wk))return null;
-  return y;
+/* dni wolne od taty chronią serię (aplikacja: rkFree / window.NH_FREE), ale nie dają monet ani dnia do pucharu.
+   Joker (do v50) zastąpiła różowa kartka z aplikacji (klucz rozowa-kartka-v1); stare jokery przenosimy do kartek. */
+window.NH_FREE=()=>FAM().events.filter(e=>e.kind==='dayoff'&&e.day).map(e=>e.day);
+function migrateJokers(){
+  const g=gLoad();if(!g.jok||!g.jok.length||!window.rkLoad)return;
+  const v=window.rkLoad(),add=g.jok.filter(k=>!v.d.includes(k));
+  if(add.length){v.d=[...v.d,...add].sort();LS.setItem(window.RK_KEY||'rozowa-kartka-v1',JSON.stringify(v));}
 }
 
 /* ---------- dodatki na ekranie głównym Hani ---------- */
@@ -208,9 +204,6 @@ function decorateHub(){
     E('button',{class:'fixbtn',type:'button',onclick:ev=>{const gg=gLoad();gg.cheers=[...gg.cheers,...fresh.map(x=>x.id)].slice(-100);gSave(gg);ev.target.parentNode.remove();}},'Dzięki!')));}
   const dayoff=f.events.find(e=>e.kind==='dayoff'&&e.day===today);
   if(dayoff)box.after(E('div',{class:'nh-cheer'},'🌴 Dziś masz dzień wolny od taty – seria jest bezpieczna.'));
-  const jk=jokerOffer();
-  if(jk)box.after(E('div',{class:'nh-cheer'},'🃏 Wczoraj zabrakło minut. Masz jokera na ten tydzień – uratuje serię.',
-    E('button',{class:'fixbtn',type:'button',onclick:()=>{const gg=gLoad();gg.jok.push(jk);gSave(gg);window.hub();}},'Użyj jokera')));
   const pend=f.claims.filter(x=>x.status==='approved');
   if(pend.length)box.after(E('div',{class:'nh-cheer'},'✅ Tata zatwierdził: '+pend.map(x=>rewardName(x.reward_id)).join(', ')+'. Upomnij się o nagrodę!'));
   /* przypomnienia i instalacja */
@@ -316,6 +309,7 @@ function renderParent(kid,days,live){
   const max=Math.max(goal,...wk.map(d=>d.m));
   let D=null;try{D=window.pData();}catch(e){}
   const gi=(()=>{try{return window.gInfo();}catch(e){return null;}})();
+  const rkSet=new Set((()=>{try{return window.rkLoad().d;}catch(e){return [];}})());
   const hard=D?D.subs.flatMap(x=>x.hard.map(hh=>({...hh,sub:x.S.subject}))).sort((a,b)=>(b.weak-a.weak)||(b.bad-a.bad)).slice(0,6):[];
   const pending=f.claims.filter(c=>c.status==='pending'),approved=f.claims.filter(c=>c.status==='approved');
   const props=f.rewards.filter(r=>r.proposed_by_child&&!r.active),active=f.rewards.filter(r=>r.active);
@@ -330,11 +324,12 @@ function renderParent(kid,days,live){
       E('div',{class:'goal-top'},E('span',{class:'label'},'Minuty dziś'),E('span',{class:'goal-fire'},gi&&gi.streak?'🔥 seria '+gi.streak+' '+dniTxt(gi.streak):'')),
       E('div',{class:'goal-num'},String(t.active_min),E('small',{},' / '+goal+' min')),
       E('div',{class:'bar'},E('i',{style:`width:${Math.min(100,Math.round(t.active_min/goal*100))}%;background:${t.active_min>=goal?'var(--t)':'var(--warn)'}`})),
-      E('p',{class:'goal-msg'},(t.rounds?t.rounds+' rund · ':'')+(subjTxt||'dziś jeszcze bez nauki')+' · 🪙 '+t.coins)),
+      E('p',{class:'goal-msg'},(gi&&gi.card?'🩷 Dziś różowa kartka (dzień przerwy) · ':'')+(t.rounds?t.rounds+' rund · ':'')+(subjTxt||'dziś jeszcze bez nauki')+' · 🪙 '+t.coins),
+      gi?E('small',{},gi.rkUsed?'🩷 Różowa kartka w tym tygodniu: wykorzystana ('+window.rkWd(gi.rkUsed)+')':'🩷 Różowa kartka w tym tygodniu: jeszcze nie wykorzystana'):null),
     E('section',{class:'tcard'},E('span',{class:'label'},'Ostatnie 7 dni'),
       E('div',{class:'week'},wk.map(d=>E('div',{class:'wk'+(d.k===today?' today':'')},E('span',{},d.m?String(d.m):''),
         E('div',{class:'col2'},E('i',{style:`height:${Math.round(d.m/max*100)}%;background:${d.m>=goal?'var(--t)':'var(--warn)'}`})),
-        E('span',{},['Nd','Pn','Wt','Śr','Cz','Pt','Sb'][new Date(d.k+'T12:00').getDay()])))),
+        E('span',{},(rkSet.has(d.k)&&d.m<goal?'🩷':'')+['Nd','Pn','Wt','Śr','Cz','Pt','Sb'][new Date(d.k+'T12:00').getDay()])))),
       E('small',{},'Razem '+wk.reduce((s,d)=>s+d.m,0)+' min · cel '+goal+' min dziennie'+(gi?' · ten tydzień '+gi.wHit+'/7 dni':''))),
     E('button',{class:'tool nh-prevbtn',type:'button',onclick:kidPreview},E('span',{class:'label'},'Podgląd'),E('h3',{},'👀 Aplikacja Hani'),E('span',{},'Zobacz przedmioty, plany i lekcje tak, jak widzi je Hania. Twoje kliknięcia nie zmieniają jej postępów.')),
     pending.length||approved.length?E('section',{class:'plan'},E('h3',{},'🎁 Nagrody do decyzji'),
@@ -401,7 +396,7 @@ async function boot(){
   syncOn=true;
   const imp=await applyImport();
   try{await loadFamily();}catch(e){}
-  patchStreak();
+  try{migrateJokers();}catch(e){console.warn('jokery',e);}
   const origHub=window.hub;
   window.hub=function(){origHub.apply(this,arguments);try{decorateHub();}catch(e){console.warn(e);}schedule();};
   if(!started){started=true;window.hub();}

@@ -372,6 +372,16 @@ details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;pa
 .gday.today{color:var(--ink);font-weight:600}
 .gday.future .gdot{opacity:.4}
 .gcup{font-size:.88rem;font-weight:600}
+.gday.free .gdot{background:#E8559A;border-color:#E8559A;font-size:.85rem}
+.goal.pink{border-color:#E8559A;background:#FDEAF3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .goal.pink{background:#3A1F2E}}
+[data-theme="dark"] .goal.pink{background:#3A1F2E}
+.rkbtn{width:100%;padding:12px 14px;border-radius:14px;border:2px dashed #E8559A;background:transparent;color:inherit;font-weight:600;font-size:.95rem;text-align:left}
+.rkinfo{font-size:.85rem;color:var(--muted)}
+.rkbox{border:2px solid #E8559A;border-radius:14px;padding:12px;display:grid;gap:8px;font-size:.95rem}
+.rkbox .next{background:#E8559A;color:#fff}
+.rk .next{background:#E8559A;color:#fff}
+.rk-big{font-size:4.5rem;line-height:1}
 .goal .share{padding:14px}
 .goal:not(.done) .share{background:var(--surface);color:var(--ink);border:2px solid var(--t)}
 .goalmini{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;display:grid;gap:6px;text-align:left;font-size:.9rem}
@@ -4835,35 +4845,62 @@ function fmtMin(ms){const m=Math.round(ms/60000);return m<60?m+' min':Math.floor
 /* ---------- daily goal: 60 minutes (umowa z tatą), streak and weekly cup ---------- */
 const GOAL_MIN=60,GOAL_MS=GOAL_MIN*60000,WEEK_GOAL=5;
 function gByDay(){const by={};tLoad().s.filter(x=>x.act>=5000||x.ans>0).forEach(x=>{by[x.d]=(by[x.d]||0)+x.act;});return by;}
-function gInfo(){const by=gByDay(),now=new Date(),key=i=>dayKey(new Date(now.getFullYear(),now.getMonth(),now.getDate()-i,12).getTime()),ms=i=>by[key(i)]||0,hit=i=>ms(i)>=GOAL_MS;
-  const todayMs=ms(0),done=hit(0);let streak=0;for(let i=done?0:1;i<T_DAYS&&hit(i);i++)streak++;
-  const wd=(now.getDay()+6)%7,week=[];for(let j=0;j<7;j++){const i=wd-j;week.push({i,hit:i>=0&&hit(i),today:i===0,future:i<0});}
+/* Różowa kartka (v51): raz w tygodniu (pon–niedz) dzień przerwy bez 60 minut – seria zostaje, ale do pucharu liczą się tylko dni z 60 min.
+   Klucz rozowa-kartka-v1 = {d:['RRRR-MM-DD',...]}. Dzień z kartką, w którym mimo to było 60 min, nie zużywa kartki. */
+const RK_KEY='rozowa-kartka-v1',RK_PINK='#E8559A';
+function rkLoad(){try{const v=JSON.parse(localStorage.getItem(RK_KEY));if(v&&Array.isArray(v.d))return v;}catch(e){}return {d:[]};}
+function rkDay(i){const n=new Date();return dayKey(new Date(n.getFullYear(),n.getMonth(),n.getDate()-i,12).getTime());}
+function rkWeek(k){const[y,m,d]=k.split('-').map(Number);const dt=new Date(y,m-1,d,12);dt.setDate(dt.getDate()-(dt.getDay()+6)%7);return dayKey(dt.getTime());}
+function rkFree(){const s=new Set(rkLoad().d);try{if(window.NH_FREE)window.NH_FREE().forEach(k=>s.add(k));}catch(e){}return s;}
+function rkUsedIn(k,by){by=by||gByDay();const w=rkWeek(k);return rkLoad().d.find(x=>rkWeek(x)===w&&(by[x]||0)<GOAL_MS)||null;}
+function rkUse(k){const v=rkLoad();if(!v.d.includes(k)){v.d.push(k);v.d.sort();}localStorage.setItem(RK_KEY,JSON.stringify(v));}
+function rkOffer(){const by=gByDay(),fr=rkFree(),y=rkDay(1),y2=rkDay(2);
+  if((by[y]||0)>=GOAL_MS||fr.has(y))return null;if(!((by[y2]||0)>=GOAL_MS||fr.has(y2)))return null;
+  return rkUsedIn(y,by)?null:y;}
+function rkWd(k){return ['niedz.','pon.','wt.','śr.','czw.','pt.','sob.'][new Date(k+'T12:00').getDay()];}
+function rkAsk(day){const g=gInfo(),today=day===rkDay(0);const x=btn('x','×',hub);x.setAttribute('aria-label','Wróć');
+  screen(h('div',{},h('div',{class:'top'},x,h('span',{class:'label'},'Różowa kartka'),h('span')),
+    h('div',{class:'result rk'},h('div',{class:'rk-big','aria-hidden':'true'},'🩷'),
+      h('h2',{},today?'Dzień przerwy?':'Uratować serię?'),
+      h('p',{},today?'Dziś nie musisz robić 60 minut. Seria zostaje.':'Wczoraj zabrakło minut. Kartka zamieni wczoraj w dzień przerwy i seria zostanie.'),
+      h('p',{class:'hint'},'Masz jedną kartkę na tydzień (pon–niedz). Dzień z kartką nie liczy się do pucharu.'+(today?' Jeśli mimo to zrobisz 60 minut, kartka wróci do Ciebie.':'')),
+      h('div',{class:'btns'},btn('next',today?'🩷 Biorę dzień przerwy':'🩷 Użyj kartki',()=>{rkUse(day);try{confetti(40);}catch(e){}hub();}),
+        btn('ghost',today?'Jednak się uczę':'Wróć',hub)))));}
+function gInfo(){const by=gByDay(),fr=rkFree(),now=new Date(),key=i=>dayKey(new Date(now.getFullYear(),now.getMonth(),now.getDate()-i,12).getTime()),ms=i=>by[key(i)]||0,hit=i=>ms(i)>=GOAL_MS,free=i=>!hit(i)&&fr.has(key(i));
+  const todayMs=ms(0),done=hit(0),rest=free(0);let streak=0;for(let i=done||rest?0:1;i<T_DAYS&&(hit(i)||free(i));i++)streak++;
+  const card=rest&&rkLoad().d.includes(key(0)),rkUsed=rkUsedIn(key(0),by);
+  const wd=(now.getDay()+6)%7,week=[];for(let j=0;j<7;j++){const i=wd-j;week.push({i,hit:i>=0&&hit(i),free:i>=0&&free(i),today:i===0,future:i<0});}
   const wHit=week.filter(d=>d.hit).length;let cups=0;
   for(let w=0;w*7<T_DAYS;w++){let c=0;for(let j=0;j<7;j++){const i=wd+7*w-j;if(i>=0&&hit(i))c++;}if(c>=WEEK_GOAL)cups++;}
-  return {todayMs,min:Math.floor(todayMs/60000),done,left:Math.max(1,GOAL_MIN-Math.floor(todayMs/60000)),streak,week,wHit,cup:wHit>=WEEK_GOAL,cups};}
+  return {todayMs,min:Math.floor(todayMs/60000),done,left:Math.max(1,GOAL_MIN-Math.floor(todayMs/60000)),streak,week,wHit,cup:wHit>=WEEK_GOAL,cups,rest,card,rkUsed};}
 const dniTxt=n=>n===1?'dzień':'dni';
 function gSubs(){const k=dayKey(Date.now()),m={};tLoad().s.filter(x=>x.d===k&&(x.act>=5000||x.ans>0)).forEach(x=>{const n=subjName(x.subj).replace(/^Język /,'').toLowerCase();m[n]=(m[n]||0)+x.act;});
   return Object.entries(m).sort((a,b)=>b[1]-a[1]).filter(([n,ms])=>ms>=30000);}
 function gText(){const g=gInfo(),s=gSubs(),L=[];
-  L.push(g.done?`Hania: dziś ${g.min} min nauki ✅ (cel ${GOAL_MIN} min zrobiony)`:`Hania: dziś ${g.min} z ${GOAL_MIN} min nauki ⏳ (brakuje ${g.left} min)`);
+  L.push(g.done?`Hania: dziś ${g.min} min nauki ✅ (cel ${GOAL_MIN} min zrobiony)`:g.card?`Hania: dziś różowa kartka 🩷 – dzień przerwy${g.min?' ('+g.min+' min nauki)':''}`:`Hania: dziś ${g.min} z ${GOAL_MIN} min nauki ⏳ (brakuje ${g.left} min)`);
   if(s.length)L.push(s.map(([n,ms])=>n+' '+Math.max(1,Math.round(ms/60000))+' min').join(', '));
   if(g.streak)L.push(`🔥 Seria: ${g.streak} ${dniTxt(g.streak)} z rzędu po ${GOAL_MIN} min`);
   L.push(g.cup?`🏆 Puchar tygodnia zdobyty (${g.wHit}/7 dni)`:`🏆 Ten tydzień: ${g.wHit}/${WEEK_GOAL} dni do pucharu`);
+  L.push(g.rkUsed?`🩷 Różowa kartka w tym tygodniu: wykorzystana (${rkWd(g.rkUsed)})`:'🩷 Różowa kartka w tym tygodniu: jeszcze nie wykorzystana');
   return L.join('\n');}
 const gWa=()=>'https://wa.me/?text='+encodeURIComponent(gText());
-function goalCard(){const g=gInfo(),p=Math.min(100,Math.round(g.todayMs/GOAL_MS*100));
-  const msg=g.done?'Cel na dziś zdobyty! Brawo 🎉 Teraz możesz odpocząć.':
+function goalCard(){const g=gInfo(),p=Math.min(100,Math.round(g.todayMs/GOAL_MS*100)),off=rkOffer(),td=rkDay(0);
+  const rk=g.done?null:g.card?null:g.rest?null:off?h('div',{class:'rkbox'},h('span',{},`🩷 Wczoraj zabrakło minut. Różowa kartka może uratować serię.`),btn('next','Użyj różowej kartki',()=>rkAsk(off))):
+    g.rkUsed?h('span',{class:'rkinfo'},`🩷 Różowa kartka wykorzystana (${rkWd(g.rkUsed)}). Nowa od poniedziałku.`):
+    btn('rkbtn','🩷 Różowa kartka: dzień przerwy bez utraty serii',()=>rkAsk(td));
+  const msg=g.done?'Cel na dziś zdobyty! Brawo 🎉 Teraz możesz odpocząć.':g.card?`Dziś masz różową kartkę 🩷 Odpoczywasz, a seria ${g.streak} ${dniTxt(g.streak)} jest bezpieczna. Jeśli się pouczysz, minuty i tak się liczą.`:g.rest?'Dziś dzień wolny – seria jest bezpieczna.':
     (g.min?`Zostało ${g.left} min – to ok. ${Math.max(1,Math.ceil(g.left/5))} ${Math.ceil(g.left/5)===1?'runda':Math.ceil(g.left/5)<=4?'rundy':'rund'}.`:`Dziś jeszcze nic. Jedna runda to ok. 5 minut – zacznij od jednej.`)+
     (g.streak?` Nie strać serii ${g.streak} ${dniTxt(g.streak)}!`:'');
-  return h('section',{class:'goal'+(g.done?' done':'')},
+  return h('section',{class:'goal'+(g.done?' done':g.card?' pink':'')},
     h('div',{class:'goal-top'},h('span',{class:'label'},'Cel na dziś'),h('span',{class:'goal-fire'},g.streak?`🔥 ${g.streak} ${dniTxt(g.streak)} z rzędu`:'🔥 seria: 0')),
     h('div',{class:'goal-num'},String(g.min),h('small',{},` / ${GOAL_MIN} min`)),
-    h('div',{class:'bar',role:'progressbar','aria-valuemin':'0','aria-valuemax':String(GOAL_MIN),'aria-valuenow':String(Math.min(g.min,GOAL_MIN))},h('i',{style:`width:${p}%;background:${g.done?'var(--t)':'var(--warn)'}`})),
+    h('div',{class:'bar',role:'progressbar','aria-valuemin':'0','aria-valuemax':String(GOAL_MIN),'aria-valuenow':String(Math.min(g.min,GOAL_MIN))},h('i',{style:`width:${p}%;background:${g.done?'var(--t)':g.card?RK_PINK:'var(--warn)'}`})),
     h('p',{class:'goal-msg'},msg),
-    h('div',{class:'gweek','aria-label':'Ten tydzień'},g.week.map((d,j)=>h('div',{class:'gday'+(d.hit?' hit':'')+(d.today?' today':'')+(d.future?' future':'')},
-      h('span',{class:'gdot'},d.hit?'✓':''),h('span',{},['Pn','Wt','Śr','Cz','Pt','Sb','Nd'][j])))),
+    h('div',{class:'gweek','aria-label':'Ten tydzień'},g.week.map((d,j)=>h('div',{class:'gday'+(d.hit?' hit':'')+(d.free?' free':'')+(d.today?' today':'')+(d.future?' future':'')},
+      h('span',{class:'gdot'},d.hit?'✓':d.free?'🩷':''),h('span',{},['Pn','Wt','Śr','Cz','Pt','Sb','Nd'][j])))),
     h('span',{class:'gcup'},g.cup?`🏆 Puchar tygodnia zdobyty!${g.cups>1?' Masz już '+g.cups+' puchary.':''}`:`🏆 Puchar tygodnia: ${g.wHit} z ${WEEK_GOAL} dni po ${GOAL_MIN} min${g.cups?' · masz już '+g.cups+' '+(g.cups===1?'puchar':g.cups<=4?'puchary':'pucharów'):''}`),
-    h('a',{class:'share',href:gWa(),target:'_blank',rel:'noopener'},g.done?'📲 Wyślij tacie: zrobione!':`📲 Wyślij tacie, ile już mam`));}
+    rk,
+    h('a',{class:'share',href:gWa(),target:'_blank',rel:'noopener'},g.done?'📲 Wyślij tacie: zrobione!':g.card?'📲 Wyślij tacie: dziś różowa kartka':`📲 Wyślij tacie, ile już mam`));}
 const WD=['niedz.','pon.','wt.','śr.','czw.','pt.','sob.'];
 function dayLabel(k){const[y,m,d]=k.split('-').map(Number);const dt=new Date(y,m-1,d);const today=dayKey(Date.now()),yest=dayKey(Date.now()-864e5);
   return (k===today?'Dziś':k===yest?'Wczoraj':WD[dt.getDay()][0].toUpperCase()+WD[dt.getDay()].slice(1))+' '+pad2(d)+'.'+pad2(m);}
@@ -4897,7 +4934,8 @@ const pct=(a,b)=>Math.round(a/b*100);
 function pText(){const D=pData(),t=D.today,L=[];
   L.push('Nauka Hani – podsumowanie '+dayLabel(t.k).replace(/^Dziś /,''),'');
   L.push('⏱ Dziś: '+fmtMin(t.ms)+(t.list.length?' ('+t.list.map(x=>{const s=sessLine(x);return x.name+' '+s.dur;}).join(', ')+')':''));
-  {const g=gInfo();L.push('🎯 Cel '+GOAL_MIN+' min: '+(g.done?'zrobiony ✅':'brakuje '+g.left+' min')+(g.streak?' · seria '+g.streak+' '+dniTxt(g.streak):'')+' · ten tydzień '+g.wHit+'/7 dni');}
+  {const g=gInfo();L.push('🎯 Cel '+GOAL_MIN+' min: '+(g.done?'zrobiony ✅':g.card?'dziś różowa kartka 🩷 (dzień przerwy)':'brakuje '+g.left+' min')+(g.streak?' · seria '+g.streak+' '+dniTxt(g.streak):'')+' · ten tydzień '+g.wHit+'/7 dni');
+   L.push('   🩷 Różowa kartka: '+(g.rkUsed?'wykorzystana w tym tygodniu ('+rkWd(g.rkUsed)+')':'w tym tygodniu jeszcze nie wykorzystana'));}
   L.push('   Ostatnie 7 dni: '+fmtMin(D.week),'');
   const F=fLines(fSum(t.list));if(F.length){L.push('🎯 Skupienie dziś');F.forEach(z=>L.push('• '+z));L.push('');}
   L.push('✅ Co już opanowała');

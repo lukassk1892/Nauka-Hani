@@ -52,7 +52,11 @@ async function run() {
       const { data: d } = await sb.from("days").select("*").eq("user_id", k.user_id).eq("day", day).maybeSingle();
       const done = d?.active_min || 0, goal = f.goal_min || 60, left = Math.max(1, goal - done);
       const times: string[] = f.remind_times || [];
-      if (!dayoff && done < goal && min < 20 * 60) {
+      // różowa kartka (klucz rozowa-kartka-v1 z aplikacji): dzień przerwy – bez przypomnień
+      const { data: rk } = await sb.from("kv").select("value").eq("user_id", k.user_id).eq("key", "rozowa-kartka-v1").maybeSingle();
+      let card = false;
+      try { card = ((JSON.parse(rk?.value || "{}").d || []) as string[]).includes(day); } catch (_) { card = false; }
+      if (!dayoff && !card && done < goal && min < 20 * 60) {
         for (let i = 0; i < times.length; i++) {
           const t = toMin(times[i]);
           if (min >= t && min < t + 60) {
@@ -69,9 +73,10 @@ async function run() {
         const rt = toMin(f.report_time || "21:00");
         if (min >= rt && min < rt + 90) {
           const subj = Object.entries((d?.subjects || {}) as Record<string, number>).filter(([, m]) => m > 0).map(([n, m]) => `${n} ${m} min`).join(", ");
-          const body = done
+          const rkTxt = card && done < goal ? " · 🩷 różowa kartka (dzień przerwy, seria zostaje)" : "";
+          const body = (done
             ? `${k.name}: ${done}/${goal} min ${done >= goal ? "✅" : "⏳"}${subj ? " · " + subj : ""}${d?.coins != null ? ` · 🪙 ${d.coins}` : ""}`
-            : `${k.name} dziś się nie uczyła${dayoff ? " (dzień wolny)" : ""}.`;
+            : `${k.name} dziś się nie uczyła${dayoff ? " (dzień wolny)" : ""}${card ? "" : "."}`) + rkTxt;
           const ov = ((d?.overdue || []) as { s: string; t: string }[]);
           const ovTxt = ov.length ? ` · ⏳ zaległe w planie: ${ov.length} (${ov.slice(0, 3).map((x) => x.s + ": " + x.t.replace(/\s*\(.*\)$/, "")).join("; ")})` : "";
           await send(p.user_id, day, "report", { title: "Raport dnia", body: body + ovTxt, tag: "raport" }, log);
