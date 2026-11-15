@@ -285,6 +285,17 @@ details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;pa
 .pfb{width:48px;height:48px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700;font-size:1.1rem}
 .pfb.sel{border-color:var(--ink);background:var(--ink);color:var(--bg)}
 .pfb:disabled{cursor:default}
+.dw{text-decoration:underline dotted;text-decoration-color:currentColor;text-decoration-thickness:2px;text-underline-offset:4px;cursor:pointer;border-radius:6px;-webkit-tap-highlight-color:transparent}
+.dw.on{background:#fff1b8;box-shadow:0 0 0 3px #fff1b8}
+.dpop{position:fixed;z-index:9999;background:#1f1d2b;color:#fff;border-radius:14px;padding:10px 46px 10px 14px;font-size:17px;line-height:1.35;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:dpopIn .15s ease-out;font-weight:500}
+.dpop .dph{margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.2)}
+.dpop .dph b{color:#ffd76a}.dpop small{opacity:.7;font-size:14px}
+.dpop .dbase{font-size:13px;opacity:.7;margin-top:3px}
+.dpop .dsay{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:17px;padding:0;cursor:pointer}
+.dpop .darr{position:absolute;bottom:-7px;width:14px;height:14px;background:#1f1d2b;transform:translateX(-50%) rotate(45deg)}
+.dpop.below .darr{bottom:auto;top:-7px}
+@keyframes dpopIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.dhint{margin:-6px 0 12px;font-size:14px;color:#6b6880}
 .qimg{display:block;max-width:100%;max-height:260px;margin:0 auto 14px;border-radius:12px;object-fit:contain}
 /* chemia */
 .tiles{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
@@ -4470,7 +4481,7 @@ function save(){try{localStorage.setItem(SUBJ.key,JSON.stringify(store));}catch(
 /* ---------- helpers ---------- */
 function h(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v] of Object.entries(attrs||{})){if(v==null)continue;if(k==='class')e.className=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(k==='style')e.style.cssText=v;else e.setAttribute(k,v);}for(const c of kids.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;}
 const app=document.getElementById('app');
-function screen(...kids){app.replaceChildren(...kids.filter(k=>k!=null&&k!==false));window.scrollTo(0,0);ptSync();}
+function screen(...kids){try{dictClose();}catch(e){}app.replaceChildren(...kids.filter(k=>k!=null&&k!==false));window.scrollTo(0,0);ptSync();}
 function starRow(n,cls='stars'){return h('span',{class:cls,'aria-label':n+' z 3 gwiazdek'},[0,1,2].map(i=>h('span',{class:i<n?'':'off'},'★')));}
 function btn(cls,label,fn){return h('button',{class:cls,type:'button',onclick:fn},label);}
 function mastered(tid){return TOPIC[tid].qs.filter(q=>store.h[q.id]&&store.h[q.id].ok).length;}
@@ -5009,6 +5020,856 @@ function stats(){
   ));
 }
 
+/* ---------- SŁOWNICZEK: tłumaczenie angielskiego słowa po dotknięciu (v52, jak w Duolingo) ----------
+   Działa w każdym przedmiocie z subject 'Język angielski', w treści zadania (h2.q), w rundach – NIE w sprawdzianie próbnym.
+   Nowe zadania: dopisz brakujące słowa do EN_PL_RAW ('słowo|tłumaczenie', małe litery, apostrof ’) albo zwroty do EN_PH_RAW.
+   W konsoli: dictMissing() pokazuje słowa z zadań angielskich, których nie ma w słowniczku.
+   Zasady, żeby nie zdradzić odpowiedzi:
+   - w tłumaczeniu nie podawaj innych form czasownika ani stopni przymiotnika (np. przy „write” NIE pisz „wrote, written”);
+   - zadania o znaczeniu słów („Co znaczy…”, „…po angielsku to”, „Popraw błąd”, sort, match) nie mają słowniczka (DICT_OFF_RE, DICT_OFF_T, DICT_OFF_ID);
+   - jeśli tłumaczenie pokrywa się z poprawną odpowiedzią, dymek pokazuje „bez podpowiedzi”. */
+const EN_PL_RAW=`a|jakiś, jeden (przedimek)
+about|o (czymś); około
+academy|akademia
+accident|wypadek
+acrobats|akrobaci
+activities|zajęcia, aktywności
+actor|aktor
+actually|właściwie, tak naprawdę
+advance|in advance = z wyprzedzeniem
+afford|pozwolić sobie (finansowo)
+after|po; po tym, jak
+ago|temu
+ahead|naprzód
+air|powietrze
+alarm|alarm
+all|wszyscy, wszystko, cały
+allergic|uczulony
+alone|sam, samotnie
+always|zawsze
+amaze|zdumiewać, zachwycać
+amazing|niesamowity
+america|Ameryka
+an|jakiś, jeden (przedimek przed samogłoską)
+and|i, a
+angry|zły, rozgniewany
+animals|zwierzęta
+announce|ogłaszać
+annual|coroczny
+any|jakiś, jakikolwiek; (w przeczeniu) żaden
+anyone|ktokolwiek; (w przeczeniu) nikt
+appear|ukazać się, pojawić się
+april|kwiecień
+are|są; jesteście (be)
+aren’t|nie są (are not)
+art|sztuka
+article|artykuł
+arts|sztuki (artystyczne)
+as|jak; tak (jak); kiedy
+ask|pytać, prosić
+at|w, na, przy; o (godzinie)
+audience|publiczność, widownia
+august|sierpień
+aunt|ciocia
+autograph|autograf
+back|z powrotem
+bad|zły
+bag|torba, torebka
+band|zespół (muzyczny)
+baseball|baseball
+battery|bateria
+be|być
+beach|plaża
+bean|fasola
+beautiful|piękny
+because|ponieważ, bo
+becoming|stający się (become = stawać się)
+bed|łóżko
+been|był, była (forma od be)
+before|przed; zanim
+better|lepszy, lepiej
+big|duży
+biggest|największy
+bike|rower
+blog|blog
+blue|niebieski
+boil|gotować się, wrzeć
+bones|kości
+book|książka
+bore|nudzić
+borrow|pożyczyć (od kogoś)
+bottles|butelki
+box|pudełko
+boy|chłopiec
+break|łamać, tłuc, psuć
+breakfast|śniadanie
+bridge|most
+bring|przynosić
+brings|przynosi
+britain|Brytania (Great Britain = Wielka Brytania)
+broadcasts|nadaje, emituje
+broke|złamał, stłukł (forma przeszła)
+brother|brat
+build|budować
+building|budynek
+bus|autobus
+busy|zajęty
+but|ale
+butterfly|motyl
+buy|kupować
+by|przez (kogoś); obok; do (jakiegoś czasu); (by car) samochodem
+cake|ciasto, tort
+can|móc, umieć, potrafić
+canada|Kanada
+can’t|nie móc, nie umieć (cannot)
+car|samochód
+careful|ostrożny
+cars|samochody
+cartoons|kreskówki
+castle|zamek
+catch|łapać
+cause|powodować
+causes|powoduje
+celebrate|świętować
+celsius|stopnie Celsjusza
+centre|centrum, ośrodek
+characters|postacie, bohaterowie
+charge|ładować (np. telefon)
+check|sprawdzać
+child|dziecko
+children|dzieci
+china|Chiny
+chocolate|czekolada
+cinema|kino
+circus|cyrk
+city|miasto
+class|klasa
+classical|klasyczny
+classroom|sala lekcyjna, klasa
+clean|czysty; czyścić, sprzątać
+cleaned|wyczyścił, posprzątał (forma przeszła)
+club|klub, kółko zainteresowań
+cold|zimny; zimno
+come|przychodzić, przyjeżdżać
+comes|przychodzi, przyjeżdża
+computer|komputer
+concert|koncert
+concerts|koncerty
+cookies|ciasteczka
+cooking|gotowanie
+cost|kosztować
+could|mógł(by), mogłem; (prośba) czy mógłbyś…
+couldn’t|nie mógł, nie mogłem
+country|kraj
+course|kurs; of course = oczywiście
+cousin|kuzyn, kuzynka
+covers|okładki
+cream|krem, śmietana (ice cream = lody)
+crime|przestępstwo, zbrodnia
+cross|krzyżować; cross-country = biegowy, przełajowy
+cruel|okrutny
+cuts|tnie, przecina
+cycling|jazda na rowerze, kolarstwo
+dad|tata
+dancer|tancerz, tancerka
+dancing|taniec, tańczenie
+dark|ciemny; ciemno
+day|dzień
+days|dni
+decided|zdecydował, postanowił
+degrees|stopnie
+delivered|doręczony, dostarczony
+depression|depresja, przygnębienie
+describes|opisuje
+design|projektowanie, projekt
+didn’t|nie (w czasie przeszłym, did not)
+die|umierać, ginąć (rośliny: usychać)
+different|inny, różny
+discover|odkrywać
+discovered|odkrył (forma przeszła)
+do|robić; (pomocniczy w pytaniach i przeczeniach)
+documentaries|filmy dokumentalne
+documentary|film dokumentalny
+doesn’t|nie (he/she/it, does not)
+dogs|psy
+done|zrobiony (forma od do)
+don’t|nie (do not)
+download|pobierać, ściągać (z internetu)
+drama|dramat; zajęcia teatralne
+dress|sukienka; ubierać się
+during|podczas
+early|wcześnie
+easier|łatwiejszy
+easy|łatwy
+eat|jeść
+eats|je
+email|e-mail
+ends|kończy się
+english|angielski; język angielski
+enjoy|lubić, cieszyć się czymś
+enough|wystarczająco, dość
+entertain|zabawiać
+equipment|sprzęt
+evening|wieczór
+events|wydarzenia
+ever|kiedykolwiek
+every|każdy
+exam|egzamin
+excellent|doskonały
+excited|podekscytowany
+exciting|ekscytujący
+exhibit|eksponat
+expected|oczekiwał, spodziewał się
+expensive|drogi (kosztowny)
+fail|oblać (egzamin), nie zdać
+famous|sławny
+fan|fan, wielbiciel
+farm|farma, gospodarstwo
+fascination|fascynacja
+fast|szybki, szybko
+favourite|ulubiony
+feel|czuć (się)
+feels|czuje (się)
+festival|festiwal
+few|kilka (a few = kilka)
+fiction|fikcja (science fiction = fantastyka naukowa)
+fifteen|piętnaście
+film|film
+films|filmy
+find|znaleźć; uważać (find something easy = uważać coś za łatwe)
+finish|kończyć
+fire|ogień, pożar
+first|najpierw; pierwszy
+fit|pasować (rozmiarem)
+fitness|sprawność fizyczna, fitness
+flowers|kwiaty
+food|jedzenie
+football|piłka nożna
+for|dla; na; przez (jakiś czas)
+forget|zapominać
+found|znalazł (forma przeszła)
+free|wolny; darmowy (for free = za darmo)
+freeze|zamarzać, zamrażać
+freezes|zamarza
+french|francuski; język francuski
+friday|piątek
+friend|przyjaciel, kolega
+friends|przyjaciele, koledzy
+from|od, z
+front|przód (in front of = przed)
+funny|zabawny, śmieszny
+furniture|meble
+future|przyszłość, przyszły
+gallery|galeria
+games|gry
+gave|dał (forma przeszła)
+get|dostawać; stawać się; docierać
+gets|dostaje; staje się; dociera
+girl|dziewczyna
+give|dawać
+go|iść, jechać
+goes|idzie, jedzie
+going|idący; be going to = zamierzać
+golf|golf
+good|dobry
+got|dostał; have got = mieć
+grades|oceny
+grandfather|dziadek
+grandma|babcia
+grass|trawa
+great|wspaniały; wielki
+green|zielony
+group|grupa
+grow|rosnąć; uprawiać
+guy|facet, gość
+had|miał (forma przeszła)
+half|połowa
+happened|zdarzyło się, stało się
+happens|dzieje się, zdarza się
+happier|szczęśliwszy
+happy|szczęśliwy, zadowolony
+hard|ciężko, mocno; trudny
+has|ma
+have|mieć
+having|mający
+he|on
+headaches|bóle głowy
+healthier|zdrowszy
+hear|słyszeć
+heat|podgrzewać; ciepło
+heavy|ciężki
+help|pomagać; pomoc
+her|ją, jej
+here|tutaj
+hi|cześć
+him|go, jego, mu
+his|jego
+hockey|hokej
+home|dom (at home = w domu)
+homemade|domowej roboty
+homework|praca domowa
+hot|gorący
+hour|godzina
+how|jak
+humour|humor
+hurry|spieszyć się
+i|ja
+ice|lód
+idea|pomysł
+if|jeśli, jeżeli; gdyby
+ill|chory
+imaginary|wymyślony, zmyślony
+important|ważny
+in|w
+inspiration|natchnienie, inspiracja
+interest|zainteresowanie
+interested|zainteresowany
+interesting|ciekawy
+into|do (środka)
+invisible|niewidzialny
+invite|zapraszać
+is|jest
+isn’t|nie jest (is not)
+it|to, ono
+italy|Włochy
+it’s|to jest (it is)
+i’d|ja bym (I would)
+i’ll|ja będę, ja zrobię (I will)
+i’m|ja jestem (I am)
+i’ve|ja mam (I have)
+jacket|kurtka
+japan|Japonia
+japanese|japoński; język japoński
+jeans|dżinsy
+jogging|bieganie, jogging
+jumping|skakanie (ski jumping = skoki narciarskie)
+large|duży
+last|ostatni; zeszły (last night = wczoraj wieczorem)
+late|późny; spóźniony
+lead|główny (lead role = główna rola)
+learn|uczyć się
+learning|uczenie się
+learns|uczy się
+leave|wychodzić, wyjeżdżać; zostawiać
+let|pozwalać
+lets|pozwala
+letters|listy
+let’s|zróbmy…, chodźmy… (let us)
+library|biblioteka
+life|życie
+light|światło
+like|lubić; jak
+listening|słuchanie
+literature|literatura
+little|mały; trochę
+live|żyć, mieszkać; na żywo
+living|living room = salon, pokój dzienny
+long|długi
+look|patrzeć; look at = patrzeć na
+lottery|loteria
+love|kochać, uwielbiać
+loved|uwielbiał, kochał
+magazine|czasopismo
+magazines|czasopisma
+magic|magia, magiczny
+magician|magik, iluzjonista
+main|główny
+make|robić, wytwarzać
+manage|dać radę, zdołać
+many|wiele, dużo
+mark|ocena, stopień (Mark – imię)
+marriage|małżeństwo
+married|żonaty, zamężna (get married = brać ślub)
+match|mecz
+maths|matematyka
+may|móc (grzecznie: May I…? = Czy mogę…?)
+maybe|może
+me|mnie, mi
+meal|posiłek
+meals|posiłki
+meat|mięso
+medicine|lekarstwo
+meet|spotykać, poznawać
+melts|topi się, topnieje
+mess|bałagan
+message|wiadomość
+microphone|mikrofon
+mind|mieć coś przeciwko
+miss|spóźnić się na (autobus); tęsknić
+mix|mieszać
+moment|chwila (at the moment = w tej chwili)
+money|pieniądze
+month|miesiąc
+more|więcej, bardziej
+most|najwięcej, najbardziej
+much|dużo (how much = ile)
+mum|mama
+museum|muzeum
+music|muzyka
+musical|musical
+must|musieć
+my|mój, moja, moje
+need|potrzebować
+never|nigdy
+new|nowy
+newsletter|biuletyn, newsletter
+newspaper|gazeta
+newspapers|gazety
+next|następny, przyszły (next week = w przyszłym tygodniu)
+nice|miły, ładny
+night|noc
+no|nie; żaden
+not|nie
+nothing|nic
+novels|powieści
+now|teraz
+obvious|oczywisty, przewidywalny
+of|(dopełniacz, np. a cup of tea = filiżanka herbaty)
+often|często
+older|starszy
+on|na; w (on Saturday = w sobotę)
+one|jeden; ten (one of = jeden z)
+ones|te (zamiast powtarzania rzeczownika)
+online|w internecie
+open|otwierać; otwarty
+opinion|opinia, zdanie
+or|lub, albo
+oranges|pomarańcze
+other|inny
+our|nasz
+out|na zewnątrz (go out = wyjść)
+over|nad; ponad; all over = na całym (świecie)
+own|własny; posiadać
+page|strona
+paint|malować
+painted|namalowany, pomalowany
+paintings|obrazy
+parents|rodzice
+park|park
+party|impreza, przyjęcie
+pass|zdać (egzamin)
+passive|strona bierna
+past|przeszły, przeszłość
+pay|płacić
+people|ludzie
+performance|występ, przedstawienie
+phone|telefon
+phones|telefony
+photo|zdjęcie
+photos|zdjęcia
+picnic|piknik
+picture|obraz, zdjęcie
+piece|kawałek (a piece of music = utwór)
+pink|różowy
+places|miejsca
+plane|samolot
+plants|rośliny
+plastic|plastikowy
+play|grać, bawić się; sztuka (teatralna)
+played|grał (forma przeszła)
+players|zawodnicy, gracze
+playing|granie
+plays|gra
+plot|fabuła
+pocket|kieszeń (pocket money = kieszonkowe)
+poland|Polska
+popular|popularny
+possible|możliwy
+post|poczta; post, wpis (w sieci)
+practise|ćwiczyć
+practised|ćwiczył
+present|teraźniejszy; prezent
+product|produkt
+programme|program
+programmes|programy
+public|publiczny (in public = publicznie)
+question|pytanie
+race|wyścig
+radio|radio
+radium|rad (pierwiastek)
+rain|deszcz; padać (o deszczu)
+rains|pada (deszcz)
+reach|osiągać, dochodzić do
+read|czytać
+real|prawdziwy
+really|naprawdę, bardzo
+recycle|poddawać recyklingowi
+red|czerwony
+regularly|regularnie
+rehearsals|próby (np. przed występem)
+repair|naprawiać
+repaired|naprawił (forma przeszła)
+restaurant|restauracja
+results|wyniki
+rice|ryż
+right|dobrze, właściwie; prawy; zaraz
+ring|dzwonić
+role|rola
+room|pokój
+royal|królewski
+rugby|rugby
+said|powiedział (forma przeszła)
+same|ten sam, taki sam
+saturday|sobota
+saturdays|soboty (on Saturdays = w soboty)
+scholarship|stypendium
+school|szkoła
+science|nauka (ścisła) (science fiction = fantastyka naukowa)
+seats|miejsca (siedzące)
+see|widzieć, zobaczyć
+selfie|selfie
+sell|sprzedawać
+send|wysyłać
+sense|zmysł, poczucie (sense of humour = poczucie humoru)
+sent|wysłał; wysłany
+series|serial, seria
+serve|podawać (jedzenie)
+share|dzielić się, udostępniać
+she|ona
+she’ll|ona będzie, ona zrobi (she will)
+she’s|ona jest (she is)
+shock|szok
+shoes|buty
+shop|sklep
+shopping|zakupy
+short|krótki
+shouldn’t|nie powinien
+show|pokaz, występ, program; pokazywać
+shows|programy, pokazy; pokazuje
+sick|chory (get sick = zachorować; mieć mdłości)
+silly|głupi, niemądry
+simple|prosty
+singer’s|piosenkarza, piosenkarki
+sister|siostra
+sit|siedzieć, usiąść
+size|rozmiar
+ski|narty, narciarski
+skiing|narciarstwo, jazda na nartach
+sleep|spać, sen
+smartphone|smartfon
+so|tak, taki; więc
+some|trochę, kilka, jakieś
+someone|ktoś
+something|coś
+song|piosenka
+soon|wkrótce, niedługo (as soon as = jak tylko)
+sorry|przepraszam; przykro mi
+speak|mówić (w języku)
+speech|przemówienie
+spend|spędzać (czas); wydawać (pieniądze)
+sport|sport
+sportswoman|sportsmenka
+spots|pryszcze; plamy
+squash|squash
+stadium|stadion
+stage|scena
+station|stacja
+stay|zostać, przebywać
+steal|kraść
+stole|ukradł (forma przeszła)
+stop|przestać, zatrzymać się
+stories|historie, opowiadania
+storm|burza
+story|historia, opowieść
+street|ulica
+strong|silny
+strongest|najsilniejszy
+student|uczeń, student
+study|uczyć się
+such|taki
+suit|garnitur
+summer|lato
+sunny|słoneczny
+sure|pewny (Sure. = Jasne.)
+sweatshirt|bluza
+sweet|słodki
+take|brać; zabierać
+takes|bierze
+talent|talent
+talented|utalentowany
+talk|rozmowa; rozmawiać
+tall|wysoki (o osobie)
+taxi|taksówka
+tea|herbata
+team|drużyna
+teen|nastolatek; nastoletni
+tell|powiedzieć, mówić (komuś)
+tennis|tenis
+test|test, sprawdzian
+text|tekst; pisać SMS-a
+than|niż
+that|tamten, to; że; który
+that’s|to jest (that is)
+the|ten, ta, to (przedimek określony)
+theatre|teatr
+them|ich, im, je
+then|wtedy, potem
+there|tam
+there’s|jest, znajduje się (there is)
+these|te, ci
+they|oni, one
+think|myśleć, sądzić
+this|ten, ta, to
+thousands|tysiące
+ticket|bilet
+tickets|bilety
+time|czas; raz
+tired|zmęczony
+to|do; żeby
+today|dzisiaj
+together|razem
+tomorrow|jutro
+tonight|dziś wieczorem
+too|za, zbyt; też
+top|bluzka, top
+tourists|turyści
+tower|wieża
+train|pociąg
+trainers|buty sportowe, adidasy
+travel|podróżować
+trendy|modny
+tries|próbuje
+trip|wycieczka, podróż
+trouble|kłopot (be in trouble = mieć kłopoty)
+truth|prawda
+turns|zmienia się (turn into = zamienić się w)
+tv|telewizja
+uk|Wielka Brytania
+unfortunately|niestety
+unless|chyba że, jeśli nie
+until|aż, dopóki (nie)
+upload|wgrywać, przesyłać do sieci
+us|nas, nam
+use|używać
+usually|zwykle
+very|bardzo
+view|oglądać
+viewer|widz
+visit|odwiedzać
+visited|odwiedzany, odwiedzony
+visits|odwiedza
+wait|czekać
+walk|spacer; chodzić, iść pieszo
+wallet|portfel
+want|chcieć
+warm|ciepły
+was|był, była, było
+wasn’t|nie był, nie była, nie było
+watch|oglądać
+watches|ogląda
+water|woda; podlewać
+way|droga, sposób
+we|my
+wear|nosić (ubranie), mieć na sobie
+weather|pogoda
+website|strona internetowa
+wedding|wesele, ślub
+week|tydzień
+weekend|weekend
+were|byli, były; byłeś
+wet|mokry
+we’ll|my będziemy, my zrobimy (we will)
+we’re|my jesteśmy (we are)
+we’ve|my mamy (we have)
+what|co, jaki
+what’s|co jest (what is)
+when|kiedy, gdy
+where|gdzie
+which|który
+while|podczas gdy
+white|biały
+who|kto; który
+wild|dziki
+will|(czas przyszły) będzie, zrobi
+win|wygrać
+window|okno
+windows|okna
+with|z
+won|wygrał; wygrany
+wonderful|wspaniały, cudowny
+won’t|nie będzie, nie zrobi (will not)
+work|praca; pracować; działać
+world|świat
+worse|gorszy, gorzej
+would|(tryb warunkowy) -by, np. I would go = poszedłbym
+wouldn’t|nie (zrobiłby), would not
+write|pisać
+writes|pisze
+writing|pisanie
+written|napisany
+wrote|napisał (forma przeszła)
+year|rok
+years|lata
+yellow|żółty
+yes|tak
+yesterday|wczoraj
+you|ty, wy
+your|twój, wasz
+you’ll|ty będziesz, ty zrobisz (you will)
+you’ve|ty masz (you have)
+cross-country|biegowy, przełajowy
+ice-skating|łyżwiarstwo, jazda na łyżwach
+a.m|rano, przed południem
+cm|centymetr(y)`;
+const EN_PH_RAW=`go ahead|proszę bardzo, śmiało
+go right ahead|proszę bardzo, śmiało
+of course|oczywiście
+no way|nie ma mowy!
+as soon as|jak tylko
+by the way|przy okazji
+in advance|z wyprzedzeniem
+on time|na czas, punktualnie
+sense of humour|poczucie humoru
+find out|dowiedzieć się
+free time|czas wolny
+in public|publicznie
+all over the world|na całym świecie
+ice cream|lody
+science fiction|fantastyka naukowa
+short stories|opowiadania
+front page|pierwsza strona (gazety)
+fire alarm|alarm pożarowy
+pocket money|kieszonkowe
+living room|salon, pokój dzienny
+art gallery|galeria sztuki
+here you are|proszę (podając coś)
+no problem|nie ma problemu
+great britain|Wielka Brytania
+new york|Nowy Jork
+in front of|przed (czymś)
+at the moment|w tej chwili
+in my opinion|moim zdaniem
+half an hour|pół godziny
+take part in|brać udział w
+come back|wrócić
+come over|wpaść (w odwiedziny)
+go out|wyjść (z domu)
+go jogging|iść pobiegać
+go cycling|jeździć na rowerze
+go to bed|iść spać
+in big trouble|w dużych kłopotach
+a few|kilka
+last night|wczoraj wieczorem
+last friday|w zeszły piątek
+next week|w przyszłym tygodniu
+next year|w przyszłym roku
+next month|w przyszłym miesiącu
+every year|co roku
+every week|co tydzień
+every summer|co lato
+at home|w domu
+in half|na pół
+open air|plener, świeże powietrze
+ski jumping|skoki narciarskie
+cross-country skiing|narciarstwo biegowe
+talent shows|programy typu talent show
+main actor|główny aktor
+lead role|główna rola
+look at|patrzeć na
+get sick|zachorować
+turns into|zamienia się w
+good at|dobry w (czymś)
+fan of|fan (czegoś)
+get home|dotrzeć do domu
+gets dark|robi się ciemno
+in the world|na świecie
+how much|ile
+how about|może…? (propozycja)
+take a photo|zrobić zdjęcie
+a photo of|zdjęcie (czegoś)
+sorry|przepraszam
+used to|kiedyś (coś robiłem)
+at all|wcale`;
+const EN_PL={},EN_PH={};
+EN_PL_RAW.split('\n').forEach(l=>{const i=l.indexOf('|');if(i>0)EN_PL[l.slice(0,i)]=l.slice(i+1);});
+EN_PH_RAW.split('\n').forEach(l=>{const i=l.indexOf('|');if(i>0&&l.slice(0,i).includes(' '))EN_PH[l.slice(0,i)]=l.slice(i+1);});
+(()=>{try{Object.values(A10_W).flat().forEach(w=>{const k=String(w[0]).toLowerCase().replace(/'/g,'’').trim();if(!k||/[()\/]/.test(k))return;(k.includes(' ')?EN_PH:EN_PL)[k]=EN_PL[k]||w[1];});}catch(e){}})();
+const DICT_OFF_RE=/znacz|po angielsku( to)?\s*[:…]|po angielsku to|Popraw błąd|pisze się|tłumaczeni/i;
+const DICT_OFF_T=new Set(['sort','match','memo','pf','ab']);
+const DICT_OFF_ID=new Set(['prm-1','prm-3','prm-15']);
+const DICT_PL_AMB=new Set(['a','i','to','do','my','on','no','go','by','most','list','post','car','pies','as','data','lot','tom','ten','pan','dam','las','pal','kit','test','film','sport']);
+const DICT_NO_MORPH=new Set(['news','bus','always','its','this','is','was','has','his','us','yes','less','class','pass','dress','miss']);
+const dKey=w=>w.toLowerCase().replace(/'/g,'’');
+function dLook(w){const k=dKey(w);if(EN_PL[k])return{pl:EN_PL[k]};
+  if(DICT_NO_MORPH.has(k)||k.length<3)return null;
+  const s=k.replace(/’s$/,'');if(s!==k&&EN_PL[s])return{pl:EN_PL[s],base:s};
+  const tries=[];const add=(re,rep)=>{if(re.test(k))tries.push(k.replace(re,rep));};
+  add(/ies$/,'y');add(/es$/,'');add(/s$/,'');add(/ied$/,'y');add(/ed$/,'');add(/ed$/,'e');add(/([b-df-hj-np-tv-z])\1ed$/,'$1');
+  add(/ing$/,'');add(/ing$/,'e');add(/([b-df-hj-np-tv-z])\1ing$/,'$1');add(/ier$/,'y');add(/iest$/,'y');add(/er$/,'');add(/est$/,'');add(/r$/,'');add(/st$/,'');add(/([b-df-hj-np-tv-z])\1(er|est)$/,'$1');add(/ly$/,'');add(/ily$/,'y');
+  for(const b of tries)if(b.length>=2&&EN_PL[b])return{pl:EN_PL[b],base:b};return null;}
+function dictOn(q){return !!(SUBJ&&SUBJ.subject==='Język angielski'&&R&&!R.exam&&!R.sheet&&q&&!DICT_OFF_T.has(q.t)&&!DICT_OFF_ID.has(q.id)&&!DICT_OFF_RE.test(q.q||''));}
+const D_WRE=/[ap]\.m\b|[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+(?:[’'][A-Za-z]+)?(?:-[A-Za-z]+)*/g;
+/* dzieli tekst na kawałki: słowa ze słowniczka dostają <span class="dw"> */
+function dictWrap(text,q){
+  if(!dictOn(q))return text;
+  const frag=document.createDocumentFragment(),words=[];
+  const segs=text.split(/((?:[„”"():→?!;–…\/=]|\.(?=\s|$))+)/);
+  segs.forEach((seg,si)=>{
+    if(si%2===1||!seg){frag.append(seg);return;}
+    const pl=/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(seg);
+    const ms=[...seg.matchAll(D_WRE)];let n=0,k=0;
+    let sure=0;ms.forEach(m=>{const w=m[0],hit=dLook(w);if(!hit&&/^[A-Z]/.test(w))return;n++;if(hit){k++;if(!DICT_PL_AMB.has(dKey(w)))sure++;}});
+    const en=!pl&&n>0&&k/n>=0.6&&sure>0;
+    let pos=0;
+    ms.forEach(m=>{const w=m[0];frag.append(seg.slice(pos,m.index));pos=m.index+w.length;
+      const hit=seg[pos]==='_'?null:dLook(w),ok=hit&&(en||!DICT_PL_AMB.has(dKey(w)));
+      if(!ok){frag.append(w);words.push(null);return;}
+      const sp=h('span',{class:'dw',role:'button',tabindex:'0'},w);sp._w=w;sp._hit=hit;sp._i=words.length;words.push(sp);
+      const open=e=>{e.preventDefault();e.stopPropagation();dictPop(sp,words,q);};
+      sp.addEventListener('pointerdown',e=>e.preventDefault());sp.addEventListener('mousedown',e=>e.preventDefault());
+      sp.addEventListener('click',open);sp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')open(e);});
+      frag.append(sp);});
+    frag.append(seg.slice(pos));
+    words.push(null);/* granica kawałka – zwroty nie przechodzą przez nawias, kropkę itp. */
+  });
+  return frag;
+}
+/* odpowiedzi zadania – do sprawdzenia, czy dymek czegoś nie zdradza */
+function dAnswers(q){const a=[];if(q.ans)a.push(...q.ans);if(q.t==='mc'&&q.o)a.push(q.o[0]);if(q.t==='multi'&&q.o&&q.c)q.c.forEach(i=>a.push(q.o[i]));if(q.t==='order'&&q.items)a.push(q.items.join(' '));
+  return a.map(s=>' '+String(s).toLowerCase().replace(/[^a-ząćęłńóśźż0-9’ ]/g,' ').replace(/\s+/g,' ').trim()+' ');}
+function dLeak(pl,q){const A=dAnswers(q);if(!A.length)return false;
+  return pl.toLowerCase().split(/[,;()=]|\bod:/).map(s=>s.replace(/[^a-ząćęłńóśźż ]/g,' ').replace(/\s+/g,' ').trim()).filter(s=>s.length>=3).some(s=>A.some(x=>x.includes(' '+s+' ')));}
+function dPhrase(sp,words){
+  for(const len of [4,3,2])for(let st=sp._i-len+1;st<=sp._i;st++){if(st<0)continue;const ws=words.slice(st,st+len);if(ws.length<len||ws.some(x=>!x))continue;
+    const key=ws.map(x=>dKey(x._w)).join(' ');if(EN_PH[key])return{key,pl:EN_PH[key],ws};}
+  return null;}
+let D_POP=null;
+function dictClose(){if(D_POP){D_POP.el.remove();D_POP.ws.forEach(x=>x.classList.remove('on'));D_POP=null;}}
+const D_KEY='nauka-hani-slownik-v1';
+function dTaps(){try{return +localStorage.getItem(D_KEY)||0;}catch(e){return 0;}}
+function dSay(t){try{const s=window.speechSynthesis;if(!s)return;s.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.9;const v=s.getVoices().find(v=>/^en[-_]GB/i.test(v.lang))||s.getVoices().find(v=>/^en/i.test(v.lang));if(v)u.voice=v;s.speak(u);}catch(e){}}
+function dictPop(sp,words,q){
+  const same=D_POP&&D_POP.sp===sp;dictClose();if(same)return;
+  try{localStorage.setItem(D_KEY,String(dTaps()+1));}catch(e){}
+  if(R)R.dictN=(R.dictN||0)+1;
+  const ph=dPhrase(sp,words),hit=sp._hit,ws=ph?ph.ws:[sp];
+  const leak=dLeak(hit.pl,q)||(ph&&dLeak(ph.pl,q));
+  const say=h('button',{class:'dsay','aria-label':'Posłuchaj wymowy',type:'button'},'🔊');
+  say.addEventListener('pointerdown',e=>e.preventDefault());say.addEventListener('mousedown',e=>e.preventDefault());
+  say.addEventListener('click',e=>{e.stopPropagation();dSay(ph?ws.map(x=>x._w).join(' '):sp._w);});
+  const el=h('div',{class:'dpop',role:'tooltip'},
+    leak?h('div',{class:'dpl'},'🙈 Tu bez podpowiedzi – to jest sedno zadania.'):[
+      ph?h('div',{class:'dph'},h('b',{},ws.map(x=>x._w).join(' ')),' – ',ph.pl):null,
+      h('div',{class:'dpl'},ph?h('small',{},sp._w+': '):null,hit.pl),
+      hit.base?h('div',{class:'dbase'},'od słowa: '+hit.base):null],
+    leak?null:say,h('i',{class:'darr'}));
+  el.addEventListener('click',e=>e.stopPropagation());
+  document.body.append(el);
+  ws.forEach(x=>x.classList.add('on'));
+  D_POP={el,sp,ws};
+  const r=sp.getBoundingClientRect(),W=Math.min(280,innerWidth-16);el.style.maxWidth=W+'px';
+  const pr=el.getBoundingClientRect();let left=r.left+r.width/2-pr.width/2;left=Math.max(8,Math.min(left,innerWidth-pr.width-8));
+  let top=r.top-pr.height-10,below=false;if(top<8){top=r.bottom+10;below=true;}
+  el.style.left=left+'px';el.style.top=top+'px';el.classList.toggle('below',below);
+  const ar=el.querySelector('.darr');ar.style.left=Math.max(12,Math.min(r.left+r.width/2-left,pr.width-12))+'px';
+  const hint=document.querySelector('.dhint');if(hint&&dTaps()>=3)hint.remove();
+}
+document.addEventListener('click',()=>dictClose());
+addEventListener('scroll',()=>dictClose(),{passive:true});addEventListener('resize',()=>dictClose());
+function dictHint(q){if(!dictOn(q)||dTaps()>=3)return null;return h('p',{class:'dhint'},'👆 Dotknij podkreślone słowo – zobaczysz, co znaczy.');}
+function dictMissing(){const out=new Set();Object.values(SUBJECTS).filter(s=>s.subject==='Język angielski').forEach(s=>s.topics.forEach(t=>t.qs.forEach(q=>{
+  (q.q||'').split(/(?:[„”"():→?!;–…\/=]|\.(?=\s|$))+/).forEach(seg=>{if(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(seg))return;const ws=(seg.match(D_WRE)||[]).filter(w=>!/^[A-Z]/.test(w)||dLook(w));if(ws.filter(w=>dLook(w)).length<ws.length/2)return;ws.forEach(w=>{if(!dLook(w))out.add(dKey(w));});});})));return [...out].sort();}
+
 /* ---------- round ---------- */
 let R=null;
 function startRound(tid){
@@ -5047,7 +5908,7 @@ function nextQ(){
   const lab=R.sheet?`Zadanie ${R.done+1}. (0–${qMax(q)} pkt)`:(retry?'Powtórka · ':'')+(q.lab||TYPES[q.t]);
   const body=h('div');
   const nudge=h('p',{class:'nudge',hidden:''},'Utknęłaś? Wybierz najlepszą odpowiedź, nawet jeśli nie masz pewności. Błąd to nic złego – zaraz zobaczysz wyjaśnienie.');
-  const view=h('div',{},top,h('div',{class:'qtype label'+(q.lab&&!R.sheet?' hot':'')},lab),h('h2',{class:'q'},q.t==='tf'?'„'+q.q+'”':q.q),q.img?h('img',{class:'qimg',src:q.img,alt:'Zdjęcie do pytania'}):null,nudge,body);
+  const view=h('div',{},top,h('div',{class:'qtype label'+(q.lab&&!R.sheet?' hot':'')},lab),h('h2',{class:'q'},dictWrap(q.t==='tf'?'„'+q.q+'”':q.q,q)),dictHint(q),q.img?h('img',{class:'qimg',src:q.img,alt:'Zdjęcie do pytania'}):null,nudge,body);
   body.append({pf:rPF,ab:rAB,mc:rMC,tf:rTF,multi:rMulti,type:rType,open:rOpen,memo:rMemo,sort:rSort,match:rMatch,order:rOrder,dna:rDNA,build:rBuild,wz:rWz,eq:rEq}[q.t](q,(err,extra)=>feedback(view,q,err,extra)));
   screen(view);
 }
