@@ -3154,7 +3154,7 @@ Object.assign(GEN,{
       e:`Plony = zbiory : powierzchnia = ${f(t)} t : ${f(ha)} ha = ${p} t/ha. 1 t = 10 dt, więc ${p*10} dt/ha.`};},
   ampl(){const mx=rnd(26,34),mn=rnd(-30,18),a=mx-mn;
     return {t:'mc',q:`Na stacji w Azji najcieplejszy miesiąc ma średnio ${mx}°C, a najzimniejszy ${mn}°C. Ile wynosi roczna amplituda temperatury powietrza?`,
-      o:[`${a}°C`,`${mx+mn}°C`,`${Math.round((mx+mn)/2)}°C`,`${a+10}°C`],
+      o:[a,mx+mn,Math.round((mx+mn)/2),a+10,a-10,mx,a+5].filter((v,i,A)=>A.indexOf(v)===i).slice(0,4).map(v=>`${v}°C`),
       e:`Amplituda = najwyższa średnia − najniższa średnia = ${mx} − (${mn}) = ${a}°C.`};}
 });
 
@@ -5987,13 +5987,15 @@ function feedback(view,q,errors,extra){
 /* ---------- question types ---------- */
 function rMC(q,done,fixed){
   const wrap=h('div',{class:'opts'+(fixed?' tf':'')});
-  const opts=q.o.map((t,i)=>({t,i}));if(!fixed)shuffle(opts);
-  const correct=fixed?q.a:0;
+  /* v53: te same odpowiedzi nigdy nie pokazują się dwa razy; gdyby jednak, każda identyczna z poprawną się liczy */
+  const nrm=t=>String(t).trim().toLowerCase().replace(/\s+/g,' ');
+  let opts=q.o.map((t,i)=>({t,i}));if(!fixed){opts=opts.filter((o,k)=>opts.findIndex(x=>nrm(x.t)===nrm(o.t))===k);shuffle(opts);}
+  const correct=fixed?q.a:0,isOk=o=>o.i===correct||(!fixed&&nrm(o.t)===nrm(q.o[0]));
   opts.forEach(o=>{
     const b=btn('opt'+(q.mono?' seq':''),o.t,()=>{
       if(wrap.dataset.lock)return;wrap.dataset.lock='1';
-      const ok=o.i===correct;
-      [...wrap.children].forEach((c,k)=>{c.disabled=true;if(opts[k].i===correct)c.classList.add('ok');else if(c!==b)c.classList.add('dim');});
+      const ok=isOk(o);
+      [...wrap.children].forEach((c,k)=>{c.disabled=true;if(isOk(opts[k]))c.classList.add('ok');else if(c!==b)c.classList.add('dim');});
       if(!ok)b.classList.add('bad','shake');
       done(ok?0:1);
     });
