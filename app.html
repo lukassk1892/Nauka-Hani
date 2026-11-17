@@ -268,7 +268,7 @@ textarea:focus-visible{outline:3px solid var(--c);outline-offset:2px}
 .share{display:block;text-align:center;text-decoration:none;width:100%;padding:16px;border-radius:14px;background:var(--t);color:#fff;font-weight:600;font-size:1.05rem}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 @media (min-width:520px){.topics{grid-template-columns:1fr 1fr}.topic{grid-template-columns:1fr;align-items:start}}
-.gal{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}.gal figure{margin:0}.gal img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:10px;display:block}.gal figcaption{font-size:13px;line-height:1.3;margin-top:4px}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}.gal figure{margin:0}.gal img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:10px;display:block}.gal figcaption{font-size:13px;line-height:1.3;margin-top:4px}.gal.sym img{aspect-ratio:2/1;object-fit:contain;border:1px solid #e5e7eb;background:#fff}
 .remember{background:var(--surface);border:2px solid var(--warn);border-radius:12px;padding:10px 12px;margin:8px 0}.remember b{display:block;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);margin-bottom:4px}.remember p{margin:4px 0}.remember .ans{font-weight:600}
 details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;padding:6px 0}
 .next.wait{position:relative;overflow:hidden;opacity:.55}.next.wait::after{content:'';position:absolute;left:0;bottom:0;height:4px;background:currentColor;animation:fbw var(--w,4s) linear forwards}@keyframes fbw{from{width:0}to{width:100%}}
@@ -4669,8 +4669,247 @@ const HPO_PLAN=[
  ['2026-11-24','exam','Kartkówka próbna (po angielskim) i słabe punkty'],
  ['2026-11-25','cards','Rano tylko fiszki – powodzenia!']];
 prep(HPO_TOPICS,HPO_KMAP);
+/* ---------- FIZYKA – Elementy obwodu elektrycznego (17.11.2026, v55).
+   Kartkówka pt. 27.11.2026. Źródło: notatki Hani z zeszytu (symbole, łączenie szeregowe i równoległe – /mnt/project-files/fizyka/obwody/notatki/)
+   i podręcznik GWO „To nasz świat. Fizyka 8”: lekcja 11 (prąd, natężenie, amperomierz) s. 77–81, lekcja 12 (napięcie, woltomierz) s. 83–89,
+   lekcja dodatkowa „Obwody elektryczne” s. 95–99 (obrazy stron: /mnt/project-files/fizyka/podrecznik/strony/, plik = strona + 2).
+   Pole k = klucz lekcji, OBW_KMAP liczy się z tych pól. Nowe zadania dopisuj TYLKO na końcu tematu (kolejność = postępy).
+   Symbole i schematy rysuje obwSym()/obwCirc() jako obrazki SVG (pole img). ---------- */
+const OBW_G={ // znak symbolu wyśrodkowany w (0,0); w = połowa szerokości (tam dochodzą przewody)
+ zar:{w:18,d:'<circle r="18"/><path d="M-13-13L13 13M13-13L-13 13"/>'},
+ ogn:{w:6,d:'<path d="M-6-22V22" stroke-width="2.5"/><path d="M6-11V11" stroke-width="7"/>'},
+ bat:{w:22,d:'<path d="M-22-22V22" stroke-width="2.5"/><path d="M-10-11V11" stroke-width="7"/><path d="M-10 0H10"/><path d="M10-22V22" stroke-width="2.5"/><path d="M22-11V11" stroke-width="7"/>'},
+ wyl:{w:20,d:'<circle cx="-20" r="3.5" fill="#1f2937"/><circle cx="20" r="3.5" fill="#1f2937"/><path d="M-20 0L15-21"/>'},
+ opor:{w:25,d:'<rect x="-25" y="-11" width="50" height="22"/>'},
+ bez:{w:25,d:'<rect x="-25" y="-11" width="50" height="22"/><path d="M-25 0H25"/>'},
+ kon:{w:6,d:'<path d="M-6-20V20M6-20V20"/>'},
+ cew:{w:40,d:'<path d="M-40 0a10 10 0 0 1 20 0a10 10 0 0 1 20 0a10 10 0 0 1 20 0a10 10 0 0 1 20 0"/>'},
+ vol:{w:18,d:'<circle r="18"/><text y="8" font-size="22">V</text>'},
+ amp:{w:18,d:'<circle r="18"/><text y="8" font-size="22">A</text>'},
+ sil:{w:18,d:'<circle r="18"/><text y="8" font-size="22">M</text>'},
+ ac:{w:18,d:'<circle r="18"/><path d="M-10 0c3-8 7-8 10 0s7 8 10 0"/>'},
+ dio:{w:13,d:'<path d="M-13-15V15L13 0Z"/><path d="M13-15V15"/>'},
+ dzw:{w:8,d:'<path d="M-8 0V-12M8 0V-12M-24-12H24M-24-12a24 24 0 0 1 48 0"/>'},
+ prz:{w:0,d:''},
+ uzi:{d:'<path d="M0-34V2M-24 2H24M-15 12H15M-6 22H6"/>'},
+ trf:{d:'<path d="M-50-26H-24a8 8 0 0 1 0 13a8 8 0 0 1 0 13a8 8 0 0 1 0 13a8 8 0 0 1 0 13H-50M50-26H24a8 8 0 0 0 0 13a8 8 0 0 0 0 13a8 8 0 0 0 0 13a8 8 0 0 0 0 13H50"/><path d="M-6-30V30M6-30V30"/>'},
+ tra:{d:'<path d="M-6-22V22" stroke-width="5"/><path d="M-50 0H-6M-6-9L24-28V-36M-6 9L24 28V36"/><path d="M24 28l-12-1 5-7z" fill="#1f2937"/>'},
+ dc:{d:'<path d="M-36-8H36"/><path d="M-36 8H-22M-7 8H7M22 8H36"/>'}
+};
+function obwSvg(vb,inner){return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+vb+'" width="'+(vb.split(' ')[2]*2)+'" height="'+(vb.split(' ')[3]*2)+'"><rect x="'+vb.split(' ')[0]+'" y="'+vb.split(' ')[1]+'" width="100%" height="100%" fill="#fff"/><g fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" font-family="Arial,sans-serif" font-weight="bold" text-anchor="middle">'+inner.replace(/<text /g,'<text fill="#1f2937" stroke="none" ')+'</g></svg>');}
+function obwSym(k){const g=OBW_G[k];const leads=g.w==null?'':'<path d="M-72 0H'+(-g.w)+'M'+g.w+' 0H72"/>';return obwSvg('-80 -40 160 80',leads+g.d);}
+// schemat: lista elementów {h:[y,x1,x2,[[k,x,etykieta?]...]]} albo {v:[x,y1,y2]} albo {dot:[x,y]} albo {t:[x,y,tekst]}
+function obwCirc(vb,parts){let s='';for(const p of parts){
+  if(p.h){const [y,x1,x2,els=[]]=p.h;let x=x1;for(const [k,ex,lab] of els.slice().sort((a,b)=>a[1]-b[1])){const g=OBW_G[k];s+='<path d="M'+x+' '+y+'H'+(ex-g.w)+'"/>';s+='<g transform="translate('+ex+' '+y+')">'+g.d+'</g>';if(lab)s+='<text x="'+ex+'" y="'+(y-26)+'" font-size="15">'+lab+'</text>';x=ex+g.w;}s+='<path d="M'+x+' '+y+'H'+x2+'"/>';}
+  else if(p.v){const [x,y1,y2,els=[]]=p.v;let y=y1;for(const [k,ey] of els){const g=OBW_G[k];s+='<path d="M'+x+' '+y+'V'+(ey-g.w)+'"/><g transform="translate('+x+' '+ey+') rotate(90)">'+g.d+'</g>';y=ey+g.w;}s+='<path d="M'+x+' '+y+'V'+y2+'"/>';}
+  else if(p.dot)s+='<circle cx="'+p.dot[0]+'" cy="'+p.dot[1]+'" r="4.5" fill="#1f2937"/>';
+  else if(p.t)s+='<text x="'+p.t[0]+'" y="'+p.t[1]+'" font-size="'+(p.t[3]||15)+'">'+p.t[2]+'</text>';}
+ return obwSvg(vb,s);}
+const OBW_C={
+ // 2 żarówki szeregowo + ogniwo + wyłącznik zamknięty (przewód)
+ sz2:obwCirc('-130 -80 260 160',[{h:[-45,-110,110,[['zar',-40,'1'],['zar',40,'2']]]},{h:[50,-110,110,[['ogn',0]]]},{v:[-110,-45,50]},{v:[110,-45,50]},{t:[0,78,'+  −',13]}]),
+ // 3 żarówki szeregowo + ogniwo + wyłącznik OTWARTY
+ sz3o:obwCirc('-130 -80 260 160',[{h:[-45,-110,110,[['zar',-60,'1'],['zar',0,'2'],['zar',60,'3']]]},{h:[50,-110,110,[['ogn',-40],['wyl',40]]]},{v:[-110,-45,50]},{v:[110,-45,50]}]),
+ // 3 żarówki równolegle + ogniwo
+ r3:obwCirc('-130 -85 260 170',[{h:[-60,-50,50,[['zar',0,'1']]]},{h:[-15,-50,50,[['zar',0,'2']]]},{h:[30,-50,50,[['zar',0,'3']]]},{v:[-50,-60,30]},{v:[50,-60,30]},{h:[-15,-110,-50]},{h:[-15,50,110]},{v:[-110,-15,65]},{v:[110,-15,65]},{h:[65,-110,110,[['ogn',0]]]},{dot:[-50,-15]},{dot:[50,-15]}]),
+ // amperomierz szeregowo z żarówką (dobrze)
+ ampOk:obwCirc('-130 -80 260 160',[{h:[-45,-110,110,[['zar',-40],['amp',40]]]},{h:[50,-110,110,[['ogn',0]]]},{v:[-110,-45,50]},{v:[110,-45,50]}]),
+ // woltomierz równolegle do żarówki (dobrze)
+ volOk:obwCirc('-130 -100 260 185',[{h:[-75,-40,40,[['vol',0]]]},{v:[-40,-75,-25]},{v:[40,-75,-25]},{h:[-25,-110,110,[['zar',0]]]},{dot:[-40,-25]},{dot:[40,-25]},{h:[60,-110,110,[['ogn',0]]]},{v:[-110,-25,60]},{v:[110,-25,60]}]),
+ // amperomierz podłączony równolegle (źle)
+ ampZle:obwCirc('-130 -100 260 185',[{h:[-75,-40,40,[['amp',0]]]},{v:[-40,-75,-25]},{v:[40,-75,-25]},{h:[-25,-110,110,[['zar',0]]]},{dot:[-40,-25]},{dot:[40,-25]},{h:[60,-110,110,[['ogn',0]]]},{v:[-110,-25,60]},{v:[110,-25,60]}]),
+ // woltomierz włączony szeregowo (źle)
+ volZle:obwCirc('-130 -80 260 160',[{h:[-45,-110,110,[['zar',-40],['vol',40]]]},{h:[50,-110,110,[['ogn',0]]]},{v:[-110,-45,50]},{v:[110,-45,50]}]),
+ // 3 żarówki równolegle + amperomierz w przewodzie głównym + wyłącznik (jak w zeszycie)
+ r3a:obwCirc('-130 -85 260 170',[{h:[-60,-50,50,[['zar',0]]]},{h:[-15,-50,50,[['zar',0]]]},{h:[30,-50,50,[['zar',0]]]},{v:[-50,-60,30]},{v:[50,-60,30]},{h:[-15,-110,-50]},{h:[-15,50,110,[['amp',82]]]},{v:[-110,-15,65]},{v:[110,-15,65]},{h:[65,-110,110,[['ogn',-50],['wyl',40]]]},{dot:[-50,-15]},{dot:[50,-15]}]),
+ // obwód z silnikiem, dzwonkiem i opornikiem (do rozpoznawania)
+ mix:obwCirc('-130 -90 260 170',[{h:[-45,-110,110,[['sil',-60],['opor',5],['dzw',70]]]},{h:[50,-110,110,[['bat',-40],['wyl',45]]]},{v:[-110,-45,50]},{v:[110,-45,50]}]),
+ // 2 żarówki szeregowo + 2 woltomierze (jak w zeszycie U = U1 + U2)
+ szV:obwCirc('-130 -118 260 203',[{h:[-75,-100,-20,[['vol',-60]]]},{h:[-75,20,100,[['vol',60]]]},{v:[-100,-75,-25]},{v:[-20,-75,-25]},{v:[20,-75,-25]},{v:[100,-75,-25]},{h:[-25,-120,120,[['zar',-60,''],['zar',60,'']]]},{dot:[-100,-25]},{dot:[-20,-25]},{dot:[20,-25]},{dot:[100,-25]},{h:[60,-120,120,[['ogn',0]]]},{v:[-120,-25,60]},{v:[120,-25,60]},{t:[-60,-100,'V₁',14]},{t:[60,-100,'V₂',14]}])
+};
+const OS=k=>obwSym(k);
+const OBW_TOPICS=[
+{id:'sym',base:'C',mark:'1',name:'Symbole elementów obwodu',pages:'zeszyt + s. 77, 79, 83',qs:[
+ {k:'syz',t:'mc',q:'Co oznacza ten symbol?',img:OS('zar'),o:['żarówkę','amperomierz','źródło prądu przemiennego','silnik'],e:'Kółko z krzyżykiem (X) to żarówka. Litera w kółku oznacza miernik albo silnik.'},
+ {k:'syz',t:'mc',q:'Co oznacza ten symbol?',img:OS('ogn'),o:['ogniwo – źródło prądu stałego','kondensator','wyłącznik','opornik'],e:'Dwie kreski: dłuższa cienka (+) i krótsza gruba (−) to ogniwo. Kondensator ma dwie RÓWNE kreski.'},
+ {k:'syz',t:'mc',q:'Co oznacza ten symbol?',img:OS('wyl'),o:['wyłącznik (przełącznik) – otwarty','dioda','uziemienie','przewód przerwany przez bezpiecznik'],e:'Odchylona kreska między dwiema kropkami to wyłącznik. Tu jest otwarty – prąd nie płynie.'},
+ {k:'sym2',t:'mc',q:'Co oznacza ten symbol?',img:OS('amp'),o:['amperomierz','woltomierz','silnik','źródło prądu przemiennego'],e:'Litera A w kółku – amperomierz, mierzy natężenie prądu w amperach (A).'},
+ {k:'sym2',t:'mc',q:'Co oznacza ten symbol?',img:OS('vol'),o:['woltomierz','amperomierz','żarówkę','silnik'],e:'Litera V w kółku – woltomierz, mierzy napięcie w woltach (V).'},
+ {k:'sym2',t:'mc',q:'Co oznacza ten symbol?',img:OS('opor'),o:['opornik (rezystor)','bezpiecznik','kondensator','ogniwo'],e:'Pusty prostokąt to opornik. Bezpiecznik to prostokąt, przez który przechodzi kreska.'},
+ {k:'sym2',t:'mc',q:'Co oznacza ten symbol?',img:OS('bez'),o:['bezpiecznik','opornik','zwojnicę (cewkę)','diodę'],e:'Prostokąt z przewodem przechodzącym przez środek to bezpiecznik (po angielsku fuse).'},
+ {k:'sym3',t:'mc',q:'Co oznacza ten symbol?',img:OS('kon'),o:['kondensator','ogniwo','baterię','wyłącznik'],e:'Dwie RÓWNE kreski to kondensator. W ogniwie jedna kreska jest dłuższa, a druga krótsza i grubsza.'},
+ {k:'sym3',t:'mc',q:'Co oznacza ten symbol?',img:OS('cew'),o:['zwojnicę (cewkę indukcyjną)','opornik','źródło prądu przemiennego','transformator'],e:'Zwoje jak sprężynka to zwojnica, czyli cewka indukcyjna.'},
+ {k:'sym2',t:'mc',q:'Co oznacza ten symbol?',img:OS('sil'),o:['silnik (motor)','miernik masy','amperomierz','źródło prądu przemiennego'],e:'Litera M w kółku – silnik (motor).'},
+ {k:'sym3',t:'mc',q:'Co oznacza ten symbol?',img:OS('dio'),o:['diodę prostowniczą','wyłącznik','uziemienie','kondensator'],e:'Trójkąt z kreską na czubku to dioda. Przepuszcza prąd tylko w jedną stronę – w kierunku, w który wskazuje trójkąt.'},
+ {k:'sym2',t:'mc',q:'Co oznacza ten symbol?',img:OS('dzw'),o:['dzwonek','uziemienie','wyłącznik','żarówkę'],e:'Daszek (kopułka) na dwóch nóżkach to dzwonek (bell).'},
+ {k:'sym3',t:'mc',q:'Co oznacza ten symbol?',img:OS('uzi'),o:['uziemienie','antenę','ogniwo','bezpiecznik'],e:'Kreska w dół i coraz krótsze poziome kreski – uziemienie.'},
+ {k:'sym3',t:'mc',q:'Co oznacza ten symbol?',img:OS('ac'),o:['źródło prądu przemiennego (AC)','źródło prądu stałego (DC)','silnik','woltomierz'],e:'Falka ~ oznacza prąd przemienny (AC). Prąd stały (DC) oznacza ogniwo albo kreska ciągła nad przerywaną.'},
+ {k:'sym3',t:'mc',q:'Co oznacza ten symbol?',img:OS('trf'),o:['transformator','dwie zwojnice połączone szeregowo','kondensator','baterię'],e:'Dwie zwojnice przedzielone kreskami (rdzeniem) to transformator.'},
+ {k:'sym3',t:'mc',q:'Co oznacza ten symbol?',img:OS('tra'),o:['tranzystor','diodę','uziemienie','wyłącznik'],e:'Kreska z dwiema ukośnymi nóżkami (jedna ze strzałką) to tranzystor.'},
+ {k:'syz',t:'mc',q:'Co oznacza ten symbol?',img:OS('bat'),o:['baterię (kilka ogniw)','dwa kondensatory','dwa wyłączniki','opornik'],e:'Kilka ogniw połączonych jedno za drugim to bateria.'},
+ {k:'syz',t:'type',q:'Wpisz nazwę elementu z rysunku.',img:OS('zar'),ans:['żarówka','zarowka'],ph:'wpisz nazwę',e:'Kółko z krzyżykiem to żarówka.'},
+ {k:'sym2',t:'type',q:'Wpisz nazwę miernika z rysunku.',img:OS('vol'),ans:['woltomierz'],ph:'wpisz nazwę',e:'V w kółku = woltomierz.'},
+ {k:'sym2',t:'type',q:'Wpisz nazwę miernika z rysunku.',img:OS('amp'),ans:['amperomierz'],ph:'wpisz nazwę',e:'A w kółku = amperomierz.'},
+ {k:'sym2',t:'type',q:'Wpisz nazwę elementu z rysunku.',img:OS('opor'),ans:['opornik','rezystor'],ph:'wpisz nazwę',e:'Prostokąt = opornik, czyli rezystor.'},
+ {k:'syz',t:'multi',q:'Zaznacz WSZYSTKIE elementy, które są na tym schemacie.',img:OBW_C.mix,o:['silnik','opornik','dzwonek','bateria','wyłącznik','żarówka','amperomierz'],c:[0,1,2,3,4],e:'Od lewej u góry: silnik (M), opornik (prostokąt), dzwonek (kopułka). Na dole bateria i otwarty wyłącznik. Żarówki ani amperomierza nie ma.'},
+ {k:'sym3',t:'tf',q:'Kondensator i ogniwo mają taki sam symbol.',a:false,e:'Kondensator ma dwie równe kreski, a ogniwo – dłuższą cienką (+) i krótszą grubą (−).'},
+ {k:'syz',t:'tf',q:'W symbolu ogniwa dłuższa, cienka kreska oznacza biegun dodatni (+).',a:true,e:'Dłuższa cienka kreska to plus, krótsza gruba to minus.'},
+ {k:'sym3',t:'sort',q:'Prąd stały czy przemienny?',cats:['prąd stały (DC)','prąd przemienny (AC)'],items:[['ogniwo',0],['bateria',0],['kółko z falką ~',1],['kreska ciągła nad przerywaną',0],['prąd w gniazdku w domu',1]],e:'Ogniwa i baterie dają prąd stały (DC). Falka ~ i sieć domowa to prąd przemienny (AC).'},
+ {k:'ang',t:'match',q:'Połącz angielską nazwę z polską.',pairs:[['bulb','żarówka'],['wire','przewód'],['bell','dzwonek'],['fuse','bezpiecznik']],e:'Bulb – żarówka, wire – przewód, bell – dzwonek, fuse – bezpiecznik.'},
+ {k:'ang',t:'match',q:'Połącz angielską nazwę z polską.',pairs:[['voltmeter','woltomierz'],['ammeter','amperomierz'],['diode','dioda'],['electrical cell','ogniwo']],e:'Voltmeter mierzy wolty, ammeter – ampery. Cell to ogniwo.'},
+ {k:'sym2',t:'match',q:'Połącz symbol (opis) z elementem.',pairs:[['kółko z literą M','silnik'],['kółko z krzyżykiem','żarówka'],['pusty prostokąt','opornik'],['prostokąt przecięty kreską','bezpiecznik']],e:'Zapamiętaj pary: M – silnik, X – żarówka, prostokąt – opornik, prostokąt z kreską – bezpiecznik.'},
+ {k:'syz',t:'mc',lab:'Znajdź fałsz',q:'Które zdanie o symbolach jest FAŁSZYWE?',o:['Kółko z literą A to woltomierz.','Linia ciągła oznacza przewód.','Wyłącznik otwarty rysujemy jako odchyloną kreskę.','Kółko z krzyżykiem to żarówka.'],e:'Kółko z A to amperomierz. Woltomierz ma literę V.'},
+ {k:'syz',t:'open',q:'Narysuj w zeszycie schemat: ogniwo, wyłącznik i dwie żarówki połączone szeregowo. Potem sprawdź się.',pts:['Ogniwo: dłuższa cienka kreska (+) i krótsza gruba (−).','Wyłącznik: odchylona kreska między dwiema kropkami.','Dwie żarówki (kółka z krzyżykiem) jedna za drugą, bez rozgałęzień.','Wszystko połączone liniami prostymi w jedną zamkniętą pętlę.']},
+ {k:'sym3',t:'open',q:'Jak odróżnić na rysunku ogniwo od kondensatora i opornik od bezpiecznika?',pts:['Ogniwo ma kreski różne: dłuższą cienką i krótszą grubą.','Kondensator ma dwie równe kreski.','Opornik to pusty prostokąt.','Bezpiecznik to prostokąt, przez który przechodzi przewód.']}
+]},
+{id:'obw',base:'T',mark:'2',name:'Obwód zamknięty i otwarty, prąd',pages:'s. 77–79',qs:[
+ {k:'zam',t:'mc',q:'Z czego składa się najprostszy obwód, w którym świeci żarówka?',o:['ze źródła energii elektrycznej (np. baterii), przewodów i żarówki','z samej żarówki i przewodów','z baterii i woltomierza','z żarówki i amperomierza'],e:'Potrzebne jest źródło (bateria, akumulator), przewody i odbiornik, np. żarówka.'},
+ {k:'zam',t:'mc',q:'Kiedy przez żarówkę płynie prąd?',o:['gdy obwód jest zamknięty','gdy wyłącznik jest otwarty','gdy odłączymy jeden przewód','tylko gdy w obwodzie jest amperomierz'],e:'Prąd płynie tylko w obwodzie zamkniętym – bez przerw.'},
+ {k:'zam',t:'type',q:'Obwód, w którym jest przerwa i prąd nie płynie, to obwód…',ans:['otwarty'],ph:'wpisz jedno słowo',e:'Przerwa = obwód otwarty. Bez przerw = obwód zamknięty.'},
+ {k:'zam',t:'multi',q:'Jak można otworzyć obwód? Zaznacz WSZYSTKIE dobre sposoby.',o:['odłączyć jeden z przewodów','otworzyć wyłącznik','dołożyć drugą żarówkę szeregowo','dołożyć drugą baterię'],c:[0,1],e:'Otwarcie obwodu = zrobienie przerwy: odłączamy przewód albo otwieramy wyłącznik.'},
+ {k:'zam',t:'mc',q:'Przez które żarówki płynie prąd, gdy wyłącznik jest otwarty jak na schemacie?',img:OBW_C.sz3o,o:['przez żadną','tylko przez żarówkę 3','tylko przez żarówki 1 i 2','przez wszystkie trzy'],e:'Wszystko jest połączone szeregowo, w jednej pętli. Otwarty wyłącznik przerywa całą pętlę.'},
+ {k:'prad',t:'type',q:'Prąd elektryczny to uporządkowany ruch…',ans:['ładunków','ładunków elektrycznych','ladunkow'],ph:'wpisz słowo',e:'Prąd to uporządkowany ruch ładunków elektrycznych, np. elektronów w metalu.'},
+ {k:'prad',t:'mc',q:'W którą stronę płyną elektrony w przewodach obwodu?',o:['od bieguna ujemnego (−) do dodatniego (+)','od bieguna dodatniego (+) do ujemnego (−)','raz w jedną, raz w drugą stronę','elektrony nie płyną, płyną tylko protony'],e:'Elektrony (ładunek ujemny) płyną od minusa do plusa.'},
+ {k:'prad',t:'mc',q:'Jaki jest umowny kierunek prądu?',o:['od bieguna dodatniego (+) do ujemnego (−)','od bieguna ujemnego (−) do dodatniego (+)','zgodny z ruchem elektronów','od żarówki do baterii'],e:'Umówiono się, że prąd płynie od plusa do minusa, czyli przeciwnie do elektronów.'},
+ {k:'prad',t:'tf',q:'Umowny kierunek prądu jest taki sam jak kierunek ruchu elektronów.',a:false,e:'Jest przeciwny: umownie od + do −, a elektrony płyną od − do +.'},
+ {k:'prad',t:'mc',q:'Dlaczego żarówka nie świeci, gdy elektrody zanurzymy w bardzo czystej wodzie, a świeci, gdy dosypiemy soli?',o:['w czystej wodzie jest bardzo mało jonów, a sól daje jony Na⁺ i Cl⁻, które przenoszą ładunek','sól ogrzewa wodę','w czystej wodzie jest za dużo elektronów','sól zamyka wyłącznik'],e:'W cieczach prąd to ruch jonów. Po rozpuszczeniu soli jonów jest dużo.'},
+ {k:'zam',t:'mc',q:'Lampki choinkowe są połączone szeregowo. Co się stanie, gdy jedna żarówka się przepali?',o:['zgasną wszystkie, bo obwód zostanie przerwany','zgaśnie tylko ta jedna','pozostałe zaświecą jaśniej','nic się nie zmieni'],e:'Przepalona żarówka to przerwa w jedynej pętli – prąd przestaje płynąć wszędzie. Wystarczy ją wymienić.'},
+ {k:'zam',t:'order',q:'Ułóż drogę prądu (umowny kierunek) w obwodzie z jedną żarówką.',items:['biegun dodatni (+) źródła','przewód','żarówka','przewód','biegun ujemny (−) źródła'],e:'Umownie prąd wypływa z plusa, przechodzi przez odbiornik i wraca do minusa.'},
+ {k:'prad',t:'sort',q:'Co płynie w tym miejscu, gdy jest prąd?',cats:['elektrony','jony'],items:[['metalowy przewód',0],['woda z solą',1],['włókno żarówki',0],['elektrolit w ogniwie',1]],e:'W metalach płyną elektrony, w cieczach (roztworach) – jony.'},
+ {k:'zam',t:'tf',q:'Gdy wyłącznik jest zamknięty, w obwodzie nie ma przerwy i może płynąć prąd.',a:true,e:'Zamknięty wyłącznik = przewód bez przerwy.'},
+ {k:'prad',t:'mc',q:'Źródło energii elektrycznej zbudowane z dwóch różnych metali rozdzielonych elektrolitem to…',o:['ogniwo galwaniczne (ogniwo Volty)','kondensator','transformator','bezpiecznik'],e:'Volta zbudował ogniwo z dwóch metali i elektrolitu – to ogniwo galwaniczne.'},
+ {k:'zam',t:'open',q:'Wyjaśnij, czym różni się obwód zamknięty od otwartego i co robi wyłącznik.',pts:['Obwód zamknięty nie ma przerw – płynie prąd, żarówka świeci.','Obwód otwarty ma przerwę – prąd nie płynie.','Wyłącznik pozwala zrobić lub usunąć przerwę, czyli otworzyć albo zamknąć obwód.']}
+]},
+{id:'mie',base:'A',mark:'3',name:'Amperomierz i woltomierz',pages:'s. 79–81, 84–86',qs:[
+ {k:'amp',t:'mc',q:'Co mierzy amperomierz?',o:['natężenie prądu','napięcie','opór','moc'],e:'Amperomierz mierzy natężenie prądu w amperach (A).'},
+ {k:'wol',t:'mc',q:'Co mierzy woltomierz?',o:['napięcie','natężenie prądu','opór','ładunek'],e:'Woltomierz mierzy napięcie w woltach (V).'},
+ {k:'amp',t:'mc',q:'Jak włączamy amperomierz do obwodu?',o:['szeregowo z urządzeniem – cały prąd musi przez niego przepłynąć','równolegle do urządzenia','zawsze bezpośrednio do biegunów baterii, bez żarówki','obojętnie jak'],e:'Amperomierz łączymy szeregowo – przed albo za urządzeniem.'},
+ {k:'wol',t:'mc',q:'Jak włączamy woltomierz?',o:['równolegle – jego końcówki łączymy z dwoma końcami urządzenia','szeregowo – rozcinamy obwód i wstawiamy go w przerwę','zawsze w miejsce wyłącznika','tylko między dwie baterie'],e:'Woltomierz podłączamy równolegle, bez rozłączania obwodu.'},
+ {k:'amp',t:'mc',q:'Na którym schemacie amperomierz jest podłączony POPRAWNIE?',img:OBW_C.ampOk,o:['tak, ten jest dobry – amperomierz jest szeregowo z żarówką','nie – amperomierz musi być równolegle do żarówki','nie – amperomierz musi być między biegunami baterii','nie – w obwodzie musi być woltomierz'],e:'Amperomierz w tej samej pętli co żarówka, jeden za drugim – czyli szeregowo. Dobrze!'},
+ {k:'amp',t:'tf',q:'Na tym schemacie amperomierz jest podłączony prawidłowo.',img:OBW_C.ampZle,a:false,e:'Tu amperomierz jest równolegle do żarówki – tak podłącza się woltomierz, nie amperomierz.'},
+ {k:'wol',t:'tf',q:'Na tym schemacie woltomierz jest podłączony prawidłowo – mierzy napięcie na żarówce.',img:OBW_C.volOk,a:true,e:'Woltomierz jest równolegle do żarówki: jego końcówki dotykają obu końców żarówki.'},
+ {k:'wol',t:'tf',q:'Na tym schemacie woltomierz jest podłączony prawidłowo.',img:OBW_C.volZle,a:false,e:'Woltomierz wstawiono szeregowo. Woltomierz łączymy równolegle do urządzenia.'},
+ {k:'amp',t:'type',q:'Jednostka natężenia prądu to…',ans:['amper','A'],ph:'nazwa lub symbol',e:'Natężenie mierzymy w amperach (A).'},
+ {k:'wol',t:'type',q:'Jednostka napięcia to…',ans:['wolt','V'],ph:'nazwa lub symbol',e:'Napięcie mierzymy w woltach (V).'},
+ {k:'amp',t:'sort',q:'Amperomierz czy woltomierz?',cats:['amperomierz','woltomierz'],items:[['mierzy natężenie',0],['mierzy napięcie',1],['łączymy szeregowo',0],['łączymy równolegle',1],['wynik w amperach',0],['wynik w woltach',1]],e:'Amperomierz: natężenie, szeregowo, A. Woltomierz: napięcie, równolegle, V.'},
+ {k:'amp',t:'mc',q:'Ile to jest 250 mA?',o:['0,25 A','2,5 A','25 A','0,025 A'],e:'1 mA = 0,001 A, więc 250 mA = 0,25 A.'},
+ {k:'amp',t:'mc',q:'Przez przewód w ciągu 2 s przepłynął ładunek 1,4 C. Jakie było natężenie prądu?',o:['0,7 A','2,8 A','3,4 A','1,4 A'],e:'I = Q : t = 1,4 C : 2 s = 0,7 A.'},
+ {k:'mult',t:'mc',q:'Mierzymy natężenie miernikiem uniwersalnym. Do których gniazd wkładamy przewody?',o:['czarny do COM, czerwony do 10A','czarny do V, czerwony do COM','oba do COM','czerwony do COM, czarny do 10A'],e:'Czarny przewód zawsze do COM. Przy natężeniu czerwony do gniazda 10A, przy napięciu – do V.'},
+ {k:'mult',t:'tf',q:'Miernik uniwersalny (multimetr) może działać jako amperomierz albo jako woltomierz – zależnie od ustawienia pokrętła i gniazd.',a:true,e:'Pokrętłem i gniazdami wybieramy, co mierzy multimetr.'},
+ {k:'amp',t:'mc',q:'W obwodzie bez rozgałęzień amperomierz przed żarówką pokazuje 2 A. Ile pokaże amperomierz za żarówką?',o:['2 A','mniej niż 2 A, bo żarówka „zużyła” prąd','więcej niż 2 A','0 A'],e:'W przewodzie bez rozgałęzień natężenie jest wszędzie takie samo – ładunek nie znika (zasada zachowania ładunku).'},
+ {k:'wol',t:'multi',q:'Zaznacz WSZYSTKIE prawdziwe zdania o woltomierzu.',o:['ma symbol V w kółku','podłączamy go bez rozłączania obwodu','pokazuje wynik w woltach','łączymy go szeregowo z żarówką','mierzy natężenie prądu'],c:[0,1,2],e:'Woltomierz: V w kółku, równolegle (bez rozcinania obwodu), wynik w woltach. Natężenie mierzy amperomierz.'},
+ {k:'amp',t:'open',q:'Opisz, jak zmierzyć natężenie prądu płynącego przez żarówkę i napięcie na tej żarówce.',pts:['Amperomierz włączam szeregowo z żarówką (przed lub za nią).','Woltomierz podłączam równolegle – do obu końców żarówki.','Natężenie odczytuję w amperach (A), napięcie w woltach (V).']}
+]},
+{id:'sze',base:'G',mark:'4',name:'Łączenie szeregowe',pages:'s. 87–88, 95–96, zeszyt',qs:[
+ {k:'szer',t:'mc',q:'Kiedy urządzenia są połączone szeregowo?',o:['gdy są połączone jedno za drugim, jak łańcuszek – w jednej pętli','gdy każde ma osobną gałąź','gdy są połączone w węźle','gdy mają wspólne oba końce'],e:'Szeregowo = jedno za drugim, bez rozgałęzień.'},
+ {k:'szer',t:'mc',q:'Co jest takie samo dla każdego urządzenia w łączeniu szeregowym?',o:['natężenie prądu','napięcie','jasność, nawet gdy żarówki są różne','opór'],e:'Ramka z podręcznika: w łączeniu szeregowym przez każde urządzenie płynie prąd o takim samym natężeniu.'},
+ {k:'szer',t:'mc',q:'Co dzieje się z napięciem źródła w łączeniu szeregowym?',o:['dzieli się na wszystkie urządzenia','na każdym urządzeniu jest całe napięcie źródła','znika na pierwszym urządzeniu','rośnie z każdym urządzeniem'],e:'Napięcie źródła dzieli się: U = U₁ + U₂ + U₃.'},
+ {k:'szer',t:'mc',q:'Dlaczego dwie żarówki połączone szeregowo świecą słabiej niż jedna taka żarówka?',o:['bo napięcie źródła dzieli się na obie żarówki','bo prąd płynie tylko przez pierwszą','bo natężenie w drugiej jest większe','bo żarówki zasłaniają sobie światło'],e:'Każda żarówka dostaje tylko część napięcia źródła, więc świeci słabiej.'},
+ {k:'szu',t:'type',q:'Trzy ogniwa po 1,5 V połączono szeregowo (+ do −). Jakie jest napięcie całej baterii? Wpisz liczbę w woltach.',ans:['4,5','4.5'],ph:'liczba',e:'Napięcia ogniw połączonych szeregowo dodają się: 1,5 + 1,5 + 1,5 = 4,5 V.'},
+ {k:'szu',t:'mc',q:'Napięcie źródła to 1,5 V. Na żarówce 3 jest 1 V, a na żarówkach 1 i 2 razem pozostała reszta. Jaki wzór to opisuje?',o:['U = U₁ + U₂ + U₃','U = U₁ = U₂ = U₃','I = I₁ + I₂ + I₃','U = U₁ · U₂ · U₃'],e:'W łączeniu szeregowym napięcia na urządzeniach dodają się do napięcia źródła.'},
+ {k:'szu',t:'mc',q:'Dwie identyczne żarówki połączono szeregowo. Napięcie źródła wynosi 10 V, natężenie 4 A. Jakie jest napięcie na każdej żarówce i natężenie prądu w każdej?',img:OBW_C.sz2,o:['5 V i 4 A','10 V i 2 A','5 V i 2 A','10 V i 4 A'],e:'Napięcie dzieli się po równo (żarówki identyczne): 10 V : 2 = 5 V. Natężenie wszędzie takie samo: 4 A.'},
+ {k:'szu',t:'pf',q:'Dwie identyczne żarówki połączono szeregowo, I = 2 A, U = 4 V. Oceń zdania.',st:[['Natężenie prądu płynącego przez żarówkę 1 wynosi 1 A.',false],['Napięcie na żarówce 2 wynosi 2 V.',true],['Każda żarówka świeci tak samo jasno.',true]],e:'Szeregowo: natężenie w każdej żarówce = 2 A. Napięcie 4 V dzieli się po równo: 2 V. Identyczne żarówki świecą tak samo.'},
+ {k:'szu',t:'mc',q:'Oporniki R₁ = 4 Ω i R₂ = 8 Ω połączono szeregowo. Na którym jest większe napięcie?',o:['na R₂, bo ma większy opór','na R₁, bo jest pierwszy','na obu takie samo','zależy od tego, gdzie jest bateria'],e:'Szeregowo: większy opór → większa część napięcia.'},
+ {k:'szer',t:'tf',q:'W łączeniu szeregowym przez każde urządzenie płynie prąd o takim samym natężeniu.',a:true,e:'Prąd ma tylko jedną drogę, więc natężenie jest wszędzie takie samo.'},
+ {k:'szer',t:'tf',q:'Gdy dołożymy szeregowo trzecią żarówkę, wszystkie żarówki zaświecą jaśniej.',a:false,e:'Napięcie podzieli się na więcej żarówek – świecą słabiej.'},
+ {k:'szer',t:'mc',q:'W analogii z podręcznika żarówki połączone szeregowo to bramki na autostradzie. Czym jest źródło napięcia?',o:['bankomatem, z którego bierzemy gotówkę (energię)','samochodami','drogą','bramką'],e:'Bankomat = źródło, droga = przewody, samochody = prąd, bramki = żarówki (na każdej zostawiamy część energii).'},
+ {k:'szu',t:'type',q:'Na schemacie woltomierz V₁ pokazuje 2 V, a V₂ – 4 V. Jakie jest napięcie źródła? Wpisz liczbę w woltach.',img:OBW_C.szV,ans:['6'],ph:'liczba',e:'Szeregowo: U = U₁ + U₂ = 2 V + 4 V = 6 V.'},
+ {k:'szer',t:'multi',q:'Zaznacz WSZYSTKIE prawdziwe zdania o łączeniu szeregowym.',o:['urządzenia są jedno za drugim','przepalenie jednej żarówki gasi wszystkie','napięcie dzieli się na urządzenia','na każdym urządzeniu jest całe napięcie źródła','w obwodzie są węzły'],c:[0,1,2],e:'Szeregowo: jedna pętla, wspólny prąd, napięcie się dzieli. Węzły i całe napięcie na każdym urządzeniu to łączenie równoległe.'},
+ {k:'szu',gen:'obwSzU'},
+ {k:'szu',gen:'obwBat'},
+ {k:'szer',t:'open',q:'Wyjaśnij, dlaczego żarówki połączone szeregowo świecą słabiej niż jedna żarówka i co się dzieje, gdy jedna się przepali.',pts:['Napięcie źródła dzieli się na wszystkie żarówki.','Każda żarówka dostaje tylko część napięcia, więc świeci słabiej.','Przez wszystkie płynie prąd o takim samym natężeniu.','Przepalona żarówka przerywa obwód – gasną wszystkie.']}
+]},
+{id:'row',base:'C',mark:'5',name:'Łączenie równoległe',pages:'s. 97–99, zeszyt',qs:[
+ {k:'row',t:'mc',q:'Kiedy urządzenia są połączone równolegle?',o:['gdy każde jest w osobnym rozgałęzieniu, a rozgałęzienia łączą się w węzłach','gdy są jedno za drugim','gdy jest tylko jedna pętla','gdy między nimi jest wyłącznik'],e:'Równolegle = osobne gałęzie między dwoma węzłami.'},
+ {k:'wez',t:'type',q:'Miejsce, w którym przewód się rozgałęzia, to…',ans:['węzeł','wezel'],ph:'wpisz jedno słowo',e:'Rozgałęzienie przewodów to węzeł.'},
+ {k:'row',t:'mc',q:'Co jest takie samo dla każdego urządzenia w łączeniu równoległym?',o:['napięcie (równe napięciu źródła)','natężenie prądu, zawsze','opór','nic'],e:'Ramka z podręcznika: w łączeniu równoległym na każdym urządzeniu jest takie samo napięcie, równe napięciu źródła.'},
+ {k:'row',t:'mc',q:'Trzy żarówki połączone równolegle świecą…',img:OBW_C.r3,o:['tak samo jasno jak jedna żarówka','trzy razy słabiej niż jedna','wcale nie świecą','świeci tylko pierwsza'],e:'Na każdej żarówce jest całe napięcie źródła, więc każda świeci tak jak pojedyncza.'},
+ {k:'wez',t:'mc',q:'Co mówi zasada dotycząca węzła?',o:['suma natężeń prądów wpływających do węzła = suma natężeń prądów wypływających','napięcie w węźle jest zerowe','w węźle prąd znika','do węzła wpływa więcej prądu niż wypływa'],e:'Ładunek nie znika, więc ile wpływa do węzła, tyle wypływa.'},
+ {k:'wez',t:'mc',q:'Trzy identyczne żarówki połączono równolegle. W przewodzie głównym płynie 0,9 A. Jakie natężenie płynie przez każdą żarówkę?',img:OBW_C.r3,o:['0,3 A','0,9 A','2,7 A','0,45 A'],e:'Prąd rozdziela się po równo na 3 identyczne gałęzie: 0,9 A : 3 = 0,3 A.'},
+ {k:'wez',t:'mc',q:'Dwa oporniki połączono równolegle. W przewodzie głównym płynie 0,6 A, a przez opornik 1 – 0,1 A. Ile płynie przez opornik 2?',o:['0,5 A','0,7 A','0,6 A','0,1 A'],e:'I = I₁ + I₂, więc I₂ = 0,6 A − 0,1 A = 0,5 A.'},
+ {k:'wez',t:'mc',q:'Przez który z dwóch oporników połączonych równolegle płynie prąd o większym natężeniu?',o:['przez ten o mniejszym oporze','przez ten o większym oporze','przez oba taki sam, zawsze','przez ten bliżej baterii'],e:'Prąd o największym natężeniu płynie przez urządzenie o najmniejszym oporze.'},
+ {k:'wez',t:'pf',q:'Dwa oporniki połączono równolegle do źródła 6 V. W przewodzie głównym płynie 3 A, przez opornik 2 – 1 A. Oceń zdania.',st:[['Przez opornik 1 płynie 2 A.',true],['Mniejszy opór ma opornik 2.',false],['Na obu opornikach jest napięcie 6 V.',true]],e:'I₁ = 3 − 1 = 2 A. Większy prąd płynie przez opornik 1, więc to on ma mniejszy opór. Równolegle napięcie jest takie samo: 6 V.'},
+ {k:'row',t:'tf',q:'Gdy w łączeniu równoległym dołączymy kolejną żarówkę, natężenie prądu w pozostałych żarówkach się nie zmieni.',a:true,e:'Nie zmienia się prąd w pozostałych gałęziach, ale rośnie natężenie w przewodzie doprowadzającym do węzła.'},
+ {k:'row',t:'tf',q:'Gdy w łączeniu równoległym dołączymy kolejną żarówkę, natężenie prądu w przewodzie głównym (przed węzłem) się nie zmieni.',a:false,e:'Rośnie – bo w węźle prąd musi się rozdzielić na więcej gałęzi.'},
+ {k:'dom',t:'mc',q:'Jak połączone są urządzenia w domowej sieci elektrycznej?',o:['równolegle','szeregowo','raz tak, raz tak','wcale nie są połączone'],e:'Równolegle – dzięki temu można włączać dowolne urządzenia, a zepsucie jednego nie wyłącza innych.'},
+ {k:'dom',t:'multi',q:'Dlaczego w domu urządzenia łączy się równolegle? Zaznacz WSZYSTKIE powody.',o:['można włączyć dowolne urządzenie w wybranym czasie','gdy jedno się zepsuje, pozostałe działają','każde dostaje pełne napięcie sieci','wtedy wszystkie włączają się jednym wyłącznikiem','wtedy płynie mniejszy prąd w przewodzie głównym'],c:[0,1,2],e:'Szeregowo trzeba by włączyć wszystko naraz, a jedna awaria wyłączałaby wszystko.'},
+ {k:'dom',t:'mc',q:'Co robi bezpiecznik („korek”) w domowej sieci?',o:['wyłącza obwód, gdy natężenie prądu jest zbyt duże','zwiększa napięcie','zamienia prąd przemienny na stały','mierzy zużycie energii'],e:'Bezpiecznik przerywa obwód przy zbyt dużym natężeniu prądu.'},
+ {k:'dom',t:'type',q:'Prąd, do którego podłącza się urządzenia w domowym gniazdku, to prąd…',ans:['przemienny'],ph:'wpisz jedno słowo',e:'W gniazdku jest prąd przemienny (AC, symbol ~).'},
+ {k:'row',t:'sort',q:'Szeregowo czy równolegle?',cats:['szeregowo','równolegle'],items:[['natężenie takie samo w każdym urządzeniu',0],['napięcie takie samo na każdym urządzeniu',1],['napięcie się dzieli',0],['prąd rozdziela się w węźle',1],['lampki choinkowe – jedna przepalona gasi wszystkie',0],['gniazdka w domu',1]],e:'Szeregowo: wspólne natężenie, napięcie się dzieli. Równolegle: wspólne napięcie, prąd się rozdziela.'},
+ {k:'row',t:'mc',q:'Gdzie na tym schemacie jest amperomierz i co mierzy?',img:OBW_C.r3a,o:['w przewodzie głównym – mierzy natężenie prądu płynącego przez wszystkie żarówki razem','przy żarówce 1 – mierzy tylko jej prąd','równolegle do baterii – mierzy napięcie','w gałęzi środkowej – mierzy prąd środkowej żarówki'],e:'Amperomierz stoi za węzłem, w przewodzie głównym, więc pokazuje sumę natężeń ze wszystkich gałęzi.'},
+ {k:'row',t:'mc',lab:'Znajdź fałsz',q:'Które zdanie o łączeniu równoległym jest FAŁSZYWE?',o:['Gdy jedna żarówka się przepali, gasną wszystkie.','Na każdej żarówce jest napięcie źródła.','Prąd rozdziela się w węzłach.','Suma prądów wpływających do węzła równa się sumie wypływających.'],e:'Równolegle przepalona żarówka gaśnie sama – inne gałęzie dalej działają.'},
+ {k:'wez',gen:'obwWez'},
+ {k:'row',t:'open',q:'Porównaj łączenie szeregowe i równoległe: co jest wspólne dla wszystkich urządzeń i co się dzieli?',pts:['Szeregowo: natężenie prądu takie samo w każdym urządzeniu.','Szeregowo: napięcie źródła dzieli się na urządzenia.','Równolegle: napięcie na każdym urządzeniu takie samo, równe napięciu źródła.','Równolegle: prąd rozdziela się w węźle, suma prądów w gałęziach = prąd w przewodzie głównym.']}
+]}
+];
+Object.assign(GEN,{
+ obwSzU(){const u1=rnd(2,9),u2=rnd(2,9),u=u1+u2;return {t:'mc',img:OBW_C.szV,q:`Dwie żarówki połączono szeregowo. Woltomierz V₁ pokazuje ${u1} V, a V₂ – ${u2} V. Jakie jest napięcie źródła?`,o:[u,Math.abs(u1-u2)||u+2,u1*u2===u?u+3:u1*u2,Math.max(u1,u2)].filter((v,i,A)=>A.indexOf(v)===i).concat([u+1,u+4]).filter((v,i,A)=>A.indexOf(v)===i).slice(0,4).map(v=>v+' V'),e:`Szeregowo napięcia dodają się: U = U₁ + U₂ = ${u1} V + ${u2} V = ${u} V.`};},
+ obwBat(){const n=rnd(2,4),c=[1.5,1.5,2,4.5][rnd(0,3)],u=Math.round(n*c*10)/10,f=v=>String(v).replace('.',',');return {t:'mc',q:`${n} jednakowe ogniwa po ${f(c)} V połączono szeregowo (+ do −). Jakie jest napięcie tej baterii?`,o:[u,c,Math.round((u+c)*10)/10,Math.round(c/n*100)/100].filter((v,i,A)=>A.indexOf(v)===i).slice(0,4).map(v=>f(v)+' V'),e:`Napięcia ogniw połączonych szeregowo dodają się: ${n} · ${f(c)} V = ${f(u)} V.`};},
+ obwWez(){const i1=rnd(1,9)/10,i2=rnd(1,9)/10,i=Math.round((i1+i2)*10)/10,f=v=>String(v).replace('.',',');const d=Math.round(Math.abs(i1-i2)*10)/10;return {t:'mc',img:OBW_C.r3a,q:`Do węzła wpływa prąd o natężeniu ${f(i)} A i rozdziela się na dwie gałęzie. W pierwszej płynie ${f(i1)} A. Ile płynie w drugiej?`,o:[i2,i,i1,Math.round((i+i1)*10)/10,Math.round((i2+0.2)*10)/10,Math.round((i2+0.1)*10)/10,Math.round((i2+0.3)*10)/10,Math.round((i2+0.4)*10)/10].filter((v,i,A)=>A.indexOf(v)===i).slice(0,4).map(v=>f(v)+' A'),e:`Ile wpływa do węzła, tyle wypływa: I₂ = ${f(i)} A − ${f(i1)} A = ${f(i2)} A.`};}
+});
+const OBW_KMAP=Object.fromEntries(OBW_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
+const OBW_LESSONS={
+ syz:{tid:'sym',name:'Podstawowe symbole: żarówka, ogniwo, bateria, wyłącznik',table:{head:['Element','Jak wygląda symbol'],rows:[['żarówka (bulb)','kółko z krzyżykiem ⊗'],['ogniwo – źródło prądu stałego (electrical cell)','dwie kreski: dłuższa cienka (+) i krótsza gruba (−)'],['bateria','kilka ogniw jedno za drugim'],['wyłącznik (przełącznik)','odchylona kreska między dwiema kropkami'],['przewód (wire)','linia ciągła']]},pts:['Schemat rysujemy liniami prostymi, przewody pod kątem prostym.','Ogniwo: + to dłuższa, cienka kreska.'],trick:'Krzyżyk w kółku = żarówka „świeci na krzyż”.'},
+ sym2:{tid:'sym',name:'Mierniki i odbiorniki',table:{head:['Element','Symbol'],rows:[['amperomierz (ammeter)','kółko z literą A'],['woltomierz (voltmeter)','kółko z literą V'],['silnik (motor)','kółko z literą M'],['dzwonek (bell)','kopułka na dwóch nóżkach'],['opornik (rezystor)','pusty prostokąt'],['bezpiecznik (fuse)','prostokąt przecięty kreską']]},pts:['Litera w kółku mówi, co to jest: A – ampery, V – wolty, M – motor.'],trick:'Prostokąt pusty = opornik. Prostokąt z kreską = bezpiecznik (drucik w środku).'},
+ sym3:{tid:'sym',name:'Pozostałe symbole z zeszytu',table:{head:['Element','Symbol'],rows:[['kondensator','dwie RÓWNE kreski'],['zwojnica (cewka indukcyjna)','zwoje jak sprężynka'],['dioda prostownicza (diode)','trójkąt z kreską'],['uziemienie','kreska i coraz krótsze poziome kreski'],['źródło prądu przemiennego (AC)','kółko z falką ~'],['prąd stały (DC)','kreska ciągła nad przerywaną'],['transformator','dwie zwojnice przedzielone kreskami'],['tranzystor','kreska z dwiema ukośnymi nóżkami, jedna ze strzałką']]},pts:['Ogniwo: kreski różne. Kondensator: kreski równe.','Falka ~ = prąd przemienny, jak w gniazdku.'],trick:'AC = falka ~ (prąd zmienia kierunek), DC = prosto (prąd stały).'},
+ ang:{tid:'sym',name:'Nazwy po angielsku (z zeszytu)',table:{head:['English','Polski'],rows:[['bulb','żarówka'],['wire','przewód'],['bell','dzwonek'],['fuse','bezpiecznik'],['electrical cell','ogniwo'],['voltmeter','woltomierz'],['ammeter','amperomierz'],['diode','dioda'],['motor','silnik']]},pts:['Nauczyciel podał też nazwy angielskie – warto je znać.'],trick:'Ammeter = Amper, Voltmeter = Volt.'},
+ zam:{tid:'obw',name:'Obwód zamknięty i otwarty',pts:['Najprostszy obwód: źródło (bateria, akumulator), przewody i odbiornik (np. żarówka).','Obwód zamknięty – bez przerw, płynie prąd, żarówka świeci.','Obwód otwarty – jest przerwa, prąd nie płynie.','Obwód otwieramy, odłączając przewód albo otwierając wyłącznik.','Lampki choinkowe (szeregowo): przepalona żarówka przerywa obwód – gasną wszystkie.'],trick:'Zamknięty = zamknięta pętla = świeci.'},
+ prad:{tid:'obw',name:'Prąd elektryczny i jego kierunek',pts:['Prąd elektryczny to uporządkowany ruch ładunków elektrycznych.','W metalach płyną elektrony – od bieguna ujemnego (−) do dodatniego (+).','Umowny kierunek prądu: od + do − (przeciwnie do elektronów).','W cieczach płyną jony (woda z solą: Na⁺ i Cl⁻), czysta woda prawie nie przewodzi.','Ogniwo galwaniczne (Volty): dwa różne metale rozdzielone elektrolitem.'],trick:'Elektrony uciekają od minusa. Umowa: prąd od plusa.'},
+ amp:{tid:'mie',name:'Natężenie prądu i amperomierz',pts:['Natężenie I = Q : t (ładunek : czas), jednostka: amper (A). 1 A = 1 C : 1 s.','1 mA = 0,001 A.','Amperomierz (A w kółku) łączymy SZEREGOWO z urządzeniem – przed nim albo za nim.','W przewodzie bez rozgałęzień natężenie jest wszędzie takie samo.'],trick:'Amperomierz „stoi w kolejce” razem z żarówką – szeregowo.'},
+ wol:{tid:'mie',name:'Napięcie i woltomierz',pts:['Napięcie mierzymy w woltach (V).','Woltomierz (V w kółku) łączymy RÓWNOLEGLE – jego końcówki dotykają obu końców urządzenia.','Woltomierz podłączamy bez rozłączania obwodu.','Napięcie na samym przewodzie jest bardzo małe.'],trick:'Woltomierz „obejmuje” żarówkę z dwóch stron – równolegle.'},
+ mult:{tid:'mie',name:'Miernik uniwersalny (multimetr)',pts:['Ma wyświetlacz, pokrętło i dwa przewody (sondy).','Czarny przewód zawsze do gniazda COM.','Natężenie: czerwony do 10A. Napięcie: czerwony do V, pokrętło np. na 20 V.'],trick:'Czarny – COM zawsze. Czerwony – tam, co mierzysz.'},
+ szer:{tid:'sze',name:'Łączenie szeregowe',pts:['Urządzenia jedno za drugim, jak łańcuszek – jedna pętla.','W łączeniu szeregowym natężenie prądu przepływającego przez każde urządzenie jest takie samo, a napięcie dzieli się na wszystkie urządzenia.','Dlatego dwie żarówki szeregowo świecą słabiej niż jedna.','Przepalenie (przerwa) w jednym miejscu gasi wszystko.','Analogia: bankomat = źródło, droga = przewody, samochody = prąd, bramki = żarówki.'],trick:'Szeregowo: Ten Sam prąd (I), napięcie się dzieli.'},
+ szu:{tid:'sze',name:'Napięcia w łączeniu szeregowym',pts:['U = U₁ + U₂ + U₃ – napięcia na urządzeniach dodają się do napięcia źródła.','Identyczne żarówki – napięcie dzieli się po równo (10 V na 2 = 5 V).','Większy opór → większe napięcie na tym urządzeniu.','Ogniwa połączone szeregowo (+ do −): napięcia dodają się, 3 × 1,5 V = 4,5 V.'],trick:'Szeregowo napięcia się DODAJE.'},
+ row:{tid:'row',name:'Łączenie równoległe',pts:['Każde urządzenie w osobnej gałęzi; gałęzie łączą się w węzłach.','W łączeniu równoległym prąd rozdziela się na rozgałęzienia, a na każdym urządzeniu jest takie samo napięcie (równe napięciu źródła).','Żarówki równolegle świecą tak jasno jak jedna.','Dołączenie żarówki nie zmienia prądu w innych gałęziach, ale zwiększa prąd w przewodzie głównym.'],trick:'Równolegle: Równe napięcie.'},
+ wez:{tid:'row',name:'Węzeł – rozdzielanie prądu',pts:['Węzeł = miejsce rozgałęzienia przewodów.','Suma natężeń prądów wpływających do węzła = suma natężeń prądów wypływających.','I = I₁ + I₂ (+ I₃): 0,6 A = 0,1 A + 0,5 A.','Największy prąd płynie przez urządzenie o najmniejszym oporze.'],trick:'Ile wpłynie do węzła, tyle wypłynie.'},
+ dom:{tid:'row',name:'Domowa sieć elektryczna',pts:['Urządzenia w domu są połączone równolegle.','Można włączać dowolne urządzenie, a zepsucie jednego nie wyłącza innych.','W gniazdku jest prąd przemienny.','Bezpieczniki („korki”) wyłączają obwód, gdy natężenie jest zbyt duże. Stosuje się też uziemienie.'],trick:'Dom = równolegle, bo każdy chce włączać co innego.'}
+};
+const OBW_GAL={syz:[['zar','żarówka','bulb'],['ogn','ogniwo (prąd stały)','dłuższa kreska = +'],['bat','bateria','kilka ogniw'],['wyl','wyłącznik otwarty','przełącznik'],['prz','przewód','wire']],
+ sym2:[['amp','amperomierz','ammeter'],['vol','woltomierz','voltmeter'],['sil','silnik','motor'],['dzw','dzwonek','bell'],['opor','opornik','rezystor'],['bez','bezpiecznik','fuse']],
+ sym3:[['kon','kondensator','dwie równe kreski'],['cew','zwojnica','cewka indukcyjna'],['dio','dioda prostownicza','diode'],['uzi','uziemienie',''],['ac','źródło prądu przemiennego','AC'],['dc','prąd stały','DC'],['trf','transformator',''],['tra','tranzystor','']]};
+for(const k in OBW_GAL){OBW_LESSONS[k].gallery=OBW_GAL[k].map(([s,n,d])=>[obwSym(s),n,d]);OBW_LESSONS[k].galSym=true;}
+const OBW_CARDS=[
+ ['⊗ kółko z krzyżykiem','żarówka (bulb)'],
+ ['dłuższa cienka + krótsza gruba kreska','ogniwo – źródło prądu stałego; dłuższa = +'],
+ ['dwie równe kreski','kondensator'],
+ ['odchylona kreska między kropkami','wyłącznik (przełącznik) otwarty'],
+ ['A w kółku','amperomierz – natężenie, w amperach, szeregowo'],
+ ['V w kółku','woltomierz – napięcie, w woltach, równolegle'],
+ ['M w kółku','silnik (motor)'],
+ ['pusty prostokąt','opornik (rezystor)'],
+ ['prostokąt przecięty kreską','bezpiecznik (fuse)'],
+ ['kopułka na nóżkach','dzwonek (bell)'],
+ ['zwoje jak sprężynka','zwojnica, cewka indukcyjna'],
+ ['trójkąt z kreską','dioda prostownicza'],
+ ['kreska i malejące poziome kreski','uziemienie'],
+ ['kółko z falką ~','źródło prądu przemiennego (AC)'],
+ ['obwód zamknięty / otwarty','bez przerwy – prąd płynie / z przerwą – nie płynie'],
+ ['prąd elektryczny','uporządkowany ruch ładunków elektrycznych'],
+ ['umowny kierunek prądu','od + do − (elektrony płyną od − do +)'],
+ ['łączenie szeregowe','jedno za drugim; to samo natężenie, napięcie się dzieli (U = U₁ + U₂ + U₃)'],
+ ['łączenie równoległe','osobne gałęzie; to samo napięcie, prąd rozdziela się w węzłach'],
+ ['węzeł','rozgałęzienie; suma prądów wpływających = suma wypływających'],
+ ['3 ogniwa po 1,5 V szeregowo','4,5 V'],
+ ['sieć domowa','połączenie równoległe, prąd przemienny, bezpieczniki'],
+ ['miernik uniwersalny','czarny przewód do COM, czerwony do 10A albo V']
+];
+const OBW_PLAN=[
+ ['2026-11-17','sym','Symbole – pierwsza runda (krótko, jutro chemia)'],
+ ['2026-11-18','cards','Dzień sprawdzianu z chemii – tylko fiszki z symbolami (5 minut)'],
+ ['2026-11-19','sym','Symbole – druga runda'],
+ ['2026-11-20','obw','Obwód zamknięty i otwarty, prąd (1 runda)'],
+ ['2026-11-21','mie','Amperomierz i woltomierz (1 runda)'],
+ ['2026-11-22','sze','Łączenie szeregowe (1 runda)'],
+ ['2026-11-23','row','Łączenie równoległe (1 runda)'],
+ ['2026-11-24','weak','Słabe punkty (krótko – dziś sprawdzian z angielskiego)'],
+ ['2026-11-25','cards','Fiszki z symbolami (dziś kartkówka z historii)'],
+ ['2026-11-26','exam','Kartkówka próbna i słabe punkty'],
+ ['2026-11-27','cards','Rano tylko fiszki – powodzenia!']];
+prep(OBW_TOPICS,OBW_KMAP);
 prep(BIO_TOPICS,BIO_KMAP);prep(PT_TOPICS,PT_KMAP);prep(GEO_TOPICS,GEO_KMAP);prep(PL_TOPICS,PL_KMAP);prep(HIS_TOPICS,HIS_KMAP);prep(EDB_TOPICS,EDB_KMAP);prep(FIZ_TOPICS,FIZ_KMAP);prep(WOS_TOPICS,WOS_KMAP);prep(ANG_TOPICS,ANG_KMAP);prep(ESP_TOPICS,ESP_KMAP);prep(CHEM_TOPICS,CHEM_KMAP);
 const SUBJECTS={
+ obw:{id:'obw',key:'fizyka-obwody-v1',title:'Obwody elektryczne',subject:'Fizyka',icon:'💡',sub:'kartkówka pt. 27.11 · elementy obwodu, łączenie szeregowe i równoległe',color:'var(--a)',decor:['A','T','C','G'],topics:OBW_TOPICS,lessons:OBW_LESSONS,cards:OBW_CARDS,examName:'Kartkówka próbna',examPer:3,plan:OBW_PLAN,
+   tip:'codziennie jedna krótka runda według planu. Najpierw symbole – na kartkówce trzeba je rozpoznać i narysować, więc przeglądaj też fiszki. Najważniejsze: amperomierz szeregowo, woltomierz równolegle; szeregowo natężenie takie samo, a napięcie się dzieli (U = U₁ + U₂); równolegle napięcie takie samo, a prąd rozdziela się w węźle. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  hpo:{id:'hpo',key:'historia-okupacja-powstanie-v1',title:'Okupacja, Państwo Podziemne, powstanie',subject:'Historia',sub:'kartkówka śr. 25.11 · rozdziały 8–10 (s. 58–80)',color:'var(--g)',decor:['G','C','A','T'],topics:HPO_TOPICS,lessons:HPO_LESSONS,cards:HPO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:HPO_PLAN,
    tip:'codziennie jedna krótka runda według planu, po kolei rozdziały 8, 9 i 10. Najważniejsze: dwaj okupanci (GG i ziemie wcielone u Niemców, sowietyzacja, deportacje i Katyń u ZSRR), rząd londyński i gen. Sikorski, układ Sikorski–Majski, Polskie Państwo Podziemne i AK, akcja „Burza” oraz powstanie warszawskie: przyczyny, cele, przebieg, postawa Stalina i aliantów, bilans. Ucz się dat z fiszek. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  agr:{id:'agr',key:'angielski-grammar-v1',title:'Passive, conditionals, adjectives',subject:'Język angielski',sub:'sprawdzian wt. 24.11 · Unit 10: passive, conditionals 0 i 1, przymiotniki',strict:true,color:'var(--c)',decor:['C','G','A','T'],topics:AGR_TOPICS,lessons:AGR_LESSONS,cards:AGR_CARDS,examName:'Sprawdzian próbny',examPer:2,plan:AGR_PLAN,
@@ -4685,7 +4924,7 @@ const SUBJECTS={
    tip:'2 nowe wersy dziennie według planu: najpierw czytasz na głos, potem znikają słowa, a na końcu mówisz z pamięci. Codziennie powiedz też na głos wszystko, czego już się nauczyłaś. Fiszki „co dalej?” ćwiczą przejścia między wersami.'},
  pt:{id:'pt',hidden:true,key:'polski-pan-tadeusz-v1',title:'Pan Tadeusz',subject:'Język polski',sub:'kartkówka pn. 9.11 · księgi I, II, IV, X, XI, XII',sheet:'tark',color:'var(--a)',decor:['A','G','T','C'],topics:PT_TOPICS,lessons:PT_LESSONS,cards:PT_CARDS,examName:'Kartkówka próbna',examPer:2,plan:PT_PLAN,
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Na kartkówkę są tylko księgi I, II, IV, X, XI i XII. Najważniejsze: kto jest kim (Robak to Jacek Soplica, ojciec Tadeusza; Zosia to wnuczka Stolnika), opowieść Gerwazego, polowanie na niedźwiedzia, spowiedź Jacka, uczta i koncert Jankiela. Dzień przed kartkówką zrób Arkusz egzaminacyjny i kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
- geo:{id:'geo',key:'geografia-azja-v1',title:'Azja',subject:'Geografia',sub:'sprawdzian pn. 16.11 · „Planeta Nowa 8”, rozdział 1',color:'var(--warn)',decor:['T','G','A','C'],topics:GEO_TOPICS,lessons:GEO_LESSONS,cards:GEO_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:GEO_PLAN,
+ geo:{id:'geo',hidden:true,key:'geografia-azja-v1',title:'Azja',subject:'Geografia',sub:'sprawdzian pn. 16.11 · „Planeta Nowa 8”, rozdział 1',color:'var(--warn)',decor:['T','G','A','C'],topics:GEO_TOPICS,lessons:GEO_LESSONS,cards:GEO_CARDS,examName:'Sprawdzian próbny',examPer:3,plan:GEO_PLAN,
    tip:'codziennie według planu powyżej, krótko w dni sprawdzianów z chemii i hiszpańskiego. Najważniejsze do zapamiętania: rekordy Azji (Everest, Morze Martwe, Morze Kaspijskie, Bajkał), monsun letni i zimowy, Ognisty Pierścień Pacyfiku i dlaczego Japonia jest bogata mimo trudnych warunków. Zadania z plonami i amplitudą losują się za każdym razem od nowa. Dwa dni przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
  chem:{id:'chem',key:'chemia-kwasy-wodorotlenki-v1',title:'Kwasy i wodorotlenki',subject:'Chemia',sub:'sprawdzian śr. 18.11 · cały dział Kwasy + wodorotlenki',color:'var(--t)',decor:['T','C','A','G'],topics:CHEM_TOPICS,lessons:CHEM_LESSONS,cards:CHEM_CARDS,examName:'Sprawdzian próbny',examPer:2,plan:CHEM_PLAN,
    tip:'codziennie 15–20 minut według planu powyżej. Na sprawdzianie wszystko piszesz sama, więc tu też budujesz wzory i równania, a nie tylko wybierasz. Gdy utkniesz, dotknij „Pomóż” – dostaniesz tylko następny krok. Zapamiętaj: H i OH mają zawsze I, a ile atomów H w kwasie, tyle H⁺ po dysocjacji. Dzień przed sprawdzianem zrób sprawdzian próbny – 90% lub więcej znaczy, że jesteś gotowa.'},
@@ -4730,7 +4969,7 @@ function lessonBody(c){
   if(L.svg){const f=h('div',{class:'fig'});f.innerHTML=SVG[L.svg];kids.push(f);}
   if(L.pairs)kids.push(h('div',{class:'strand'},h('div',{class:'strand-in'},['A','T','C','G'].map(b=>h('div',{class:'pair'},h('div',{class:'nt b'+b},b),h('div',{class:'bond'}),h('div',{class:'nt b'+COMP[b]},COMP[b]))))));
   if(L.table){const T=L.table===true?{head:['','Mitoza','Mejoza'],rows:CMP_ROWS}:L.table;kids.push(h('div',{class:'tbl'},h('table',{},h('tr',{},T.head.map(x=>h('th',{},x))),T.rows.map(r=>h('tr',{},r.map((c2,i)=>h(i?'td':'th',{},c2)))))));}
-  if(L.gallery)kids.push(h('div',{class:'gal'},L.gallery.map(([src,n,d])=>h('figure',{},h('img',{src,alt:n}),h('figcaption',{},h('b',{},n),h('br'),d)))));
+  if(L.gallery)kids.push(h('div',{class:'gal'+(L.galSym?' sym':'')},L.gallery.map(([src,n,d])=>h('figure',{},h('img',{src,alt:n}),h('figcaption',{},h('b',{},n),h('br'),d)))));
   if(L.quote)kids.push(h('blockquote',{class:'quote'},L.quote.map(l=>h('span',{},l)),h('small',{},L.quoteSrc)));
   kids.push(h('ul',{},L.pts.map(p=>h('li',{},p))));
   if(L.trick)kids.push(h('div',{class:'trick'},h('b',{},'Trik: '),L.trick));
@@ -6519,7 +6758,7 @@ function hub(){
     goalCard(),
     h('div',{class:'sndrow',style:'margin:10px 0'},sndBtn(true)),
     h('div',{class:'subjs'},...HUB_IDS.map(card)),
-    (()=>{const arch=['ro','sjs','a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
+    (()=>{const arch=['geo','ro','sjs','a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
       h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
       h('div',{class:'subjs'},...arch.map(card)),
       h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
@@ -6532,9 +6771,9 @@ function hub(){
   );
 }
 /* ---------- v44: ikony przedmiotów i przycisk „Zacznij” ---------- */
-const HUB_IDS=['hpo','agr','inw','geo','chem','edb','esp'];
+const HUB_IDS=['obw','hpo','agr','inw','chem','edb','esp'];
 const ICONS={'Język angielski':'🇬🇧','Język polski':'📖','Geografia':'🌏','Chemia':'🧪','EDB':'🚑','Język hiszpański':'🇪🇸','Biologia':'🧬','Historia':'🏛️','Fizyka':'🌡️','WOS':'👥'};
-function subjIco(S){return ICONS[S.subject]||'📚';}
+function subjIco(S){return S.icon||ICONS[S.subject]||'📚';}
 function testIn(S){const m=(S.sub||'').match(/(\d{1,2})\.(\d{1,2})/);if(!m)return null;const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);
   let d=new Date(n.getFullYear(),+m[2]-1,+m[1],12);if(d-a<-180*864e5)d=new Date(n.getFullYear()+1,+m[2]-1,+m[1],12);return Math.round((d-a)/864e5);}
 function whenTxt(n){return n===0?'dziś':n===1?'jutro':n===2?'pojutrze':'za '+n+' dni';}
