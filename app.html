@@ -332,6 +332,21 @@ details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;pa
 .prow{display:grid;grid-template-columns:76px 1fr;gap:8px;font-size:.88rem;padding:4px 0;color:var(--muted)}
 .prow.today{color:var(--ink);font-weight:600;background:var(--t-soft);border-radius:8px;padding:6px}
 .prow.past{opacity:.55}
+/* pełny tekst Inwokacji – wysuwana belka (polski, inw, 17.11.2026) */
+.iw-tab{position:fixed;right:0;top:128px;z-index:25;writing-mode:vertical-rl;transform:rotate(180deg);background:var(--a);color:#fff;border:none;border-radius:0 12px 12px 0;padding:14px 7px;font-weight:700;font-size:.85rem;letter-spacing:.03em;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.iw-tab.lock{background:#9a93ad}
+.iw-panel{position:fixed;top:0;right:0;bottom:0;width:min(92%,460px);background:var(--bg);z-index:30;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 28px;box-shadow:-4px 0 18px rgba(0,0,0,.25);transform:translateX(105%);transition:transform .25s ease-out}
+.iw-panel.open{transform:none}
+.iw-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:2px}
+.iw-head h2{font-size:1.25rem;font-weight:800}
+.iw-src{color:var(--muted);font-size:.82rem;margin:0 0 10px}
+.iw-ch{margin:12px 0 4px;font-size:.8rem;font-weight:700;color:var(--a);text-transform:uppercase;letter-spacing:.04em}
+.iw-v{display:grid;grid-template-columns:26px 1fr;gap:6px;padding:5px 6px;border-radius:8px;font-size:1.05rem;line-height:1.4}
+.iw-v b{font-size:.75rem;color:var(--muted);font-weight:600;text-align:right;padding-top:4px}
+.iw-v.on{background:var(--t-soft)}.iw-v.on b{color:var(--t)}
+.iw-legend{font-size:.8rem;color:var(--muted);margin:12px 0 0}
+.iw-lock{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:16px;text-align:center;font-size:1rem;line-height:1.45;margin-top:10px}
+.iw-lock big{display:block;font-size:2rem;margin-bottom:6px}
 /* układ okresowy (chemia) */
 .pt-tab{position:fixed;right:0;top:42%;z-index:25;writing-mode:vertical-rl;transform:rotate(180deg);background:var(--t);color:#fff;border:none;border-radius:0 12px 12px 0;padding:12px 6px;font-weight:600;font-size:.82rem;letter-spacing:.03em;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .pt-back{position:fixed;inset:0;background:rgba(10,12,20,.45);z-index:29}
@@ -4048,6 +4063,28 @@ function inwPanel(){const k=inwKnown(),n=k.size;
     h('div',{class:'mchips'},INW_VIS.map(c=>{const all=Array.from({length:c[3]-c[2]+1},(_,j)=>k.has(c[2]-1+j)).every(Boolean);
       return h('button',{class:'mchip'+(all?' on':''),type:'button',onclick:()=>startRound(c[0])},(all?'✓ ':c[5]+' ')+c[4]);})),
     h('small',{},'Wers liczy się, gdy powiesz go z pamięci bez błędu w zadaniu „Powiedz z pamięci”.'));}
+/* Pełny tekst Inwokacji na wysuwanej belce z prawej (17.11.2026, prośba Łukasza). Widoczna w całym przedmiocie inw: ekran przedmiotu, lekcje, ściąga, fiszki, wyniki.
+   W rundzie i próbie generalnej tekst jest zablokowany, dopóki zadanie na ekranie nie ma odpowiedzi (INW_LOCK) – inaczej ćwiczenie z pamięci nie miałoby sensu. */
+let iwEl=null,INW_LOCK=false,SCR_Q=false;
+function iwBuild(){
+  const back=h('div',{class:'pt-back',hidden:''}),panel=h('aside',{class:'iw-panel','aria-label':'Cała Inwokacja'}),body=h('div');
+  const tab=btn('iw-tab','📜 Cała Inwokacja',()=>iwOpen(true));tab.setAttribute('aria-label','Pokaż cały tekst Inwokacji');
+  const close=btn('x','×',()=>iwOpen(false));close.setAttribute('aria-label','Zamknij tekst Inwokacji');
+  panel.append(h('div',{class:'iw-head'},h('h2',{},'Inwokacja'),close),h('p',{class:'iw-src'},'„Pan Tadeusz”, Księga I, wersy 1–22'),body);
+  back.addEventListener('click',()=>iwOpen(false));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')iwOpen(false);});
+  document.body.append(tab,back,panel);iwEl={tab,back,panel,body};}
+function iwFill(){const b=iwEl.body;
+  if(INW_LOCK){b.replaceChildren(h('div',{class:'iw-lock'},h('big',{},'🙈'),'Najpierw spróbuj z pamięci!',h('br'),'Tekst pokażę od razu po odpowiedzi.'));return;}
+  const k=inwKnown(),kids=[];
+  INW_VIS.slice().sort((x,y)=>x[2]-y[2]).forEach(c=>{kids.push(h('div',{class:'iw-ch'},c[5]+' '+c[4].replace(/^\d+\. /,'')));
+    for(let n=c[2];n<=c[3];n++)kids.push(h('div',{class:'iw-v'+(k.has(n-1)?' on':'')},h('b',{},String(n)),h('span',{},INW[n-1])));});
+  kids.push(h('p',{class:'iw-legend'},k.size?'Na zielono: wersy, które już umiesz na pamięć ('+k.size+'/22).':'Wersy, które powiesz z pamięci bez błędu, zrobią się zielone.'));
+  b.replaceChildren(...kids);}
+function iwOpen(on){if(!iwEl)return;if(on)iwFill();iwEl.panel.classList.toggle('open',on);iwEl.back.hidden=!on;iwEl.tab.hidden=on||!(SUBJ&&SUBJ.id==='inw');if(on)iwEl.panel.scrollTop=0;}
+function iwSync(){const show=!!(SUBJ&&SUBJ.id==='inw');if(!iwEl){if(!show)return;iwBuild();}
+  iwEl.tab.classList.toggle('lock',INW_LOCK);iwEl.tab.textContent=(INW_LOCK?'🔒':'📜')+' Cała Inwokacja';
+  iwEl.tab.hidden=!show||iwEl.panel.classList.contains('open');if(!show)iwOpen(false);else if(iwEl.panel.classList.contains('open'))iwFill();}
 /* ---------- ANGIELSKI: Unit 10 Sport – Wordlist (kartkówka ze słówek wt. 10.11.2026). Źródło: zdjęcie strony „Wordlist” od Łukasza (Vocabulary s. 24–25, Reading s. 26, Listening s. 30, Other words). Wszystkie słówka ze zdjęcia są w A10_W.
    Zadania generują się z A10_W (dla każdej grupy słówek: „połącz w pary”, potem „wpisz po angielsku” każde słowo), na końcu tematu są zadania pisane ręcznie (A10_X).
    NIE zmieniaj A10_W (kolejność = postępy). Nowe zadania dopisuj tylko do A10_X na końcu tematu, z polem k. ---------- */
@@ -4957,7 +4994,7 @@ function save(){try{localStorage.setItem(SUBJ.key,JSON.stringify(store));}catch(
 /* ---------- helpers ---------- */
 function h(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v] of Object.entries(attrs||{})){if(v==null)continue;if(k==='class')e.className=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(k==='style')e.style.cssText=v;else e.setAttribute(k,v);}for(const c of kids.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;}
 const app=document.getElementById('app');
-function screen(...kids){try{dictClose();}catch(e){}app.replaceChildren(...kids.filter(k=>k!=null&&k!==false));window.scrollTo(0,0);ptSync();}
+function screen(...kids){try{dictClose();}catch(e){}app.replaceChildren(...kids.filter(k=>k!=null&&k!==false));window.scrollTo(0,0);ptSync();INW_LOCK=SCR_Q;SCR_Q=false;iwSync();}
 function starRow(n,cls='stars'){return h('span',{class:cls,'aria-label':n+' z 3 gwiazdek'},[0,1,2].map(i=>h('span',{class:i<n?'':'off'},'★')));}
 function btn(cls,label,fn){return h('button',{class:cls,type:'button',onclick:fn},label);}
 function mastered(tid){return TOPIC[tid].qs.filter(q=>store.h[q.id]&&store.h[q.id].ok).length;}
@@ -6386,7 +6423,7 @@ function nextQ(){
   const nudge=h('p',{class:'nudge',hidden:''},'Utknęłaś? Wybierz najlepszą odpowiedź, nawet jeśli nie masz pewności. Błąd to nic złego – zaraz zobaczysz wyjaśnienie.');
   const view=h('div',{},top,h('div',{class:'qtype label'+(q.lab&&!R.sheet?' hot':'')},lab),h('h2',{class:'q'},dictWrap(q.t==='tf'?'„'+q.q+'”':q.q,q)),dictHint(q),q.img?h('img',{class:'qimg',src:q.img,alt:'Zdjęcie do pytania'}):null,nudge,body);
   body.append({pf:rPF,ab:rAB,mc:rMC,tf:rTF,multi:rMulti,type:rType,open:rOpen,memo:rMemo,sort:rSort,match:rMatch,order:rOrder,dna:rDNA,build:rBuild,wz:rWz,eq:rEq}[q.t](q,(err,extra)=>feedback(view,q,err,extra)));
-  screen(view);
+  SCR_Q=!!(SUBJ&&SUBJ.id==='inw');screen(view);
 }
 function answerText(q){
   if(q.t==='pf'||q.t==='ab')return corrText(q).replace(/^Poprawnie: /,'');
@@ -6417,6 +6454,7 @@ function corrText(q){
   if(q.t==='sort')return q.cats.map((c,i)=>c+': '+q.items.filter(x=>x[1]===i).map(x=>x[0]).join(', ')).join(' · ');
   return '';}
 function feedback(view,q,errors,extra){
+  if(INW_LOCK){INW_LOCK=false;iwSync();}
   const first=!R.seen.has(q.id);R.seen.add(q.id);
   const ok=errors===0;
   if(first&&R.log){R.log.ans++;if(ok)R.log.ok++;}
