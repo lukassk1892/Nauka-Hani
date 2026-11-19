@@ -6971,12 +6971,7 @@ function hub(){
     goalCard(),
     h('div',{class:'sndrow',style:'margin:10px 0'},sndBtn(true)),
     h('div',{class:'subjs'},...HUB_IDS.map(card)),
-    (()=>{const arch=['chem','geo','ro','sjs','a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
-      h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
-      h('div',{class:'subjs'},...arch.map(card)),
-      h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
-      try{d.open=localStorage.getItem('arch-open')==='1';}catch(e){}
-      d.addEventListener('toggle',()=>{try{localStorage.setItem('arch-open',d.open?'1':'0');}catch(e){}});return d;})(),
+    /* 19.11.2026: Archiwum schowane z ekranu głównego na prośbę Łukasza – przedmioty i postępy zostają (hidden:true). */
     (()=>{const t=tDays(1)[0];return h('button',{class:'tool',type:'button',style:'border-color:var(--warn);background:var(--warn-soft)',onclick:stats},h('span',{class:'label'},'Czas nauki'),h('h3',{},'Dziś: '+fmtMin(t.ms)),h('span',{},'Wykres 7 dni i ile trwała każda runda.'));})(),
     h('button',{class:'tool',type:'button',style:'border-color:var(--t);background:var(--t-soft)',onclick:()=>parentView('hub')},h('span',{class:'label'},'Dla taty'),h('h3',{},'Raport dla taty'),h('span',{},'Co już umiem, z czym mam kłopot i ile dziś się uczyłam. Wyślij go na WhatsAppie.')),
     migrateLink(),
