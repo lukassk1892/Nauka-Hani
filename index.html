@@ -4712,6 +4712,172 @@ const HPO_PLAN=[
  ['2026-11-24','exam','Kartkówka próbna (po angielskim) i słabe punkty'],
  ['2026-11-25','cards','Rano tylko fiszki – powodzenia!']];
 prep(HPO_TOPICS,HPO_KMAP);
+/* ---------- JĘZYK POLSKI: Rozprawka – „Pan Tadeusz” (sprawdzian czw. 26.11.2026, praca literacka). Księgi I, II, IV, X, XI, XII.
+   Przykłady sprawdzone z tekstem lektury (Wolne Lektury). Pole k = klucz lekcji, ROZ_KMAP liczy się z tych pól.
+   Nowe zadania dopisuj TYLKO na końcu tematu (kolejność = postępy). ---------- */
+const ROZ_TOPICS = [
+{id:'rbud', base:'A', mark:'1', name:'Budowa rozprawki: teza, wstęp, zakończenie', pages:'jak pisać', qs:[
+ {k:'teza', t:'type', q:'Twierdzenie, którego bronisz w rozprawce i które udowadniasz argumentami, to…', ans:['teza'], e:'Teza to Twoje stanowisko – jasna odpowiedź na pytanie z tematu.'},
+ {k:'bud', t:'mc', q:'Z jakich trzech części składa się rozprawka?', o:['wstęp, rozwinięcie, zakończenie','teza, streszczenie, morał','wstęp, opis, dialog','zwrot do słuchaczy, apel, podziękowanie'], e:'Zwrot do słuchaczy, apel i podziękowanie to części przemówienia, nie rozprawki.'},
+ {k:'teza', t:'mc', q:'Gdzie w rozprawce stawiasz tezę?', o:['we wstępie','dopiero w ostatnim zdaniu','w środku drugiego argumentu','w tytule pracy'], e:'Tezę stawiasz we wstępie, a w zakończeniu ją potwierdzasz.'},
+ {k:'teza', t:'mc', q:'Temat: „Czy można odkupić swoje winy?”. Które zdanie jest dobrą tezą?', o:['Uważam, że można odkupić swoje winy.','Jacek Soplica był ojcem Tadeusza.','Czy można odkupić swoje winy? To trudne pytanie.','W „Panu Tadeuszu” występuje wielu bohaterów.'], e:'Teza to jasna odpowiedź (tak albo nie) na pytanie z tematu.'},
+ {k:'wst', t:'multi', q:'Zaznacz WSZYSTKO, co powinno znaleźć się we wstępie rozprawki.', o:['teza – jasne stanowisko','wprowadzenie w temat','tytuł i autor lektury','streszczenie całej lektury','najmocniejszy argument z przykładem','podziękowanie za uwagę'], c:[0,1,2], e:'Argumenty są w rozwinięciu. Streszczenia i podziękowania w rozprawce nie ma.'},
+ {k:'hip', t:'tf', q:'Teza i hipoteza to to samo.', a:false, e:'Tezę stawiasz od razu i jej bronisz. Hipotezę (przypuszczenie) sprawdzasz i dopiero w zakończeniu potwierdzasz albo odrzucasz.'},
+ {k:'hip', t:'mc', q:'Czym różni się hipoteza od tezy?', o:['Hipoteza to przypuszczenie – sprawdzasz je i potwierdzasz albo odrzucasz w zakończeniu.','Hipoteza jest zawsze dłuższa od tezy.','Hipotezę stawia się w zakończeniu, a tezę w rozwinięciu.','Hipoteza to inna nazwa argumentu.'], e:'Teza: „Uważam, że…”. Hipoteza: „Spróbuję sprawdzić, czy…”.'},
+ {k:'bud', t:'order', q:'Ułóż części rozprawki w dobrej kolejności.', items:['Wstęp z tezą','Argument 1 z przykładem z lektury','Argument 2 z przykładem z lektury','Argument 3 – najmocniejszy','Zakończenie – potwierdzenie tezy'], e:'Najmocniejszy argument zostawiasz na koniec rozwinięcia.'},
+ {k:'zak', t:'mc', q:'Co powinno być w zakończeniu rozprawki?', o:['podsumowanie i potwierdzenie tezy','nowy argument, o którym jeszcze nie pisałaś','streszczenie Księgi XII','pytanie do nauczyciela'], e:'W zakończeniu podsumowujesz i jeszcze raz, pewniej, powtarzasz tezę.'},
+ {k:'zak', t:'tf', q:'W zakończeniu warto dodać nowy, najmocniejszy argument.', a:false, e:'Nowych argumentów w zakończeniu się nie dodaje. Najmocniejszy dajesz jako ostatni w rozwinięciu.'},
+ {k:'bud', t:'mc', q:'Ile słów musi mieć co najmniej wypracowanie na egzaminie ósmoklasisty?', o:['200','100','150','500'], e:'Co najmniej 200 słów. Krótsza praca traci większość punktów – celuj w 250–300.'},
+ {k:'teza', t:'multi', q:'Zaznacz WSZYSTKIE zwroty, którymi można zacząć tezę.', o:['Uważam, że…','Jestem przekonana, że…','Moim zdaniem…','Dawno, dawno temu…','Szanowni Państwo!','Pewnego dnia…'], c:[0,1,2], e:'„Dawno temu” i „Pewnego dnia” pasują do opowiadania, a „Szanowni Państwo!” do przemówienia.'},
+ {k:'wst', t:'mc', lab:'Znajdź błąd', q:'Wstęp: „W tej pracy streszczę »Pana Tadeusza«. Najpierw Tadeusz przyjechał do Soplicowa”. Co jest nie tak?', o:['Brakuje tezy – zamiast stanowiska jest zapowiedź streszczenia.','Tytuł lektury jest za krótki.','Brakuje podziękowania za uwagę.','We wstępie nie wolno pisać o Tadeuszu.'], e:'Rozprawka nie streszcza – we wstępie musi być teza.'},
+ {k:'bud', t:'sort', q:'Gdzie pasuje to zdanie: do wstępu czy do zakończenia?', cats:['wstęp','zakończenie'], items:[['Każdy człowiek popełnia błędy.',0],['Spróbuję to udowodnić na przykładzie „Pana Tadeusza”.',0],['Podsumowując, przedstawione argumenty potwierdzają moją tezę.',1],['Historia Jacka Soplicy przekonuje, że miałam rację.',1],['Zastanówmy się, czy człowiek może zmienić się na lepsze.',0],['Dlatego jestem pewna, że warto przebaczać.',1]], e:'Wstęp wprowadza i zapowiada. Zakończenie podsumowuje i potwierdza.'},
+ {k:'teza', t:'open', q:'Temat: „Czy warto przebaczać?”. Napisz wstęp: jedno zdanie wprowadzenia i tezę.', pts:['Teza jasno odpowiada na pytanie (tak albo nie).','Jest „uważam, że”, „moim zdaniem” albo podobny zwrot.','Zdanie wprowadzenia nie streszcza lektury.','Jest tytuł i autor: „Pan Tadeusz” Adama Mickiewicza.']},
+ {k:'zak', t:'open', q:'Temat: „Czy warto kochać ojczyznę?”. Napisz zakończenie (2–3 zdania).', pts:['Zaczyna się od „Podsumowując”, „Reasumując” albo „Przedstawione argumenty dowodzą, że…”.','Powtarza tezę innymi słowami.','Nie ma nowego argumentu.']}
+]},
+{id:'rarg', base:'T', mark:'2', name:'Argument, przykład, wniosek', pages:'APW', qs:[
+ {k:'arg', t:'mc', q:'Czym jest argument w rozprawce?', o:['uzasadnieniem tezy – pokazuje, dlaczego teza jest słuszna','streszczeniem jednej sceny z lektury','cytatem z lektury bez komentarza','pytaniem retorycznym'], e:'Argument odpowiada na pytanie „dlaczego tak uważam?”.'},
+ {k:'arg', t:'mc', q:'Teza: „Warto przebaczać”. Który argument do niej pasuje?', o:['Przebaczenie kończy dawne spory i pozwala żyć w zgodzie.','Gerwazy miał rapier zwany Scyzorykiem.','Zemsta jest słodka.','„Pan Tadeusz” ma dwanaście ksiąg.'], e:'Argument musi wspierać tezę, a nie tylko mówić coś o lekturze.'},
+ {k:'str', t:'mc', lab:'Argument czy streszczenie?', q:'Które zdanie jest ARGUMENTEM, a nie streszczeniem?', o:['Miłość do ojczyzny może zmienić człowieka na lepsze.','Robak w karczmie częstował szlachtę tabaką.','Tadeusz przyjechał do Soplicowa z Wilna.','Wojski zagrał na rogu po polowaniu.'], e:'Argument to ogólna myśl. Pozostałe zdania mówią, co się wydarzyło – to materiał na przykład.'},
+ {k:'str', t:'sort', q:'Argument (ogólna myśl) czy przykład z lektury?', cats:['argument','przykład'], items:[['Człowiek może naprawić swoje błędy.',0],['Jacek Soplica jako ksiądz Robak walczy za ojczyznę.',1],['Zgoda jest silniejsza niż dawne urazy.',0],['Gerwazy i Protazy piją razem miód.',1],['Tradycja łączy pokolenia.',0],['Podkomorzy prowadzi poloneza z Zosią.',1]], e:'Argument mówi coś ogólnego o życiu. Przykład to konkretna scena z lektury.'},
+ {k:'wn', t:'order', q:'Ułóż akapit z argumentem w dobrej kolejności.', items:['Po pierwsze, człowiek może naprawić swoje błędy.','Przykładem jest Jacek Soplica, który zastrzelił Stolnika Horeszkę.','Później jako ksiądz Robak walczył za ojczyznę i opłacał wychowanie Zosi.','Jego historia dowodzi, że winę można odkupić czynami.'], e:'Argument → przykład → wniosek (APW).'},
+ {k:'prz', t:'mc', q:'Argument: „Spory można zakończyć zgodą”. Który przykład go potwierdza?', o:['Kusy i Sokół jednocześnie łapią zająca, a Rejent i Asesor się godzą.','Robak zabija niedźwiedzia.','Tadeusz myli Zosię z Telimeną.','Jankiel prowadzi karczmę.'], e:'Wojski ogłasza: „obaście wygrali” – spór z Księgi I kończy się zgodą w Księdze XI.'},
+ {k:'prz', t:'mc', q:'Argument: „Patriota potrafi poświęcić własne korzyści”. Który przykład pasuje NAJLEPIEJ?', o:['Tadeusz i Zosia dają chłopom wolność i ziemię, choć będą ubożsi.','Telimena opowiada o Petersburgu.','Wojski radzi postawić zakład.','Hrabia zaspał na polowanie.'], e:'Uwłaszczenie chłopów w Księdze XII to rezygnacja z własnej korzyści dla dobra innych.'},
+ {k:'wn', t:'multi', q:'Zaznacz WSZYSTKIE zwroty, którymi można zacząć wniosek po przykładzie.', o:['To dowodzi, że…','Ta sytuacja pokazuje, że…','Świadczy to o tym, że…','Dawno, dawno temu…','Po pierwsze…','Dziękuję za uwagę.'], c:[0,1,2], e:'„Po pierwsze” zaczyna argument, a nie wniosek.'},
+ {k:'str', t:'tf', q:'Dobry przykład w rozprawce to długie streszczenie całej księgi.', a:false, e:'Wystarczy krótko przywołać jedną scenę (kto, co zrobił) i od razu wyjaśnić, co z niej wynika.'},
+ {k:'prz', t:'mc', lab:'Znajdź błąd', q:'Akapit: „Po drugie, warto pielęgnować tradycję. Hrabia zaspał na polowanie, a potem zobaczył Zosię w ogrodzie”. Co jest źle?', o:['Przykład nie pasuje do argumentu i brakuje wniosku.','Brakuje tezy na początku akapitu.','Przykład powinien być przed argumentem.','Nie wolno pisać o Hrabim.'], e:'Do tradycji pasują np. uczta i polonez (XII) albo grzeczność według Sędziego (I).'},
+ {k:'prz', t:'mc', q:'Kiedy przykład z lektury jest najmocniejszy?', o:['gdy podaje konkretną postać i scenę, a potem wyjaśnia, co z niej wynika','gdy jest bardzo długi','gdy mówi ogólnie: „bohaterowie robili różne rzeczy”','gdy kończy się pytaniem'], e:'Kto? Co zrobił? Co z tego wynika dla tezy?'},
+ {k:'arg', t:'tf', q:'Argumenty warto ułożyć od najsłabszego do najmocniejszego.', a:true, e:'Najmocniejszy na koniec – zostaje w pamięci czytającego.'},
+ {k:'prz', t:'match', q:'Połącz argument z przykładem z „Pana Tadeusza”.', pairs:[['Winę można odkupić','Jacek zostaje Robakiem i walczy za ojczyznę'],['Przebaczenie przynosi pokój','umierający Stolnik kreśli krzyż – przebacza Jackowi'],['Sztuka przypomina historię narodu','koncert Jankiela na cymbałach'],['Miłość wymaga cierpliwości','Tadeusz nie chce zaręczyn, zanim zasłuży na Zosię']], e:'Każdy argument potrzebuje sceny, która naprawdę go potwierdza.'},
+ {k:'wn', t:'open', q:'Argument: „Zemsta niszczy człowieka”. Dopisz przykład z lektury i wniosek (2–3 zdania).', pts:['Konkretna postać i scena, np. Jacek z urażonej dumy zabija Stolnika i zostaje uznany za zdrajcę.','Krótko – bez streszczania całej historii.','Wniosek: „To dowodzi, że…” albo „Ta sytuacja pokazuje, że…”.']}
+]},
+{id:'rpat', base:'G', mark:'3', name:'Bank argumentów: ojczyzna i patriotyzm', pages:'księgi I, IV, X–XII', qs:[
+ {k:'pat', t:'multi', q:'Temat: „Czy warto kochać ojczyznę?”. Zaznacz WSZYSTKIE sceny, które mogą być przykładami.', o:['Robak jako emisariusz budzi szlachtę do walki','koncert Jankiela – historia Polski w muzyce','Tadeusz wyjeżdża za Niemen, by walczyć, i wraca jako ułan','spór Asesora i Rejenta o charty','Tadeusz myli Zosię z Telimeną'], c:[0,1,2], e:'Spór o charty i pomyłka Tadeusza nie mają nic wspólnego z ojczyzną.'},
+ {k:'pat', t:'mc', q:'Jak Robak w Księdze IV budzi w szlachcie ducha walki?', o:['częstuje tabaką z tabakierki z Napoleonem i woła: „Oczyścić dom, dzieci!”','wygłasza kazanie w kościele','śpiewa Mazurka Dąbrowskiego','rozdaje broń w zamku'], e:'„Oczyścić dom” – wypędzić Moskali, zanim przyjdzie Napoleon.'},
+ {k:'pat', t:'mc', q:'Co w Księdze I świadczy o patriotyzmie mieszkańców Soplicowa?', o:['portrety Kościuszki, Rejtana, Jasińskiego i Korsaka oraz zegar grający Mazurka Dąbrowskiego','obrazy francuskich mód na ścianach','herb Horeszków nad bramą','portret cara w salonie'], e:'Dwór Sopliców pamięta o bohaterach narodowych.'},
+ {k:'emi', t:'mc', q:'Dlaczego Tadeusz w Księdze X musi opuścić Soplicowo?', o:['po bitwie z Moskalami grozi mu kara, więc ucieka za Niemen, by walczyć dalej','ojciec wysyła go na studia do Wilna','obraził Telimenę','Sędzia go wydziedzicza'], e:'Uczestnicy bitwy uciekają do Księstwa Warszawskiego i wstępują do wojska.'},
+ {k:'emi', t:'tf', q:'Hrabia w 1812 roku wystawił własnym kosztem pułk i został pułkownikiem.', a:true, e:'Tak – Księga XI. Dziwak Hrabia też potrafi poświęcić się dla ojczyzny.'},
+ {k:'uwl', t:'mc', q:'Argument: „Patriotyzm to nie tylko walka z bronią w ręku”. Który przykład pasuje?', o:['uwłaszczenie chłopów przez Tadeusza i Zosię','polowanie na niedźwiedzia','opowieść o Doweyce i Domeyce','spór o Kusego i Sokoła'], e:'Tadeusz chce, by wszyscy Polacy byli wolni i równi.'},
+ {k:'uwl', t:'type', q:'Tadeusz w Księdze XII: „Sami wolni, uczyńmy i włościan…”', ans:['wolnemi','wolnymi'], e:'„Sami wolni, uczyńmy i włościan wolnemi” – dajemy chłopom wolność i ziemię.'},
+ {k:'jan', t:'mc', q:'Co wyraża koncert Jankiela?', o:['historię Polski: radość 3 Maja, zdradę, klęskę, tułaczkę i nadzieję','radość z udanego polowania','żal po śmierci Jacka','tęsknotę Jankiela za Paryżem'], e:'Polonez 3 Maja → Targowica → rzeź Pragi → żołnierz tułacz → Mazurek Dąbrowskiego.'},
+ {k:'jan', t:'tf', q:'Jankiel, choć jest Żydem, kocha w poemacie Polskę jak Polak.', a:true, e:'„Żyd poczciwy Ojczyznę jako Polak kochał!” – świetny przykład, że patriotyzm łączy ludzi.'},
+ {k:'pat', t:'mc', q:'Co Maciek Dobrzyński mówi w Księdze XII o Napoleonie?', o:['nie ufa mu: „dla Polski polskiego trzeba bohatera”','wznosi toast na jego cześć','chce wstąpić do jego armii','nie wie, kim on jest'], e:'Ten przykład przyda się, gdy piszesz, że o wolność trzeba walczyć samemu.'},
+ {k:'emi', t:'match', q:'Połącz postać z jej czynem dla ojczyzny.', pairs:[['Jacek Soplica','emisariusz, walczył m.in. w Hiszpanii'],['Tadeusz','ułan, wraca ranny z wojska'],['Hrabia','wystawia pułk własnym kosztem'],['Jankiel','gra na cymbałach historię Polski']], e:'Każdy z nich służy ojczyźnie na swój sposób.'},
+ {k:'pat', t:'open', q:'Napisz akapit do tematu „Czy warto poświęcać się dla ojczyzny?” (3–4 zdania).', pts:['Spójnik na początku: „Po pierwsze”, „Ponadto” albo „Kolejnym argumentem jest…”.','Argument – ogólna myśl.','Przykład: konkretna postać z lektury i co zrobiła.','Wniosek: „To dowodzi, że…”.']}
+]},
+{id:'rwin', base:'C', mark:'4', name:'Bank argumentów: wina, przemiana, przebaczenie', pages:'Jacek Soplica, Gerwazy', qs:[
+ {k:'pmn', t:'order', q:'Ułóż etapy życia Jacka Soplicy.', items:['Dumny junak zakochany w Ewie','Stolnik odmawia mu ręki córki','Zabójstwo Stolnika z urażonej dumy','Zakonnik – ksiądz Robak','Walka i praca emisariusza dla ojczyzny','Spowiedź przed śmiercią i przebaczenie'], e:'Duma → zbrodnia → pokora → bohaterstwo.'},
+ {k:'jac', t:'mc', q:'Dlaczego Jacek zabił Stolnika – według jego spowiedzi?', o:['z urażonej dumy i rozpaczy, a nie w zmowie z Moskalami','na rozkaz rosyjskiego generała','dla pieniędzy Horeszków','przez przypadek na polowaniu'], e:'Jacek zastrzelił Stolnika podczas napadu Moskali na zamek, ale z nimi nie współpracował.'},
+ {k:'jac', t:'multi', q:'Zaznacz WSZYSTKO, czym Jacek naprawiał zło, które wyrządził.', o:['został zakonnikiem – księdzem Robakiem','walczył za ojczyznę i był emisariuszem','opłacał wychowanie Zosi, wnuczki Stolnika','uratował Tadeusza i Hrabiego przed niedźwiedziem','przyjął od cara wysoki urząd','oddał zamek Hrabiemu'], c:[0,1,2,3], e:'Urzędu od cara nie przyjął, a o zamek spierali się Sędzia i Hrabia.'},
+ {k:'jac', t:'tf', q:'Jacek zabił Stolnika w zmowie z Moskalami.', a:false, e:'Uznano go za zdrajcę, ale w spowiedzi wyjaśnia: „nie byłem zdrajcą kraju”.'},
+ {k:'prb', t:'mc', q:'Co Gerwazy wyjawia umierającemu Jackowi?', o:['że Stolnik przed śmiercią mu przebaczył, kreśląc w powietrzu krzyż','że Zosia jest jego córką','że to on sam zabił Stolnika','że Moskale chcą go aresztować'], e:'Gerwazy przez lata nikomu o tym krzyżu nie powiedział.'},
+ {k:'jac', t:'mc', q:'Co oznacza rehabilitacja Jacka w Księdze XI?', o:['oczyszczenie jego dobrego imienia za zasługi dla ojczyzny','awans na generała','ułaskawienie przez cara','oddanie mu zamku Horeszków'], e:'Podkomorzy ogłasza zasługi Jacka, a na jego grobie wisi krzyż Legii Honorowej.'},
+ {k:'zem', t:'tf', q:'Gerwazy do końca utworu chce zabić kogoś z Sopliców.', a:false, e:'Po spowiedzi Jacka Gerwazy przebacza, a w Księdze XI pije miód z Protazym.'},
+ {k:'jac', t:'mc', q:'Temat: „Czy można odkupić swoje winy?”. Która teza ma najlepsze oparcie w lekturze?', o:['Tak – Jacek Soplica naprawił zło pokutą i służbą ojczyźnie.','Nie – Jacek do końca pozostał zdrajcą.','Nie wiadomo – lektura nic o tym nie mówi.','Tak – bo Jacek uniknął kary.'], e:'Historia Jacka to najlepszy przykład odkupienia winy w „Panu Tadeuszu”.'},
+ {k:'pmn', t:'match', q:'Połącz okres życia Jacka z tym, jaki wtedy był.', pairs:[['młodość','dumny szlachcic zakochany w Ewie'],['zbrodnia','strzela do Stolnika podczas napadu Moskali'],['pokuta','bernardyn Robak, emisariusz'],['śmierć','spowiedź, przebaczenie, wieść o wojnie']], e:'Przemiana Jacka pasuje do tematów o winie, zmianie i przebaczeniu.'},
+ {k:'zem', t:'mc', q:'Argument: „Zemsta niszczy także tego, kto się mści”. Który przykład pasuje?', o:['Jacek po zabójstwie zostaje uznany za zdrajcę i traci szczęście','Wojski gra na rogu','Podkomorzy prowadzi poloneza','Zosia zbiera ogórki'], e:'Zemsta odebrała Jackowi dobre imię i spokój na całe życie.'},
+ {k:'pmn', t:'sort', q:'Jacek przed przemianą czy po przemianie?', cats:['przed','po'], items:[['dumny, porywczy',0],['pokorny zakonnik',1],['zabija Stolnika',0],['zasłania w bitwie Hrabiego i Gerwazego',1],['chce zemsty za odmowę',0],['opłaca wychowanie Zosi',1]], e:'Przed: duma i zemsta. Po: pokora i pomoc innym.'},
+ {k:'pmn', t:'open', q:'Napisz akapit do tematu „Czy człowiek może się zmienić?” na przykładzie Jacka Soplicy (3–5 zdań).', pts:['Argument: człowiek może zmienić się na lepsze.','Jacek przed przemianą: duma, zabójstwo Stolnika.','Jacek po przemianie: Robak, walka, emisariusz, opieka nad Zosią.','Wniosek, który łączy przykład z tezą.']}
+]},
+{id:'rsz', base:'T', mark:'5', name:'Bank argumentów: spór i zgoda, honor, tradycja', pages:'szlachta w PT', qs:[
+ {k:'zg', t:'multi', q:'Temat: „Czy zgoda jest lepsza od sporu?”. Zaznacz WSZYSTKIE pasujące przykłady.', o:['Gerwazy i Protazy piją razem miód','koniec sporu o Kusego i Sokoła – „obaście wygrali”','Wojski godzi Doweykę i Domeykę','„Kochajmy się” – toast i tytuł Księgi XII','Robak zabija niedźwiedzia'], c:[0,1,2,3], e:'Zabicie niedźwiedzia to przykład odwagi, a nie zgody.'},
+ {k:'zg', t:'mc', q:'Jak kończy się wielki spór Sopliców z Horeszkami?', o:['zaręczynami Tadeusza Soplicy z Zosią, wnuczką Stolnika','pojedynkiem Tadeusza z Hrabią','sprzedażą zamku','wyrokiem sądu w Wilnie'], e:'Jak dawniej – spór kończy wesele.'},
+ {k:'zg', t:'mc', q:'Jak Wojski zakończył spór Doweyki i Domeyki?', o:['pociął niedźwiedzią skórę w długi pas, więc pojedynek przez skórę stał się niemożliwy i zamiast niego była zgoda','zabrał im pistolety','urządził im ucztę','ożenił ich z siostrami'], e:'Opowieść Wojskiego z Księgi IV – spryt zamiast przelewu krwi.'},
+ {k:'hon', t:'mc', q:'Co mówi Hrabia w Księdze II, gdy postanawia walczyć o zamek?', o:['„Honor każe”','„Kochajmy się”','„Pax vobiscum”','„Oczyścić dom”'], e:'Hrabia mówi o honorze, ale kierują nim romantyczne marzenia.'},
+ {k:'hon', t:'mc', q:'Argument: „Prawdziwy honor to odpowiedzialność, a nie duma”. Który przykład pasuje?', o:['Tadeusz nie chce zaręczyn z Zosią, zanim na nią nie zasłuży','Hrabia ubiera służbę jak dżokejów','Rejent przychodzi na ucztę we fraku','Asesor kłóci się o charta'], e:'Księga X: przyjąć rękę, „na którąm nie zasłużył, byłaby nikczemność”.'},
+ {k:'hon', t:'tf', q:'Duma i źle rozumiany honor doprowadziły Jacka do zbrodni.', a:true, e:'Jacek sam mówi o „obrażonej dumie” – to ona pchnęła go do zabójstwa.'},
+ {k:'tra', t:'multi', q:'Zaznacz WSZYSTKIE szlacheckie tradycje pokazane w księgach I, II, IV, X–XII.', o:['gościnność – brama dworu zawsze otwarta','polowanie i gra Wojskiego na rogu','uczta staropolska i polonez','grzeczność wobec starszych','bale w Paryżu','turniej rycerski'], c:[0,1,2,3], e:'Bali w Paryżu ani turniejów w poemacie nie ma.'},
+ {k:'tra', t:'mc', q:'O czym mówi Sędzia w Księdze I?', o:['o grzeczności – szacunku dla wieku, urodzenia i urzędu','o wyższości francuskiej mody','o polowaniu na niedźwiedzie','o powstaniu kościuszkowskim'], e:'„Grzeczność nie jest nauką łatwą ani małą”.'},
+ {k:'tra', t:'mc', q:'Co wyraża zdanie o Podkomorzym: „Może ostatni, co tak poloneza wodzi!”?', o:['żal, że dawne obyczaje szlacheckie odchodzą','radość z wygranej bitwy','krytykę Podkomorzego','zachwyt nad nowym tańcem z Paryża'], e:'Narrator czuje, że ten świat przemija.'},
+ {k:'szl', t:'sort', q:'Zaleta czy wada szlachty w „Panu Tadeuszu”?', cats:['zaleta','wada'], items:[['gościnność',0],['kłótliwość (spór o charty)',1],['patriotyzm',0],['zapatrzenie w obce mody (Rejent we fraku)',1],['przywiązanie do tradycji',0],['skłonność do zemsty (Gerwazy)',1]], e:'Mickiewicz pokazuje szlachtę z humorem: ma wady, ale kocha ojczyznę.'},
+ {k:'tra', t:'mc', q:'Temat: „Czy warto pielęgnować tradycję?”. Który argument jest NAJLEPSZY?', o:['Tradycja łączy pokolenia i daje poczucie wspólnoty, co widać podczas uczty i poloneza w Księdze XII.','Tradycja jest stara.','W Soplicowie było dużo jedzenia.','Bigos to tradycyjna potrawa, bo Wojski go jadł.'], e:'Dobry argument to ogólna myśl + konkretna scena.'},
+ {k:'szl', t:'open', q:'Temat: „Czy szlachta w »Panu Tadeuszu« zasługuje na podziw?”. Podaj jedną zaletę i jedną wadę szlachty, każdą z przykładem.', pts:['Zaleta + przykład, np. patriotyzm (Robak, Tadeusz, Hrabia w wojsku) albo gościnność (otwarta brama Soplicowa).','Wada + przykład, np. kłótliwość (Asesor i Rejent) albo obce mody (Telimena, Rejent we fraku).','Przykłady tylko z ksiąg I, II, IV, X, XI, XII.']}
+]},
+{id:'rplan', base:'A', mark:'6', name:'Plan, akapity, styl i spójniki', pages:'na sprawdzianie', qs:[
+ {k:'spo', t:'multi', q:'Zaznacz WSZYSTKIE zwroty, którymi można zacząć kolejny argument.', o:['Po pierwsze','Ponadto','Kolejnym argumentem jest','Co więcej','Dawno temu','Ach!'], c:[0,1,2,3], e:'Spójniki to drogowskazy – pokazują, że zaczyna się nowy argument.'},
+ {k:'spo', t:'mc', q:'Którym zwrotem zaczniesz zakończenie?', o:['Podsumowując,','Po pierwsze,','Na przykład,','Pewnego dnia'], e:'„Podsumowując,”, „Reasumując,” – i po nich przecinek.'},
+ {k:'sty', t:'mc', q:'Jaki styl obowiązuje w rozprawce?', o:['oficjalny i rzeczowy – bez słów potocznych','potoczny, jak w rozmowie z koleżanką','urzędowy, jak w podaniu','gwarowy'], e:'Piszesz jak do dyrektora, nie jak na czacie.'},
+ {k:'sty', t:'mc', lab:'Znajdź błąd', q:'Które zdanie NIE pasuje do stylu rozprawki?', o:['Jacek był spoko gościem, ale trochę przegiął.','Jacek Soplica popełnił zbrodnię, lecz ją odkupił.','Postawa Tadeusza zasługuje na uznanie.','Ten przykład dowodzi słuszności mojej tezy.'], e:'„Spoko”, „gość”, „przegiął” to słowa potoczne.'},
+ {k:'kom', t:'tf', q:'Wstęp, każdy argument i zakończenie zaczynasz od nowego akapitu.', a:true, e:'Akapity pokazują budowę pracy – to osobny punkt w ocenie (kompozycja).'},
+ {k:'kom', t:'type', q:'Fragment tekstu zaczynany od nowej linii z wcięciem to…', ans:['akapit'], e:'Akapit = nowa myśl od nowej linii.'},
+ {k:'pln', t:'order', q:'Ułóż plan pracy nad rozprawką na sprawdzianie.', items:['Przeczytaj temat i podkreśl słowa kluczowe','Zdecyduj: tak czy nie – zapisz tezę','Wypisz argumenty i do każdego scenę z lektury','Napisz plan albo brudnopis','Przepisz na czysto, z akapitami','Sprawdź ortografię, przecinki i liczbę słów'], e:'5 minut planu oszczędza 15 minut poprawiania.'},
+ {k:'pln', t:'mc', q:'Temat: „Czy miłość wymaga poświęceń? Rozważ problem, odwołując się do »Pana Tadeusza«”. Co znaczy „rozważ problem”?', o:['napisz rozprawkę: postaw tezę i uzasadnij ją argumentami z przykładami','opowiedz historię miłości Tadeusza i Zosi','opisz wygląd Zosi','napisz list do Zosi'], e:'„Rozważ”, „uzasadnij”, „odpowiedz na pytanie” = rozprawka.'},
+ {k:'sty', t:'multi', q:'Przed którymi słowami stawiasz przecinek? Zaznacz WSZYSTKIE.', o:['że','ponieważ','który','aby','i (pojedyncze)','oraz'], c:[0,1,2,3], e:'Przed pojedynczym „i” i przed „oraz” przecinka zwykle nie ma.'},
+ {k:'pln', t:'mc', q:'Ile argumentów najlepiej podać w rozprawce na sprawdzianie?', o:['2–3, każdy z przykładem','1, ale bardzo długi','8–10 krótkich','żadnego – wystarczy teza'], e:'Dwa dobrze rozwinięte to minimum, trzy to bezpieczna liczba.'},
+ {k:'kom', t:'mc', lab:'Znajdź błąd', q:'Zakończenie: „Podsumowując, Hrabia był dziwakiem, a Telimena kokietką”. Co jest źle?', o:['Nie wraca do tezy – podaje nowe informacje o postaciach.','Brakuje „Po pierwsze”.','Zdanie jest za krótkie.','Nie wolno pisać o Telimenie.'], e:'Zakończenie ma potwierdzić tezę ze wstępu.'},
+ {k:'pln', t:'open', q:'Ułóż plan rozprawki na temat „Czy warto przebaczać?”: teza i 3 argumenty z przykładami (w punktach).', pts:['Teza w jednym zdaniu.','Argument 1 + przykład, np. umierający Stolnik przebacza Jackowi.','Argument 2 + przykład, np. Gerwazy i Protazy się godzą.','Argument 3 + przykład, np. zaręczyny Tadeusza i Zosi kończą spór rodów, „Kochajmy się”.']}
+]}
+];
+const ROZ_KMAP=Object.fromEntries(ROZ_TOPICS.map(t=>[t.id,t.qs.map(q=>q.k).join(' ')]));
+const ROZ_LESSONS={
+ bud:{tid:'rbud',name:'Budowa rozprawki',pts:['Wstęp – wprowadzenie w temat i teza.','Rozwinięcie – 2–3 argumenty, każdy w osobnym akapicie: argument → przykład z lektury → wniosek.','Zakończenie – podsumowanie i potwierdzenie tezy.','Co najmniej 200 słów (celuj w 250–300).'],trick:'Rozprawka jak kanapka: wstęp i zakończenie to chleb, argumenty to nadzienie.'},
+ teza:{tid:'rbud',name:'Teza',pts:['Teza = jasna odpowiedź na pytanie z tematu: tak albo nie.','Zwroty: „Uważam, że…”, „Jestem przekonana, że…”, „Moim zdaniem…”.','Powtórz słowa z tematu: „Czy warto przebaczać?” → „Uważam, że warto przebaczać”.'],trick:'Temat pyta – teza odpowiada.'},
+ hip:{tid:'rbud',name:'Teza czy hipoteza?',pts:['Hipoteza = przypuszczenie: „Spróbuję sprawdzić, czy…”.','Sprawdzasz ją w rozwinięciu, a w zakończeniu potwierdzasz albo odrzucasz.','Na sprawdzianie bezpieczniej postawić tezę – łatwiej się jej trzymać.'],trick:'Teza – wiem. Hipoteza – sprawdzam.'},
+ wst:{tid:'rbud',name:'Wstęp',pts:['1–2 zdania wprowadzenia, np. „Każdy człowiek popełnia błędy. Czy można je naprawić?”.','Teza.','Lektura: „Spróbuję to udowodnić na przykładzie »Pana Tadeusza« Adama Mickiewicza”.','We wstępie nie streszczasz lektury.'],trick:'Wstęp = temat + teza + lektura.'},
+ zak:{tid:'rbud',name:'Zakończenie',pts:['Zacznij: „Podsumowując,”, „Reasumując,”, „Przedstawione argumenty dowodzą, że…”.','Powtórz tezę innymi słowami.','Żadnych nowych argumentów.','Możesz dodać refleksję: co to znaczy dla nas dzisiaj.'],trick:'Zakończenie = teza jeszcze raz, ale pewniej.'},
+ arg:{tid:'rarg',name:'Argument',pts:['Argument = ogólna myśl, która uzasadnia tezę: „Po pierwsze, człowiek może naprawić swoje błędy”.','Musi pasować do tezy, a nie tylko do lektury.','Układaj od najsłabszego do najmocniejszego.'],trick:'Argument odpowiada na pytanie „dlaczego?”.'},
+ prz:{tid:'rarg',name:'Przykład z lektury',pts:['Przykład = jedna konkretna scena: kto, co zrobił, najlepiej z numerem księgi.','Scena musi naprawdę pasować do argumentu.','Krótko: 1–2 zdania, nie streszczenie całej księgi.'],trick:'Kto? Co zrobił? W której księdze?'},
+ wn:{tid:'rarg',name:'Wniosek',pts:['Po przykładzie wyjaśnij, co z niego wynika dla tezy.','Zwroty: „To dowodzi, że…”, „Ta sytuacja pokazuje, że…”, „Świadczy to o tym, że…”.','Akapit: Argument → Przykład → Wniosek.'],trick:'APW: Argument – Przykład – Wniosek.'},
+ str:{tid:'rarg',name:'Argument to nie streszczenie',pts:['Streszczenie mówi, co się stało. Argument mówi, co z tego wynika.','„Robak zabił niedźwiedzia” – to fakt, a nie argument.','„Odwaga to gotowość do ratowania innych” – to argument. Robak ratujący Tadeusza i Hrabiego – to przykład.'],trick:'Fakt z lektury zawsze z wnioskiem – inaczej to tylko streszczenie.'},
+ pat:{tid:'rpat',name:'Patriotyzm w „Panu Tadeuszu”',pts:['Soplicowo (I): portrety Kościuszki, Rejtana, Jasińskiego i Korsaka, zegar gra Mazurka Dąbrowskiego.','Robak (IV): tabakiera z Napoleonem, „Oczyścić dom, dzieci!”.','Rok 1812 (XI): wojsko polskie w Soplicowie; Tadeusz – ranny ułan, Hrabia – pułkownik.','Maciek Dobrzyński (XII): „dla Polski polskiego trzeba bohatera”.'],trick:'Patriotyzm w PT: portrety, tabakiera, wojsko, cymbały.'},
+ emi:{tid:'rpat',name:'Walka za ojczyznę',pts:['Po bitwie z Moskalami Tadeusz i inni uciekają za Niemen, do Księstwa Warszawskiego (X).','Hrabia też jedzie walczyć (X), a w 1812 r. wystawia własnym kosztem pułk (XI).','Jacek walczył m.in. pod Hohenlinden i w Hiszpanii, był emisariuszem (X, XI).'],trick:'Wyjeżdżają, żeby wrócić z wojskiem.'},
+ jan:{tid:'rpat',name:'Jankiel i jego koncert',pts:['Jankiel – karczmarz i cymbalista, „miał sławę dobrego Polaka” (IV).','Koncert (XII): Polonez 3 Maja → fałszywy akord Targowicy → rzeź Pragi → piosenka o żołnierzu tułaczu → Mazurek Dąbrowskiego.','„Żyd poczciwy Ojczyznę jako Polak kochał!”.'],trick:'Koncert = historia Polski w pięciu utworach.'},
+ uwl:{tid:'rpat',name:'Uwłaszczenie chłopów',pts:['Pierwszy akt urzędowy Tadeusza (XII): wolność i ziemia dla chłopów.','„Sami wolni, uczyńmy i włościan wolnemi”.','Zosia się zgadza, choć będą ubożsi. Toast za „wolnych, równych Polaków”.'],trick:'Patriotyzm bez broni = uwłaszczenie.'},
+ jac:{tid:'rwin',name:'Wina i odkupienie Jacka',pts:['Zabił Stolnika z urażonej dumy, gdy ten nie chciał dać mu ręki Ewy. Uznano go za zdrajcę.','Pokuta: zakonnik Robak, żołnierz i emisariusz, opłacał wychowanie Zosi.','Spowiedź (X): „Jam jest Jacek Soplica…”.','Rehabilitacja (XI): Podkomorzy oczyszcza jego imię, na grobie krzyż Legii Honorowej.'],trick:'Jacek – najlepszy przykład do tematów o winie i przemianie.'},
+ pmn:{tid:'rwin',name:'Przemiana Jacka',pts:['Przed: dumny junak, porywczy, myśli o zemście.','Zbrodnia: strzela do Stolnika, gdy Moskale napadają na zamek.','Po: pokorny zakonnik, ratuje innych (niedźwiedź – IV, bitwa – X), służy ojczyźnie.'],trick:'Duma → zbrodnia → pokora → bohaterstwo.'},
+ prb:{tid:'rwin',name:'Przebaczenie',pts:['Umierający Stolnik kreśli w powietrzu krzyż – przebacza Jackowi. Wyjawia to Gerwazy w Księdze X.','Gerwazy, przez lata żądny zemsty, przebacza i godzi się z Soplicami.','Jacek umiera spokojny po przebaczeniu i wieści o wojnie.'],trick:'Przebaczenie kończy historię zemsty.'},
+ zem:{tid:'rwin',name:'Zemsta',pts:['Gerwazy przez lata żyje przysięgą zemsty (II).','Jacek mści się za urażoną dumę i traci dobre imię, spokój i szczęście (X).','Zemsta przedłuża spór rodów, zgoda go kończy (XI–XII).'],trick:'Zemsta niszczy – przebaczenie buduje.'},
+ zg:{tid:'rsz',name:'Spór i zgoda',pts:['Soplicowie i Horeszkowie – spór kończą zaręczyny Tadeusza i Zosi (XI).','Gerwazy i Protazy piją razem miód. Kusy i Sokół – „obaście wygrali” (XI).','Doweyko i Domeyko pogodzeni przez Wojskiego (IV).','„Kochajmy się” – toast i tytuł Księgi XII.'],trick:'Każdy spór w PT kończy się zgodą.'},
+ hon:{tid:'rsz',name:'Honor i duma',pts:['Hrabia: „Honor każe” (II) – ale walczy o zamek z romantycznych marzeń.','Jacek: urażona duma prowadzi do zbrodni (X).','Tadeusz (X): nie chce zaręczyn, zanim zasłuży na Zosię – to prawdziwy honor.'],trick:'Honor to nie duma.'},
+ tra:{tid:'rsz',name:'Tradycja i obyczaj',pts:['Gościnność: „Brama na wciąż otwarta przechodniom ogłasza, że gościnna” (I).','Grzeczność według Sędziego: szacunek dla wieku, urodzenia i urzędu (I).','Polowanie, róg Wojskiego, bigos (IV); uczta staropolska i polonez (XII).','„Może ostatni, co tak poloneza wodzi!” – żal za odchodzącym światem.'],trick:'Tradycja w PT: brama, grzeczność, polowanie, polonez.'},
+ szl:{tid:'rsz',name:'Obraz szlachty',pts:['Zalety: patriotyzm, gościnność, odwaga, przywiązanie do tradycji.','Wady: kłótliwość (Asesor i Rejent), skłonność do zemsty (Gerwazy), zapatrzenie w obce mody (Telimena, Rejent we fraku w XII).','Mickiewicz pokazuje szlachtę z humorem, ale z miłością.'],trick:'Szlachta: gorące serce, gorąca głowa.'},
+ pln:{tid:'rplan',name:'Plan pracy na sprawdzianie',pts:['1. Podkreśl słowa kluczowe w temacie.','2. Teza: tak czy nie.','3. Argumenty + sceny z lektury w punktach.','4. Pisz z akapitami. 5. Sprawdź błędy i liczbę słów.'],trick:'Najpierw plan, potem pisanie.'},
+ spo:{tid:'rplan',name:'Spójniki i zwroty',pts:['Argumenty: „Po pierwsze”, „Po drugie”, „Ponadto”, „Co więcej”, „Kolejnym argumentem jest…”, „Najważniejszym argumentem jest…”.','Przykład: „Dowodem na to jest…”, „Przykładem jest…”.','Wniosek: „To dowodzi, że…”. Zakończenie: „Podsumowując,”, „Reasumując,”.'],trick:'Spójniki to drogowskazy dla nauczyciela.'},
+ sty:{tid:'rplan',name:'Styl i przecinki',pts:['Styl rzeczowy, bez słów potocznych („spoko”, „fajny”, „przegiął”).','Przecinek przed: że, ponieważ, bo, który, aby, żeby, gdy.','Bez przecinka przed pojedynczym „i”, „oraz”, „lub”.'],trick:'Piszę jak do dyrektora, nie jak na czacie.'},
+ kom:{tid:'rplan',name:'Akapity i kompozycja',pts:['Każda część od nowego akapitu (wcięcie).','Zakończenie wraca do tezy ze wstępu.','Wstęp i zakończenie krótkie, argumenty najdłuższe.'],trick:'Wstęp i zakończenie po 3–4 linijki, argument po 5–7.'}
+};
+ROZ_LESSONS.bud.storyTag='Rozprawka w 2 minuty – zgaduj i układaj.';
+ROZ_LESSONS.bud.story=[
+ {t:'info',say:'Rozprawka to tekst, w którym <b>udowadniasz</b> swoje zdanie. Jak adwokat w sądzie ⚖️'},
+ {t:'quiz',say:'Temat: „Czy można odkupić swoje winy?”. Co jest <b>tezą</b>?',o:['Uważam, że można odkupić swoje winy.','Jacek Soplica był księdzem.','To trudne pytanie.'],e:'Teza = jasna odpowiedź tak albo nie na pytanie z tematu.'},
+ {t:'order',say:'Ułóż części rozprawki.',items:[['🚪','Wstęp z tezą'],['1️⃣','Argument 1 + przykład'],['2️⃣','Argument 2 + przykład'],['💪','Argument 3 – najmocniejszy'],['🏁','Zakończenie']]},
+ {t:'info',say:'Każdy argument to <b>APW</b>: <b>A</b>rgument → <b>P</b>rzykład z lektury → <b>W</b>niosek.'},
+ {t:'quiz',say:'Które zdanie to <b>argument</b>, a nie streszczenie?',o:['Człowiek może naprawić swoje błędy.','Robak zabił niedźwiedzia.','Tadeusz wrócił z Wilna.'],e:'Argument to ogólna myśl. Scena z lektury to przykład.'},
+ {t:'quiz',say:'Jak zaczniesz <b>wniosek</b> po przykładzie?',o:['To dowodzi, że…','Dawno, dawno temu…','Szanowni Państwo!'],e:'Wniosek łączy przykład z tezą.'},
+ {t:'quiz',say:'Czego <b>NIE</b> piszesz w zakończeniu?',o:['nowego argumentu','tezy innymi słowami','„Podsumowując,”'],e:'W zakończeniu tylko podsumowujesz i potwierdzasz tezę.'},
+ {t:'quiz',say:'Ile co najmniej słów?',o:['200','100','50'],e:'Minimum 200, a najlepiej 250–300.'},
+ {t:'end',say:'Brawo! Teza → APW, APW, APW → zakończenie.'}
+];
+const ROZ_CARDS=[
+ ['Teza','jasna odpowiedź na pytanie z tematu: „Uważam, że…”'],
+ ['Hipoteza','przypuszczenie, które sprawdzasz i potwierdzasz albo odrzucasz w zakończeniu'],
+ ['Argument','ogólna myśl, która uzasadnia tezę – odpowiada na „dlaczego?”'],
+ ['Przykład','konkretna scena z lektury: kto, co zrobił, która księga'],
+ ['Wniosek','„To dowodzi, że…” – łączy przykład z tezą'],
+ ['APW','Argument → Przykład → Wniosek = jeden akapit'],
+ ['Wstęp','wprowadzenie + teza + tytuł i autor lektury'],
+ ['Zakończenie','„Podsumowując,” + teza innymi słowami, bez nowych argumentów'],
+ ['Ile słów?','co najmniej 200, najlepiej 250–300'],
+ ['Spójniki','po pierwsze, po drugie, ponadto, co więcej, kolejnym argumentem jest'],
+ ['Patriotyzm – przykłady','Robak i „Oczyścić dom” (IV), Tadeusz-ułan (X–XI), Hrabia i pułk (XI), uwłaszczenie i koncert Jankiela (XII)'],
+ ['Wina i przemiana','Jacek Soplica: zabójstwo Stolnika → Robak, emisariusz → spowiedź (X) → rehabilitacja (XI)'],
+ ['Przebaczenie','umierający Stolnik kreśli krzyż (X); Gerwazy godzi się z Soplicami (XI)'],
+ ['Zgoda','Gerwazy i Protazy, Kusy i Sokół (XI), Doweyko i Domeyko (IV), „Kochajmy się” (XII)'],
+ ['Tradycja','otwarta brama i grzeczność (I), polowanie i róg (IV), uczta i polonez (XII)'],
+ ['Honor','Tadeusz nie chce zaręczyn, zanim zasłuży (X); Hrabia „Honor każe” (II); duma Jacka'],
+ ['Miłość','Tadeusz i Zosia – łzy przy pożegnaniu (X–XI); Jacek i Ewa – miłość i duma (X)'],
+ ['Szlachta – wady','kłótliwość (Asesor i Rejent), zemsta (Gerwazy), obce mody (Telimena, Rejent we fraku)']
+];
+const ROZ_PLAN=[
+ ['2026-11-19','rbud','Budowa rozprawki (najpierw 🎬 lekcja, potem 1 runda)'],
+ ['2026-11-20','rarg','Argument, przykład, wniosek (1 runda)'],
+ ['2026-11-21','rwin','Jacek: wina i przemiana (1 runda)'],
+ ['2026-11-22','pisz','Próbna rozprawka w Pisarzu, potem na kartce – zdjęcie dla taty'],
+ ['2026-11-23','rpat','Ojczyzna i patriotyzm (1 runda – jutro angielski)'],
+ ['2026-11-24','rsz','Spór i zgoda, honor, tradycja (1 runda – jutro historia)'],
+ ['2026-11-25','rplan','Plan, akapity, styl (1 runda), wieczorem test próbny'],
+ ['2026-11-26','cards','Rano tylko fiszki – powodzenia!']];
+prep(ROZ_TOPICS,ROZ_KMAP);
+
 /* ---------- FIZYKA – Elementy obwodu elektrycznego (17.11.2026, v55).
    Kartkówka pt. 27.11.2026. Źródło: notatki Hani z zeszytu (symbole, łączenie szeregowe i równoległe – /mnt/project-files/fizyka/obwody/notatki/)
    i podręcznik GWO „To nasz świat. Fizyka 8”: lekcja 11 (prąd, natężenie, amperomierz) s. 77–81, lekcja 12 (napięcie, woltomierz) s. 83–89,
@@ -4953,6 +5119,8 @@ prep(BIO_TOPICS,BIO_KMAP);prep(PT_TOPICS,PT_KMAP);prep(GEO_TOPICS,GEO_KMAP);prep
 const SUBJECTS={
  obw:{id:'obw',key:'fizyka-obwody-v1',title:'Obwody elektryczne',subject:'Fizyka',icon:'💡',sub:'kartkówka pt. 27.11 · elementy obwodu, łączenie szeregowe i równoległe',color:'var(--a)',decor:['A','T','C','G'],topics:OBW_TOPICS,lessons:OBW_LESSONS,cards:OBW_CARDS,examName:'Kartkówka próbna',examPer:3,plan:OBW_PLAN,
    tip:'codziennie jedna krótka runda według planu. Najpierw symbole – na kartkówce trzeba je rozpoznać i narysować, więc przeglądaj też fiszki. Najważniejsze: amperomierz szeregowo, woltomierz równolegle; szeregowo natężenie takie samo, a napięcie się dzieli (U = U₁ + U₂); równolegle napięcie takie samo, a prąd rozdziela się w węźle. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
+ roz:{id:'roz',key:'polski-rozprawka-pt-v1',title:'Rozprawka – „Pan Tadeusz”',subject:'Język polski',sub:'sprawdzian czw. 26.11 · praca literacka, księgi I, II, IV, X–XII',icon:'✍️',tools:'roz',color:'var(--c)',decor:['C','A','G','T'],topics:ROZ_TOPICS,lessons:ROZ_LESSONS,cards:ROZ_CARDS,examName:'Test próbny',examPer:2,plan:ROZ_PLAN,
+   tip:'codziennie ok. 15 minut według planu powyżej. Zacznij od 🎬 lekcji „Budowa rozprawki”. W niedzielę napisz próbną rozprawkę w Pisarzu rozprawek, przepisz ją na kartkę i wyślij tacie zdjęcie. Zapamiętaj: teza we wstępie, każdy argument to APW (argument → przykład z lektury → wniosek), zakończenie powtarza tezę, co najmniej 200 słów. Przykłady tylko z ksiąg I, II, IV, X, XI i XII.'},
  hpo:{id:'hpo',key:'historia-okupacja-powstanie-v1',title:'Okupacja, Państwo Podziemne, powstanie',subject:'Historia',sub:'kartkówka śr. 25.11 · rozdziały 8–10 (s. 58–80)',color:'var(--g)',decor:['G','C','A','T'],topics:HPO_TOPICS,lessons:HPO_LESSONS,cards:HPO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:HPO_PLAN,
    tip:'codziennie jedna krótka runda według planu, po kolei rozdziały 8, 9 i 10. Najważniejsze: dwaj okupanci (GG i ziemie wcielone u Niemców, sowietyzacja, deportacje i Katyń u ZSRR), rząd londyński i gen. Sikorski, układ Sikorski–Majski, Polskie Państwo Podziemne i AK, akcja „Burza” oraz powstanie warszawskie: przyczyny, cele, przebieg, postawa Stalina i aliantów, bilans. Ucz się dat z fiszek. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  agr:{id:'agr',key:'angielski-grammar-v1',title:'Passive, conditionals, adjectives',subject:'Język angielski',sub:'sprawdzian wt. 24.11 · Unit 10: passive, conditionals 0 i 1, przymiotniki',strict:true,color:'var(--c)',decor:['C','G','A','T'],topics:AGR_TOPICS,lessons:AGR_LESSONS,cards:AGR_CARDS,examName:'Sprawdzian próbny',examPer:2,plan:AGR_PLAN,
@@ -5176,6 +5344,7 @@ function storyScreen(c,back){
     const card=h('div',{class:'scard'});
     const spk=h('button',{class:'sspk',type:'button','aria-label':'Przeczytaj na głos',onclick:()=>sSay(k.say)},'🔊');
     card.append(spk,sHtml('div','ssay',k.say));
+    if(k.t==='info')next();
     if(k.t==='sound'){
       const s=btn('siren '+k.snd,'📢',()=>{if(s.classList.contains('play'))return;s.classList.add('play');bar.firstChild.style.transition=`width ${k.sec||6}s linear`;bar.firstChild.style.width='100%';
         sStop=sSiren(k.snd,k.sec||6,()=>{s.classList.remove('play');th.remove();if(!card.querySelector('.sfact')){card.append(sHtml('div','sfact',k.after));if(k.note)card.append(sHtml('p','snote',k.note));}next();});});
@@ -5278,11 +5447,11 @@ function pickFrom(pool,n){
 /* plan: punkt jest zrobiony, gdy od jego dnia była ukończona pasująca runda; zaległe punkty przechodzą na górę planu (nie przepadają) */
 function planStatus(id){const S=SUBJECTS[id];if(!S||!S.plan)return null;const td=dayKey(Date.now()),last=S.plan[S.plan.length-1][0];
   const ses=tLoad().s.filter(x=>x.subj===id&&(x.act>=5000||x.ans>0));const tn={};S.topics.forEach(t=>tn[t.id]=t.name);
-  const done=(d,a)=>ses.some(x=>x.d>=d&&(a==='cards'?true:a==='exam'?x.kind==='exam'&&x.fin:a==='weak'?(x.kind==='weak'||x.kind==='k')&&x.fin:x.kind==='topic'&&x.fin&&x.name===tn[a]));
+  const done=(d,a)=>a==='pisz'?rwDoneSince(d):ses.some(x=>x.d>=d&&(a==='cards'?true:a==='exam'?x.kind==='exam'&&x.fin:a==='weak'?(x.kind==='weak'||x.kind==='k')&&x.fin:x.kind==='topic'&&x.fin&&x.name===tn[a]));
   const items=S.plan.map(([d,a,txt])=>({d,a,txt,done:done(d,a)}));
   return {items,over:last<td?[]:items.filter(x=>x.d<td&&!x.done),today:items.find(x=>x.d===td)||null,td};}
 function planBox(){const WDS=['nd','pon','wt','śr','czw','pt','sob'];
-  const go=a=>a==='exam'?startRound('exam'):a==='cards'?startCards():a==='weak'?(weakList().length?startRound('weak'):startCards()):startRound(a);
+  const go=a=>a==='pisz'?rWriter():a==='exam'?startRound('exam'):a==='cards'?startCards():a==='weak'?(weakList().length?startRound('weak'):startCards()):startRound(a);
   const P=planStatus(SUBJ.id),td=P.td,cur=P.today;
   const lab=d=>{const[y,m,dd]=d.split('-').map(Number);const dt=new Date(y,m-1,dd);return (d===td?'dziś ':WDS[dt.getDay()]+' ')+dd+'.'+m;};
   return h('section',{class:'plan'},h('h3',{},'Plan do sprawdzianu'),
@@ -5311,7 +5480,7 @@ function home(){
       h('div',{},h('h1',{},SUBJ.title),h('p',{},`${SUBJ.subject} · ${SUBJ.sub} · ${total} zadań`))),
     SUBJ.panel?SUBJ.panel():null,
     SUBJ.news?h('button',{class:'tool',type:'button',onclick:()=>lessonScreen(SUBJ.news.lesson,home)},h('span',{class:'label'},SUBJ.news.label),h('h3',{},SUBJ.news.title),h('span',{},SUBJ.news.text)):null,
-    SUBJ.tools?h('button',{class:'tool',type:'button',onclick:()=>writer()},h('span',{class:'label'},'Narzędzie do kartkówki'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku, z gotowymi zwrotami, automatyczną listą kontrolną i wzorem.')):null,
+    SUBJ.tools==='roz'?h('button',{class:'tool',type:'button',style:'border-color:var(--c);background:var(--c-soft)',onclick:()=>rWriter()},h('span',{class:'label'},'Narzędzie do sprawdzianu'),h('h3',{},'✍️ Pisarz rozprawek'),h('span',{},'Napisz rozprawkę krok po kroku: bank argumentów z lektury, gotowe zwroty, lista kontrolna i przykładowa rozprawka.')):SUBJ.tools?h('button',{class:'tool',type:'button',onclick:()=>writer()},h('span',{class:'label'},'Narzędzie do kartkówki'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku, z gotowymi zwrotami, automatyczną listą kontrolną i wzorem.')):null,
     h('section',{class:'overall'},
       h('div',{class:'overall-top'},h('span',{class:'label'},'Opanowane zadania'),h('b',{},`${done} / ${total}`)),
       h('div',{class:'bar'},h('i',{style:`width:${pct}%`})),
@@ -6802,7 +6971,7 @@ function hub(){
     goalCard(),
     h('div',{class:'sndrow',style:'margin:10px 0'},sndBtn(true)),
     h('div',{class:'subjs'},...HUB_IDS.map(card)),
-    (()=>{const arch=['geo','ro','sjs','a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
+    (()=>{const arch=['chem','geo','ro','sjs','a10','pt','wos','ang','fiz','pl','his','bio'];const d=h('details',{class:'arch'},
       h('summary',{},h('span',{},'🗄️ Archiwum'),h('small',{},`już po sprawdzianie (${arch.length})`)),
       h('div',{class:'subjs'},...arch.map(card)),
       h('button',{class:'tool',type:'button',onclick:()=>{useSubject('pl');writer();}},h('span',{class:'label'},'Język polski'),h('h3',{},'Pisarz przemówień'),h('span',{},'Napisz przemówienie krok po kroku – z listą kontrolną i wzorem.')));
@@ -6815,13 +6984,13 @@ function hub(){
   );
 }
 /* ---------- v44: ikony przedmiotów i przycisk „Zacznij” ---------- */
-const HUB_IDS=['obw','hpo','agr','inw','chem','edb','esp'];
+const HUB_IDS=['obw','hpo','roz','agr','inw','edb','esp'];
 const ICONS={'Język angielski':'🇬🇧','Język polski':'📖','Geografia':'🌏','Chemia':'🧪','EDB':'🚑','Język hiszpański':'🇪🇸','Biologia':'🧬','Historia':'🏛️','Fizyka':'🌡️','WOS':'👥'};
 function subjIco(S){return S.icon||ICONS[S.subject]||'📚';}
 function testIn(S){const m=(S.sub||'').match(/(\d{1,2})\.(\d{1,2})/);if(!m)return null;const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);
   let d=new Date(n.getFullYear(),+m[2]-1,+m[1],12);if(d-a<-180*864e5)d=new Date(n.getFullYear()+1,+m[2]-1,+m[1],12);return Math.round((d-a)/864e5);}
 function whenTxt(n){return n===0?'dziś':n===1?'jutro':n===2?'pojutrze':'za '+n+' dni';}
-function goTask(id,a){useSubject(id);a==='exam'?startRound('exam'):a==='cards'?startCards():a==='weak'?(weakList().length?startRound('weak'):startCards()):startRound(a);}
+function goTask(id,a){useSubject(id);a==='pisz'?rWriter():a==='exam'?startRound('exam'):a==='cards'?startCards():a==='weak'?(weakList().length?startRound('weak'):startCards()):startRound(a);}
 function nextTask(id){useSubject(id);let t;const P=SUBJ.plan?planStatus(id):null,cut=x=>x.replace(/\s*\(.*\)$/,'');
   if(P&&P.over.length)t={a:P.over[0].a,txt:'nadrabiam: '+cut(P.over[0].txt)};
   else if(P&&P.today&&!P.today.done)t={a:P.today.a,txt:cut(P.today.txt)};
@@ -6988,6 +7157,200 @@ function modelScreen(){
     h('p',{class:'hint'},`Na zielono opisano, co robi każdy fragment. ${n} słów. Nie przepisuj – pisz własne, ale zobacz, jak to jest zbudowane.`),
     h('div',{class:'paper model-paper'},MODEL.map(([tag,t])=>h('div',{class:'mpart'},h('span',{class:'mtag'},tag),h('p',{},t)))),
     h('div',{class:'wnav'},btn('ghost','← Wróć',writer),btn('next','Napisz swoje',()=>writer()))
+  ));
+}
+
+/* ---------- Pisarz rozprawek („Pan Tadeusz”, sprawdzian 26.11.2026). Zapis w kluczu rozprawka-pt-v1 (osobny, nie dotyka postępów). ---------- */
+const RW_KEY='rozprawka-pt-v1';
+const RW_TOPICS=[
+ {id:'t1',title:'Czy można odkupić swoje winy?',task:'Czy można odkupić swoje winy? Rozważ problem i uzasadnij swoje zdanie, odwołując się do „Pana Tadeusza” Adama Mickiewicza.',teza:'Uważam, że można odkupić swoje winy.',args:[
+  ['Winę można naprawić dobrymi czynami.','Jacek Soplica po zabójstwie Stolnika zostaje księdzem Robakiem, walczy za ojczyznę i jest emisariuszem (X).'],
+  ['Kto naprawia zło, pomaga skrzywdzonym.','Jacek przez lata opłaca wychowanie Zosi, wnuczki Stolnika (X).'],
+  ['Szczere wyznanie winy przynosi przebaczenie.','Spowiedź Jacka; Gerwazy wyjawia, że umierający Stolnik przebaczył mu, kreśląc krzyż (X).'],
+  ['Zasługi mogą przywrócić dobre imię.','Rehabilitacja Jacka i krzyż Legii Honorowej na jego grobie (XI).'],
+  ['Pokuta wymaga pokory.','Dumny Jacek zostaje zakonnikiem i latami ukrywa, kim jest (X).']]},
+ {id:'t2',title:'Czy warto kochać ojczyznę i poświęcać się dla niej?',task:'Czy warto kochać ojczyznę i poświęcać się dla niej? Rozważ problem, odwołując się do „Pana Tadeusza” Adama Mickiewicza.',teza:'Uważam, że warto kochać ojczyznę i poświęcać się dla niej.',args:[
+  ['Miłość do ojczyzny nadaje życiu sens.','Jacek całe życie poświęca walce i pracy emisariusza (X).'],
+  ['Patriotyzm łączy ludzi ponad podziałami.','Jankiel, Żyd, gra na cymbałach historię Polski i płacze ze wzruszenia (XII).'],
+  ['Patriota myśli o dobru innych, nie tylko o własnym.','Tadeusz i Zosia dają chłopom wolność i ziemię (XII).'],
+  ['Dla ojczyzny warto opuścić bezpieczny dom.','Tadeusz ucieka za Niemen, by walczyć, i wraca jako ranny ułan (X–XI).'],
+  ['Słowa mogą obudzić odwagę.','Robak z tabakierą z Napoleonem woła: „Oczyścić dom, dzieci!” (IV).']]},
+ {id:'t3',title:'Czy zgoda jest lepsza od sporu?',task:'Czy zgoda jest lepsza od sporu? Uzasadnij swoje zdanie, odwołując się do „Pana Tadeusza” Adama Mickiewicza.',teza:'Uważam, że zgoda jest lepsza od sporu.',args:[
+  ['Spory przynoszą krzywdę i nieszczęście.','Kłótnia Sopliców z Horeszkami kończy się śmiercią Stolnika i nieszczęściem Jacka (II, X).'],
+  ['Zgoda daje szczęście nowemu pokoleniu.','Zaręczyny Tadeusza Soplicy z Zosią, wnuczką Stolnika, kończą spór rodów (XI).'],
+  ['Nawet dawni wrogowie mogą się pogodzić.','Gerwazy i Protazy piją razem miód (XI).'],
+  ['Mądry człowiek potrafi zażegnać kłótnię.','Wojski godzi Doweykę i Domeykę, tnąc niedźwiedzią skórę (IV).'],
+  ['Zgoda czyni wspólnotę silną.','„Kochajmy się” – wezwanie z Księgi XII; wszyscy razem świętują przed wojną.']]},
+ {id:'t4',title:'Czy warto pielęgnować tradycję?',task:'Czy warto pielęgnować tradycję? Rozważ problem, odwołując się do „Pana Tadeusza” Adama Mickiewicza.',teza:'Uważam, że warto pielęgnować tradycję.',args:[
+  ['Tradycja uczy szacunku dla innych.','Sędzia mówi o grzeczności: szacunku dla wieku, urodzenia i urzędu (I).'],
+  ['Tradycja łączy ludzi.','Uczta staropolska i polonez prowadzony przez Podkomorzego z Zosią (XII).'],
+  ['Tradycja jest częścią tożsamości narodu.','W Soplicowie wiszą portrety bohaterów narodowych, a zegar gra Mazurka Dąbrowskiego (I).'],
+  ['Tradycja przekazuje wiedzę i umiejętności.','Wojski gra na rogu i opowiada dawne historie myśliwskie (IV).'],
+  ['Gościnność buduje dobre relacje.','Brama Soplicowa jest „na wciąż otwarta” – każdy gość jest mile widziany (I).']]},
+ {id:'t5',title:'Czy miłość wymaga poświęceń?',task:'Czy prawdziwa miłość wymaga poświęceń? Uzasadnij swoje zdanie, odwołując się do „Pana Tadeusza” Adama Mickiewicza.',teza:'Uważam, że prawdziwa miłość wymaga poświęceń.',args:[
+  ['Miłość wymaga cierpliwości.','Tadeusz nie chce zaręczyn, zanim zasłuży na Zosię, i jedzie na wojnę (X).'],
+  ['Miłość to wspólne decyzje.','Zosia zgadza się na uwłaszczenie chłopów, choć będą ubożsi (XII).'],
+  ['Prawdziwe uczucie poznaje się po czynach, a nie po słowach.','Zosia uwierzyła w miłość Tadeusza, gdy zobaczyła jego łzy przy pożegnaniu (XI).'],
+  ['Miłość połączona z pychą prowadzi do nieszczęścia.','Jacek, zakochany w Ewie, z urażonej dumy zabija Stolnika (X).']]},
+ {id:'t6',title:'Czy honor jest ważny w życiu człowieka?',task:'Czy honor jest ważny w życiu człowieka? Rozważ problem, odwołując się do „Pana Tadeusza” Adama Mickiewicza.',teza:'Uważam, że honor jest ważny, ale nie wolno mylić go z pychą.',args:[
+  ['Prawdziwy honor to odpowiedzialność za słowa i czyny.','Tadeusz nie przyjmuje ręki Zosi, zanim na nią nie zasłuży (X).'],
+  ['Źle rozumiany honor prowadzi do zła.','Urażona duma popycha Jacka do zabójstwa Stolnika (X).'],
+  ['Honor każe naprawić krzywdę.','Jacek oddaje życie walce o ojczyznę, by zmazać swoją winę (X).'],
+  ['Honor bywa pustym słowem.','Hrabia mówi „Honor każe” i walczy o zamek z romantycznej fantazji (II).'],
+  ['Honor to wierność.','Gerwazy przez lata jest wierny pamięci Stolnika, a na koniec daje Zosi skarbczyk Stolnika (XII).']]},
+ {id:'own',title:'Własny temat od nauczyciela',task:'',teza:'',args:[]}
+];
+const RW_STEPS=[
+ {id:'wstep',name:'Wstęp: wprowadzenie i teza',hint:'1–2 zdania wprowadzenia, potem teza (tak albo nie) i tytuł z autorem lektury. Nie streszczaj.',starters:['Każdy człowiek ','Od wieków ludzie zastanawiają się, ','Uważam, że ','Spróbuję to udowodnić na przykładzie „Pana Tadeusza” Adama Mickiewicza.']},
+ {id:'a1',name:'Argument 1 → przykład → wniosek',hint:'Argument (ogólna myśl), potem jedna scena z lektury (kto, co zrobił, księga), na końcu wniosek.',starters:['Po pierwsze, ','Przykładem jest ','To dowodzi, że ']},
+ {id:'a2',name:'Argument 2 → przykład → wniosek',hint:'Inny argument i inna scena. Pamiętaj o wniosku.',starters:['Po drugie, ','Ponadto ','Dowodem na to jest ','Ta sytuacja pokazuje, że ']},
+ {id:'a3',name:'Argument 3 – najmocniejszy',hint:'Najmocniejszy argument zostaw na koniec rozwinięcia. Dwa argumenty to minimum, trzy to bezpieczna liczba.',starters:['Najważniejszym argumentem jest jednak to, że ','Co więcej, ','Świadczy to o tym, że ']},
+ {id:'zak',name:'Zakończenie: teza jeszcze raz',hint:'Podsumuj i powtórz tezę innymi słowami. Bez nowych argumentów. Możesz dodać, co to znaczy dla nas dziś.',starters:['Podsumowując, ','Przedstawione argumenty dowodzą, że ','Dlatego jestem przekonana, że ','To ważna nauka także dla nas: ']}
+];
+const RW_MODEL=[
+ ['wstęp: wprowadzenie','Każdy człowiek popełnia błędy. Niektóre są tak poważne, że wydaje się, iż nie da się ich naprawić. Czy można odkupić swoje winy?'],
+ ['teza + lektura','Uważam, że tak. Spróbuję to udowodnić na przykładzie Jacka Soplicy z „Pana Tadeusza” Adama Mickiewicza.'],
+ ['argument 1 → przykład → wniosek','Po pierwsze, winę można naprawić dobrymi czynami. Jacek Soplica w młodości zastrzelił Stolnika Horeszkę, ponieważ ten nie chciał oddać mu ręki swojej córki. Później jednak został zakonnikiem, księdzem Robakiem, walczył za ojczyznę i jako emisariusz przygotowywał Litwę do powstania. Jego życie dowodzi, że nawet po zbrodni można zmienić się na lepsze.'],
+ ['argument 2 → przykład → wniosek','Po drugie, odkupienie winy wymaga naprawienia krzywdy. Jacek przez lata opłacał wychowanie Zosi, wnuczki zabitego Stolnika, choć nikt o tym nie wiedział. Nie szukał za to pochwał. To pokazuje, że prawdziwa pokuta polega na pomaganiu skrzywdzonym, a nie na pustych słowach.'],
+ ['argument 3 – najmocniejszy','Najważniejszym argumentem jest jednak to, że szczere wyznanie winy przynosi przebaczenie. W Księdze X umierający Robak wyznaje: „Jam jest Jacek Soplica”. Wtedy Gerwazy, który przez lata pragnął zemsty, wyjawia, że Stolnik przed śmiercią przebaczył Jackowi, kreśląc w powietrzu krzyż. Ksiądz umiera spokojny, a w Księdze XI Podkomorzy ogłasza jego zasługi i oczyszcza jego imię. Świadczy to o tym, że odkupienie win jest możliwe, nawet jeśli wymaga całego życia.'],
+ ['zakończenie: teza jeszcze raz','Podsumowując, historia Jacka Soplicy potwierdza moją tezę: winy można odkupić, jeśli człowiek szczerze żałuje, zmienia swoje postępowanie i naprawia wyrządzone zło. To ważna nauka także dla nas – nigdy nie jest za późno, by stać się lepszym.']
+];
+const RW_SELF=['Sprawdziłam ortografię: ó–u, rz–ż, ch–h, „nie” z czasownikami osobno.','Przecinki przed: że, ponieważ, bo, który, aby, gdy.','Wszystkie przykłady są z ksiąg I, II, IV, X, XI lub XII.','Nie streszczam – po każdym przykładzie jest wniosek.','Argumenty idą od najsłabszego do najmocniejszego.','Każda część zaczyna się od nowego akapitu.'];
+const RW_HEROES=/jac|robak|soplic|gerwaz|tadeusz|zosi|zośk|hrabi|sędzi|jankiel|wojsk|podkomorz|telimen|protaz|asesor|rejent|dąbrowsk|kniaziewicz|maciek|maćk|stolnik|horeszk|ew[aęy]\b|doweyk|domeyk|szlacht/i;
+const RW_WN=/dowodz|dowodem|świadcz|pokazuj|udowadni|potwierdz|wynika|widać|przekonuj|oznacza to|to znaczy/i;
+const RW_SPO=/po pierwsze|po drugie|po trzecie|ponadto|co więcej|kolejn\w* argument|następn\w* argument|najważniejsz\w* argument|przede wszystkim|wreszcie|również|poza tym|innym argumentem/gi;
+const RW_POT=/\b(spoko|fajn\w*|super|okej|ok|przegi\w*|ziom\w*|masakr\w*|ogarn\w*|gościu|kumpl\w*|czad\w*|totalnie|mega)\b/i;
+function rwLoad(){try{return JSON.parse(localStorage.getItem(RW_KEY))||{};}catch(e){return {};}}
+function rwSave(d){try{localStorage.setItem(RW_KEY,JSON.stringify(d));}catch(e){}}
+function rwFull(d){return RW_STEPS.map(s=>(d.parts&&d.parts[s.id]||'').trim()).filter(Boolean);}
+function rwTopic(d){return RW_TOPICS.find(t=>t.id===d.topic)||RW_TOPICS[RW_TOPICS.length-1];}
+function rwDoneSince(day){const d=rwLoad();return (d.done||[]).some(x=>x>=day);}
+function rwBack(){useSubject('roz');home();}
+function rWriter(){
+  useSubject('roz');
+  const d=rwLoad();
+  const x=btn('x','×',rwBack);x.setAttribute('aria-label','Wróć');
+  const has=d.topic&&d.parts&&Object.values(d.parts).some(v=>v&&v.trim());
+  screen(h('div',{},
+    h('div',{class:'top'},x,h('span',{class:'label'},'Pisarz rozprawek'),h('span')),
+    h('h2',{class:'q'},'Napisz rozprawkę krok po kroku'),
+    h('p',{class:'hint'},'5 krótkich kroków: wstęp, 3 argumenty, zakończenie. Przy każdym są gotowe zwroty i bank argumentów z lektury – dotknij, żeby wstawić. Na końcu lista kontrolna jak u nauczyciela.'),
+    has?h('div',{class:'opts',style:'margin-bottom:14px'},btn('next',`Wróć do swojej rozprawki (${wordsOf(rwFull(d).join(' '))} słów)`,()=>rwStep(0))):null,
+    h('div',{class:'qtype label'},has?'albo zacznij nową – wybierz temat':'Wybierz temat'),
+    h('div',{class:'opts'},RW_TOPICS.map(t=>{const b=btn('opt wtopic','',()=>rwStart(t));b.append(h('b',{},t.title),h('span',{},t.id==='own'?'Wpiszesz temat w następnym kroku':'Bank: '+t.args.length+' argumentów z przykładami'));return b;})),
+    h('div',{class:'qtype label',style:'margin-top:18px'},'Zanim zaczniesz'),
+    h('div',{class:'opts'},btn('opt','Zobacz przykładową rozprawkę z opisem',rwModel),btn('opt','🎬 Rozprawka w 2 minuty',()=>storyScreen('bud',rWriter)),btn('opt','Lekcja: argument → przykład → wniosek',()=>lessonScreen('wn',rWriter)))
+  ));
+}
+function rwStart(t){
+  const d=rwLoad();
+  const fresh={topic:t.id,task:t.task,parts:{},self:{},done:d.done||[]};
+  if(d.topic&&d.parts&&Object.values(d.parts).some(v=>v&&v.trim())){
+    const box=h('div',{class:'confirm'},'Nowa rozprawka zastąpi zapisaną. Kontynuować?',
+      btn('danger','Tak, zacznij nową',()=>{rwSave(fresh);rwStep(t.id==='own'?-1:0);}),
+      btn('','Anuluj',rWriter));
+    app.append(box);box.scrollIntoView({block:'nearest'});return;
+  }
+  rwSave(fresh);rwStep(t.id==='own'?-1:0);
+}
+function rwStep(i){
+  const d=rwLoad();d.parts=d.parts||{};
+  const x=btn('x','×',rWriter);x.setAttribute('aria-label','Wróć');
+  const total=RW_STEPS.length,T=rwTopic(d);
+  if(i===-1){
+    const ta=h('textarea',{id:'rw-task',rows:'4',placeholder:'np. Czy warto…? Rozważ problem, odwołując się do „Pana Tadeusza”.'});ta.value=d.task||'';
+    screen(h('div',{},h('div',{class:'top'},x,h('div',{class:'bar'},h('i',{style:'width:0%'})),h('span',{class:'count'},'temat')),
+      h('h2',{class:'q'},'Wpisz temat od nauczyciela'),ta,
+      h('div',{class:'wnav'},btn('next','Dalej →',()=>{d.task=ta.value.trim();rwSave(d);rwStep(0);}))));
+    return;
+  }
+  if(i>=total)return rwReview();
+  const S=RW_STEPS[i];
+  const ta=h('textarea',{id:'rw-'+S.id,rows:'7',placeholder:i===3?'Możesz pominąć, jeśli masz już 2 mocne argumenty…':'Pisz tutaj…'});ta.value=d.parts[S.id]||'';
+  const wc=h('span',{class:'wc'});
+  const upd=()=>{d.parts[S.id]=ta.value;rwSave(d);const n=wordsOf(rwFull(d).join(' '));wc.textContent=`Razem: ${n} słów${n<200?` · do 200 brakuje ${200-n}`:' · ✓ ponad 200'}`;};
+  ta.addEventListener('input',upd);upd();
+  const ins=t=>{const v=ta.value;ta.value=v+(v&&!/\s$/.test(v)?' ':'')+t;upd();ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);};
+  const starters=S.id==='wstep'&&T.teza?S.starters.concat([T.teza+' ']):S.starters;
+  const kids=[
+    h('div',{class:'top'},x,h('div',{class:'bar'},h('i',{style:`width:${i/total*100}%`})),h('span',{class:'count'},`${i+1}/${total}`)),
+    d.task?h('p',{class:'wtask'},d.task):null,
+    h('div',{class:'qtype label'},`Krok ${i+1}`),
+    h('h2',{class:'q'},S.name),
+    h('p',{class:'hint'},S.hint),
+    h('div',{class:'wchips'},starters.map(t=>btn('wchip',t.trim(),()=>ins(t)))),
+    ta,wc];
+  if(S.id.startsWith('a')&&T.args.length){
+    const used=RW_STEPS.filter(s=>s.id!==S.id).map(s=>d.parts[s.id]||'').join(' ');
+    kids.push(h('details',{class:'eps',open:''},h('summary',{},'Bank argumentów do tego tematu'),
+      h('p',{class:'hint',style:'margin:6px 0'},'Dotknij argumentu, żeby wstawić jego początek. Przykład opisz własnymi słowami i dopisz wniosek.'),
+      h('div',{class:'opts'},T.args.map(([a,p])=>{const b=btn('opt'+(used.includes(a)?' dim':''),'',()=>ins(a+' '));b.style.textAlign='left';b.append(h('b',{},a),h('span',{style:'display:block;font-weight:400;font-size:.92em;margin-top:4px'},'Przykład: '+p));return b;}))));
+  }else if(S.id.startsWith('a'))kids.push(h('details',{class:'eps'},h('summary',{},'Pomysły: sceny z lektury'),h('ul',{},RW_TOPICS.slice(0,6).flatMap(t=>t.args.slice(0,2).map(a=>h('li',{},a[1]))))));
+  kids.push(h('div',{class:'wnav'},
+    i>0?btn('ghost','← Wstecz',()=>rwStep(i-1)):btn('ghost','← Tematy',rWriter),
+    btn('next',i===total-1?'Sprawdź całość ✓':'Dalej →',()=>rwStep(i+1))));
+  screen(h('div',{},kids));
+}
+function rwChecks(d){
+  const p=d.parts||{},all=rwFull(d).join('\n'),n=wordsOf(all);
+  const args=['a1','a2','a3'].filter(k=>(p[k]||'').trim());
+  const firstBad=f=>{const k=['a1','a2','a3'].find(k=>((p[k]||'').trim()||k!=='a3')&&!f(p[k]||''));return k?['a1','a2','a3'].indexOf(k)+1:1;};
+  const spo=(args.map(k=>p[k]).join(' ').match(RW_SPO)||[]).length;
+  const potK=RW_STEPS.findIndex(s=>RW_POT.test(p[s.id]||''));
+  return [
+   [/uważam|moim zdaniem|sądzę|twierdzę|jestem przekonan|jestem pewn|myślę, że|spróbuję (sprawdzić|udowodnić|rozważyć)/i.test(p.wstep||''),'Teza we wstępie','Napisz jasno: „Uważam, że…”.',0],
+   [/pan\w* tadeusz/i.test(all)&&/mickiewicz/i.test(all),'Tytuł i autor lektury','Dopisz: „Pan Tadeusz” Adama Mickiewicza.',0],
+   [['a1','a2'].every(k=>wordsOf(p[k]||'')>=25),'Co najmniej 2 rozwinięte argumenty','Każdy argument to ok. 3–4 zdania: argument, przykład, wniosek.',firstBad(v=>wordsOf(v)>=25)],
+   [args.length>=2&&args.every(k=>RW_HEROES.test(p[k])),'W każdym argumencie postać z lektury','Nazwij bohatera i scenę, np. „Jacek Soplica w Księdze X…”.',firstBad(v=>RW_HEROES.test(v))],
+   [args.filter(k=>RW_WN.test(p[k])).length>=Math.max(2,args.length),'Wniosek po każdym przykładzie','Dopisz: „To dowodzi, że…” albo „Ta sytuacja pokazuje, że…”.',firstBad(v=>RW_WN.test(v))],
+   [spo>=2,'Spójniki między argumentami','Zacznij argumenty od „Po pierwsze”, „Po drugie”, „Ponadto”.',1],
+   [/podsumow|reasumu|przedstawione argumenty|wobec tego|dlatego|zatem|z powyższ/i.test(p.zak||''),'Zakończenie zaczyna się podsumowaniem','Zacznij od „Podsumowując,”.',4],
+   [/uważam|tez[aęy]|słuszn|zdani|przekonan|udowodni|potwierdz|jestem pewn/i.test(p.zak||''),'Teza powtórzona w zakończeniu','Powtórz tezę innymi słowami.',4],
+   [potK<0,'Styl bez słów potocznych',potK<0?'':'Zamień potoczne słowa (np. „spoko”, „fajny”) w części: '+RW_STEPS[potK].name.split(':')[0]+'.',potK<0?0:potK],
+   [n>=200,`Co najmniej 200 słów (masz ${n})`,`Dopisz jeszcze ${Math.max(0,200-n)} słów – najlepiej rozwiń argumenty.`,1]
+  ];
+}
+function rwReview(){
+  const d=rwLoad(),parts=rwFull(d),checks=rwChecks(d),okN=checks.filter(c=>c[0]).length,n=wordsOf(parts.join(' '));
+  d.self=d.self||{};
+  if(n>=150){const td=dayKey(Date.now());d.done=d.done||[];if(!d.done.includes(td))d.done.push(td);rwSave(d);}
+  const x=btn('x','×',rWriter);x.setAttribute('aria-label','Wróć');
+  const text=(d.task?d.task+'\n\n':'')+parts.join('\n\n');
+  const copyBtn=btn('ghost','Kopiuj tekst',()=>{const done=()=>{copyBtn.textContent='Skopiowano ✓';};
+    try{navigator.clipboard.writeText(text).then(done,()=>{sel();});}catch(e){sel();}
+    function sel(){const r=document.createRange();r.selectNodeContents(paper);const s=getSelection();s.removeAllRanges();s.addRange(r);copyBtn.textContent='Zaznaczono – skopiuj';}});
+  const paper=h('div',{class:'paper'},parts.map(t=>h('p',{},t)));
+  const selfBox=h('div',{class:'checks'},RW_SELF.map((s,j)=>{const on=!!d.self[j];const row=h('button',{type:'button',class:'chk '+(on?'on':'off'),style:'width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer',onclick:()=>{d.self[j]=!d.self[j];rwSave(d);row.className='chk '+(d.self[j]?'on':'off');row.firstChild.textContent=d.self[j]?'✓':'○';sTap&&sTap();}},h('span',{class:'mark'},on?'✓':'○'),h('div',{},h('b',{},s)));return row;}));
+  const wa='https://wa.me/?text='+encodeURIComponent('✍️ Moja rozprawka ('+n+' słów, lista kontrolna '+okN+'/'+checks.length+'):\n\n'+text);
+  screen(h('div',{},
+    h('div',{class:'top'},x,h('div',{class:'bar'},h('i',{style:'width:100%'})),h('span',{class:'count'},'gotowe')),
+    h('h2',{class:'q'},okN===checks.length?'Wszystko na miejscu!':`Lista kontrolna: ${okN} z ${checks.length}`),
+    d.task?h('p',{class:'wtask'},d.task):null,
+    h('div',{class:'checks'},checks.map(([ok,label,fix,step])=>h('div',{class:'chk '+(ok?'on':'off')},
+      h('span',{class:'mark'},ok?'✓':'!'),
+      h('div',{},h('b',{},label),ok?null:h('span',{},fix)),
+      ok?null:btn('fixbtn','Popraw',()=>rwStep(step))))),
+    h('div',{class:'qtype label',style:'margin-top:16px'},'Sprawdź sama i odhacz'),
+    selfBox,
+    h('p',{class:'hint',style:'margin-top:10px'},'Lista sprawdza tylko budowę. Przeczytaj pracę na głos – czy każdy argument naprawdę broni tezy?'),
+    paper,
+    h('div',{class:'wnav'},btn('ghost','← Edytuj',()=>rwStep(0)),copyBtn),
+    h('div',{class:'remember',style:'margin-top:14px'},h('b',{},'✍️ Teraz jak na sprawdzianie'),h('span',{style:'display:block;margin-top:4px'},'Przepisz rozprawkę na kartkę, bez telefonu, z akapitami. Zrób zdjęcie i wyślij tacie – dostaniesz ocenę i wskazówki, co poprawić.')),
+    h('div',{class:'opts',style:'margin-top:10px'},
+      h('a',{class:'opt',href:wa,target:'_blank',rel:'noopener',style:'text-decoration:none;color:inherit;text-align:center'},'📲 Wyślij tekst tacie na WhatsAppie'),
+      btn('opt','Porównaj z przykładową rozprawką',rwModel))
+  ));
+  if(okN===checks.length)confetti();
+}
+function rwModel(){
+  const x=btn('x','×',rWriter);x.setAttribute('aria-label','Wróć');
+  const n=wordsOf(RW_MODEL.map(m=>m[1]).join(' '));
+  screen(h('div',{},
+    h('div',{class:'top'},x,h('span',{class:'label'},'Przykładowa rozprawka'),h('span')),
+    h('h2',{class:'q'},'Czy można odkupić swoje winy?'),
+    h('p',{class:'hint'},`Na zielono opisano, co robi każdy fragment. ${n} słów. Nie przepisuj – pisz własną, ale zobacz, jak jest zbudowana.`),
+    h('div',{class:'paper model-paper'},RW_MODEL.map(([tag,t])=>h('div',{class:'mpart'},h('span',{class:'mtag'},tag),h('p',{},t)))),
+    h('div',{class:'wnav'},btn('ghost','← Wróć',rWriter),btn('next','Napisz swoją',()=>rWriter()))
   ));
 }
 
