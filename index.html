@@ -387,7 +387,7 @@ details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;pa
 .pt-rule{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:.88rem}
 .pt-rule h3{font-size:1rem;font-weight:800;margin-bottom:6px}
 .pt-rule table{border-collapse:collapse;width:100%}.pt-rule td{border-top:1px solid var(--line);padding:5px 4px;vertical-align:top}.pt-rule td:first-child{white-space:nowrap;font-weight:600}
-.arch{margin-top:14px;background:var(--soft);border:1px dashed var(--line);border-radius:18px;padding:4px 12px}.arch summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 2px;font-weight:600;list-style:none}.arch summary::-webkit-details-marker{display:none}.arch summary span{white-space:nowrap}.arch summary small{text-align:right;color:var(--muted);font-weight:400;font-size:.82rem}.arch[open]{padding-bottom:12px}.arch .subj{opacity:.85}
+.archlink{display:block;margin:6px auto 18px;background:none;border:0;color:var(--muted,#888);font-size:13px;text-decoration:underline;cursor:pointer;padding:8px}.arch{margin-top:14px;background:var(--soft);border:1px dashed var(--line);border-radius:18px;padding:4px 12px}.arch summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 2px;font-weight:600;list-style:none}.arch summary::-webkit-details-marker{display:none}.arch summary span{white-space:nowrap}.arch summary small{text-align:right;color:var(--muted);font-weight:400;font-size:.82rem}.arch[open]{padding-bottom:12px}.arch .subj{opacity:.85}
 .goal{background:var(--surface);border:2px solid var(--warn);border-radius:20px;padding:16px;display:grid;gap:10px;margin-bottom:16px}
 .goal.done{border-color:var(--t);background:var(--t-soft)}
 .goal-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -7007,9 +7007,7 @@ function subjStats(id){
   const weak=Object.keys(S.lessons).filter(c=>st.k[c]&&st.k[c].weak).length;
   return {done,total:all.length,weak,exam:st.exam||0};
 }
-function hub(){
-  SUBJ=null;
-  const card=id=>{const S=SUBJECTS[id],s=subjStats(id),p=Math.round(s.done/s.total*100);
+const subjCard=id=>{const S=SUBJECTS[id],s=subjStats(id),p=Math.round(s.done/s.total*100);
     return h('button',{class:'subj',type:'button',style:`--sc:${S.color}`,onclick:()=>{useSubject(id);home();}},
       h('span',{class:'subj-ico','aria-hidden':'true'},subjIco(S)),
       h('span',{class:'label'},S.subject),
@@ -7017,6 +7015,9 @@ function hub(){
       h('span',{class:'subj-sub'},S.sub),
       h('div',{class:'bar'},h('i',{style:`width:${p}%;background:${S.color}`})),
       h('div',{class:'subj-meta'},h('span',{},`${s.done}/${s.total} opanowanych`),s.weak?h('span',{class:'warnt'},`słabe punkty: ${s.weak}`):s.exam?h('span',{},`rekord: ${s.exam}%`):null));};
+function hub(){
+  SUBJ=null;
+  const card=subjCard;
   screen(
     h('header',{class:'hero'},
       h('div',{class:'helix','aria-hidden':'true'},['A','G','C','T'].map((b,i)=>h('span',{style:`background:${BASES[b]};height:${[36,52,30,44][i]}px`}))),
@@ -7024,16 +7025,27 @@ function hub(){
     startCard(),
     goalCard(),
     h('div',{class:'sndrow',style:'margin:10px 0'},sndBtn(true)),
-    h('div',{class:'subjs'},...HUB_IDS.map(card)),
+    h('div',{class:'subjs'},...hubOrder().map(card)),
     /* 19.11.2026: Archiwum schowane z ekranu głównego na prośbę Łukasza – przedmioty i postępy zostają (hidden:true). */
     (()=>{const t=tDays(1)[0];return h('button',{class:'tool',type:'button',style:'border-color:var(--warn);background:var(--warn-soft)',onclick:stats},h('span',{class:'label'},'Czas nauki'),h('h3',{},'Dziś: '+fmtMin(t.ms)),h('span',{},'Wykres 7 dni i ile trwała każda runda.'));})(),
     h('button',{class:'tool',type:'button',style:'border-color:var(--t);background:var(--t-soft)',onclick:()=>parentView('hub')},h('span',{class:'label'},'Dla taty'),h('h3',{},'Raport dla taty'),h('span',{},'Co już umiem, z czym mam kłopot i ile dziś się uczyłam. Wyślij go na WhatsAppie.')),
     migrateLink(),
-    h('p',{class:'foot'},'Postępy zapisują się na tym telefonie.')
+    h('p',{class:'foot'},'Postępy zapisują się na tym telefonie.'),
+    archIds().length?h('button',{class:'archlink',type:'button',onclick:archive},'🗄️ Archiwum ('+archIds().length+')'):null
   );
 }
+/* 24.11.2026: po terminie przedmiot sam znika z ekranu głównego i trafia do małego Archiwum (postępy zostają) */
+function archIds(){const d=id=>{const n=testIn(SUBJECTS[id]);return n==null?-1e6:n;};
+  const past=HUB_IDS.filter(id=>SUBJECTS[id]&&!SUBJECTS[id].hidden&&testIn(SUBJECTS[id])<0);
+  const old=Object.keys(SUBJECTS).filter(id=>SUBJECTS[id].hidden&&SUBJECTS[id].topics&&SUBJECTS[id].topics.length);
+  return [...past,...old].map((id,i)=>[id,d(id),i]).sort((a,b)=>b[1]-a[1]||a[2]-b[2]).map(x=>x[0]);}
+function archive(){SUBJ=null;screen(btn('back','← Wszystkie przedmioty',hub),
+  h('header',{class:'hero'},h('div',{},h('h1',{},'Archiwum'),h('p',{},'Przedmioty po sprawdzianie. Postępy zostały.'))),
+  h('div',{class:'subjs'},...archIds().map(subjCard)));}
 /* ---------- v44: ikony przedmiotów i przycisk „Zacznij” ---------- */
 const HUB_IDS=['obw','hpo','roz','agr','inw','edb','esp'];
+/* 24.11.2026: kafelki od najbliższego sprawdzianu/kartkówki (liczone od dziś); bez daty – na końcu, po terminie – do Archiwum */
+function hubOrder(){const r=id=>{const S=SUBJECTS[id],n=S?testIn(S):null;return n==null||n<0?1e6:n;};return HUB_IDS.filter(id=>{const S=SUBJECTS[id];if(!S||S.hidden)return false;const n=testIn(S);return n==null||n>=0;}).map((id,i)=>[id,r(id),i]).sort((a,b)=>a[1]-b[1]||a[2]-b[2]).map(x=>x[0]);}
 const ICONS={'Język angielski':'🇬🇧','Język polski':'📖','Geografia':'🌏','Chemia':'🧪','EDB':'🚑','Język hiszpański':'🇪🇸','Biologia':'🧬','Historia':'🏛️','Fizyka':'🌡️','WOS':'👥'};
 function subjIco(S){return S.icon||ICONS[S.subject]||'📚';}
 function testIn(S){const m=(S.sub||'').match(/(\d{1,2})\.(\d{1,2})/);if(!m)return null;const n=new Date(),a=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);
