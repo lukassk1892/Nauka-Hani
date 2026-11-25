@@ -33,3 +33,14 @@
 .nh-prevbtn{border-color:var(--c)!important;background:var(--c-soft)!important}
 .nh-prevbar{position:fixed;left:0;right:0;bottom:0;z-index:60;border:0;background:var(--c);color:#fff;font:600 15px var(--body);padding:12px 10px calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 14px rgba(0,0,0,.18);cursor:pointer}
 .nh-prev body{padding-bottom:56px}
+
+/* „Hania teraz” – wskaźnik na żywo u taty */
+.nh-live{display:flex;gap:12px;align-items:center;border:2px solid var(--line);border-radius:16px;padding:12px 14px;margin:0 0 14px;background:var(--surface)}
+.nh-live-dot{font-size:1.6rem;line-height:1}
+.nh-live b{display:block;font-size:1.02rem}
+.nh-live small{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+.nh-live.on{border-color:var(--t);background:var(--t-soft,var(--surface))}
+.nh-live.on .nh-live-dot{animation:pulse 1.6s infinite}
+.nh-live.idle{border-color:var(--warn)}
+.nh-live.away{border-color:#E8742A}
+.nh-liveinfo{font-size:.8rem;color:var(--muted);text-align:center;margin:6px 0 0}

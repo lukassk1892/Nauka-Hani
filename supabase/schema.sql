@@ -178,3 +178,18 @@ comment on table public.sent is 'Tylko dla funkcji powiadomień (service role) �
 alter table public.families alter column remind_times set default array['16:00','17:30','19:00'];
 -- Rodzina i zaproszenia (e-maile) wpisane osobno, nie są w repozytorium.
 alter table public.days add column if not exists overdue jsonb not null default '[]';
+
+-- ===== Migracja status_na_zywo (25.11.2026): wskaźnik „Hania teraz” w widoku taty =====
+create table if not exists public.live_status (
+  user_id uuid primary key references auth.users on delete cascade,
+  state text not null check (state in ('active','away','closed')),
+  what text not null default '',
+  ans int not null default 0,
+  last_tap timestamptz,
+  updated_at timestamptz not null default now()
+);
+alter table public.live_status enable row level security;
+create policy ls_own on public.live_status for all using (user_id = auth.uid()) with check (user_id = auth.uid());
+create policy ls_par on public.live_status for select using (private.am_parent() and private.same_family(user_id));
+alter table public.live_status replica identity full;
+alter publication supabase_realtime add table public.live_status;
