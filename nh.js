@@ -279,7 +279,7 @@ function pushButton(){
    Póki aplikacja jest na ekranie, co 45 s idzie sygnał; brak sygnału ponad 2 min = brak połączenia.
    Strona NIE widzi, co Hania robi w innych aplikacjach – tylko to, że wyszła z nauki. */
 const LIVE_BEAT=45000,LIVE_STALE=120000,LIVE_IDLE=4*60000;
-const LIVE_KID_INFO=true; /* Hania widzi na ekranie głównym, że tata widzi ten wskaźnik */
+const LIVE_KID_INFO=false; /* decyzja taty 25.11.2026: Hania nie widzi informacji o wskaźniku (true = pokaż jej) */
 let liveTok=null,liveTap=0,liveSentTap=0,liveWhatLast='',liveAwayT=null;
 function liveRound(){try{if(typeof R!=='undefined'&&R&&R.log&&!R.log.fin)return R;}catch(e){}return null;}
 function liveWhat(){const r=liveRound();if(r){const S=SUBJECTS[r.log.subj];return (S?S.subject+' · ':'')+r.log.name;}return '';}
