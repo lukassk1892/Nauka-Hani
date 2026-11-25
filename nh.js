@@ -209,6 +209,7 @@ function decorateHub(){
   /* przypomnienia i instalacja */
   const extra=pushButton();if(extra)a.querySelector('.subjs').before(extra);
   const foot=a.querySelector('.foot');if(foot)foot.textContent='Postępy zapisują się na Twoim koncie – nic nie zginie.';
+  if(LIVE_KID_INFO&&foot)foot.after(E('p',{class:'nh-liveinfo'},'👀 Tata widzi, czy aplikacja jest teraz otwarta. Nie widzi, co robisz poza nią.'));
   const out=E('button',{class:'reset',type:'button',onclick:logout},'Wyloguj ('+(ME.name||'')+')');a.append(out);
 }
 const rewardName=id=>{const r=FAM().rewards.find(x=>x.id===id);return r?r.title:'nagroda';};
@@ -273,6 +274,61 @@ function pushButton(){
   return b;
 }
 
+/* ---------- „Hania teraz” – wskaźnik na żywo dla taty (tabela live_status) ----------
+   Telefon Hani zgłasza: active (aplikacja na ekranie), away (przełączyła się gdzie indziej / zablokowała ekran), closed (zamknęła).
+   Póki aplikacja jest na ekranie, co 45 s idzie sygnał; brak sygnału ponad 2 min = brak połączenia.
+   Strona NIE widzi, co Hania robi w innych aplikacjach – tylko to, że wyszła z nauki. */
+const LIVE_BEAT=45000,LIVE_STALE=120000,LIVE_IDLE=4*60000;
+const LIVE_KID_INFO=false; /* decyzja taty 25.11.2026: Hania nie widzi informacji o wskaźniku (true = pokaż jej) */
+let liveTok=null,liveTap=0,liveSentTap=0,liveWhatLast='',liveAwayT=null;
+function liveRound(){try{if(typeof R!=='undefined'&&R&&R.log&&!R.log.fin)return R;}catch(e){}return null;}
+function liveWhat(){const r=liveRound();if(r){const S=SUBJECTS[r.log.subj];return (S?S.subject+' · ':'')+r.log.name;}return '';}
+async function liveToken(){try{const {data:{session}}=await sb.auth.getSession();liveTok=session&&session.access_token;}catch(e){}return liveTok;}
+function sendLive(state){
+  if(!ME||ME.role!=='child'||!liveTok)return;
+  if(state==='active')liveWhatLast=liveWhat();
+  const r=liveRound();
+  const row={user_id:ME.user_id,state,what:liveWhatLast,ans:r?(r.log.ans||0):0,last_tap:liveTap?new Date(liveTap).toISOString():null,updated_at:new Date().toISOString()};
+  liveSentTap=liveTap;
+  try{fetch(SB_URL+'/rest/v1/live_status?on_conflict=user_id',{method:'POST',keepalive:true,
+    headers:{apikey:SB_KEY,Authorization:'Bearer '+liveTok,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},
+    body:JSON.stringify(row)}).catch(()=>{});}catch(e){}
+}
+const liveOnScreen=()=>!document.hidden&&(document.hasFocus?document.hasFocus():true);
+function liveStart(){
+  liveTap=Date.now();
+  liveToken().then(()=>sendLive('active'));
+  setInterval(()=>{if(!document.hidden)liveToken().then(()=>sendLive(liveOnScreen()?'active':'away'));},LIVE_BEAT);
+  document.addEventListener('visibilitychange',()=>{clearTimeout(liveAwayT);if(document.hidden)sendLive('away');else{liveTap=Date.now();liveToken().then(()=>sendLive('active'));}});
+  /* komputer: przełączenie na inne okno (krótka zwłoka, żeby nie migało) */
+  addEventListener('blur',()=>{clearTimeout(liveAwayT);liveAwayT=setTimeout(()=>{if(!liveOnScreen())sendLive('away');},1500);});
+  addEventListener('focus',()=>{clearTimeout(liveAwayT);liveTap=Date.now();sendLive('active');});
+  addEventListener('pagehide',()=>sendLive('closed'));
+  const tap=()=>{liveTap=Date.now();if(liveTap-liveSentTap>60000)sendLive('active');};
+  ['pointerdown','keydown'].forEach(ev=>addEventListener(ev,tap,{passive:true,capture:true}));
+}
+/* widok taty */
+let LIVE=null;
+const hhmm=ms=>new Date(ms).toTimeString().slice(0,5);
+function agoTxt(ms){const m=Math.floor(ms/60000);if(m<1)return 'przed chwilą';if(m<60)return m+' min temu';const h=Math.floor(m/60);return h+' h'+(m%60?' '+m%60+' min':'')+' temu';}
+function liveInfo(now){
+  const L=LIVE;if(!L)return {c:'off',i:'⚪',t:'jeszcze bez sygnału',d:'Wskaźnik ruszy, gdy Hania otworzy aplikację po aktualizacji.'};
+  const up=Date.parse(L.updated_at),tap=L.last_tap?Date.parse(L.last_tap):up,since=hhmm(up);
+  const what=L.what?L.what:'';
+  if(L.state==='active'&&now-up>LIVE_STALE)return {c:'off',i:'⚪',t:'brak sygnału z telefonu',d:'Ostatnio w aplikacji o '+since+' ('+agoTxt(now-up)+'). Telefon mógł stracić internet albo aplikacja została zamknięta.'};
+  if(L.state==='active'&&now-tap>LIVE_IDLE)return {c:'idle',i:'🟡',t:'aplikacja otwarta, ale bez ruchu',d:'Ostatnie dotknięcie '+agoTxt(now-tap)+(what?' · '+what:'')+'.'};
+  if(L.state==='active')return {c:'on',i:'🟢',t:what?'uczy się':'jest w aplikacji',d:what?what+(L.ans?' · '+L.ans+' odp. w tej rundzie':''):'Przegląda przedmioty, plan albo lekcję.'};
+  if(L.state==='away')return {c:'away',i:'🟠',t:'wyszła z aplikacji',d:'Od '+since+' ('+agoTxt(now-up)+') aplikacja jest w tle – przełączyła się na coś innego albo zablokowała telefon.'+(what?' Wcześniej: '+what+'.':'')};
+  return {c:'off',i:'⚫',t:'aplikacja zamknięta',d:'Zamknięta o '+since+' ('+agoTxt(now-up)+').'};
+}
+function liveBox(){return E('section',{class:'nh-live',role:'status','aria-live':'polite'});}
+function paintLive(){
+  document.querySelectorAll('.nh-live').forEach(b=>{const x=liveInfo(Date.now());b.className='nh-live '+x.c;
+    b.replaceChildren(E('span',{class:'nh-live-dot','aria-hidden':'true'},x.i),E('div',{},E('b',{},'Hania teraz: '+x.t),E('small',{},x.d)));});
+}
+async function loadLive(kidId){const {data,error}=await sb.from('live_status').select('*').eq('user_id',kidId).maybeSingle();if(!error)LIVE=data;}
+setInterval(()=>{if(document.querySelector('.nh-live'))paintLive();},15000);
+
 /* ---------- widok rodzica ---------- */
 let parentCh=null;
 async function parentHome(){
@@ -286,8 +342,9 @@ async function parentHome(){
   const since=dayKey(Date.now()-13*864e5);
   const dq=await sb.from('days').select('*').eq('user_id',kid.user_id).gte('day',since);
   const days={};(dq.data||[]).forEach(d=>days[d.day]=d);
+  await loadLive(kid.user_id).catch(()=>{});
   renderParent(kid,days);
-  if(!parentCh){parentCh=sb.channel('rodzic').on('postgres_changes',{event:'*',schema:'public',table:'days',filter:'user_id=eq.'+kid.user_id},p=>{if(p.new&&p.new.day){days[p.new.day]=p.new;if(document.querySelector('.nh-parent'))renderParent(kid,days,true);}})
+  if(!parentCh){parentCh=sb.channel('rodzic').on('postgres_changes',{event:'*',schema:'public',table:'live_status',filter:'user_id=eq.'+kid.user_id},p=>{if(p.new&&p.new.user_id){LIVE=p.new;paintLive();}}).on('postgres_changes',{event:'*',schema:'public',table:'days',filter:'user_id=eq.'+kid.user_id},p=>{if(p.new&&p.new.day){days[p.new.day]=p.new;if(document.querySelector('.nh-parent'))renderParent(kid,days,true);}})
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'claims'},()=>parentHome()).on('postgres_changes',{event:'INSERT',schema:'public',table:'rewards'},()=>parentHome()).subscribe();}
 }
 /* podgląd aplikacji Hani w widoku taty: kopia jej postępów jest już w telefonie (parentHome), synchronizacja u rodzica jest wyłączona,
@@ -319,6 +376,7 @@ function renderParent(kid,days,live){
   const times=E('input',{value:((f.family&&f.family.remind_times)||[]).join(', '),placeholder:'16:00, 17:30, 19:00'});
   const rep=E('input',{value:(f.family&&f.family.report_time)||'21:00',placeholder:'21:00'});
   show(E('div',{class:'nh-parent'},
+    liveBox(),
     E('header',{class:'hero'},E('div',{},E('h1',{},'Hania dziś'),E('p',{},live?'aktualizuje się na żywo · '+new Date().toTimeString().slice(0,5):'widok rodzica · '+(ME.name||'')))),
     E('section',{class:'goal'+(t.active_min>=goal?' done':'')},
       E('div',{class:'goal-top'},E('span',{class:'label'},'Minuty dziś'),E('span',{class:'goal-fire'},gi&&gi.streak?'🔥 seria '+gi.streak+' '+dniTxt(gi.streak):'')),
@@ -363,6 +421,7 @@ function renderParent(kid,days,live){
           const {error}=await sb.from('families').update({remind_times:tm.map(x=>x.padStart(5,'0')),report_time:rep.value.trim().padStart(5,'0')}).eq('id',ME.family_id);if(error)throw error;alertBox('Zapisane.');})))),
     window.btn('ghost','Odśwież',parentHome),
     E('button',{class:'reset',type:'button',onclick:logout},'Wyloguj')));
+  paintLive();
 }
 function alertBox(msg){const n=E('div',{class:'nh-toast',role:'status'},msg);document.body.append(n);setTimeout(()=>n.remove(),2600);}
 
@@ -403,6 +462,7 @@ async function boot(){
   if(imp>0)alertBox('📦 Przeniesiono postępy ze starej aplikacji ('+imp+').');
   if(imp<0)alertBox('Nie udało się przenieść postępów – spróbuj jeszcze raz z przycisku w starej aplikacji.');
   schedule(1000);
+  try{liveStart();}catch(e){console.warn('live',e);}
   addEventListener('online',()=>schedule(500));
   document.addEventListener('visibilitychange',()=>{if(document.hidden)flush();else{loadFamily().catch(()=>{});schedule(500);}});
   sb.channel('rodzina').on('postgres_changes',{event:'*',schema:'public',table:'events'},()=>loadFamily().catch(()=>{}))
