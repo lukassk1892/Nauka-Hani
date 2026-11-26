@@ -5872,7 +5872,7 @@ function storyScreen(c,back){
     if(k.t==='order'){
       const items=shuffle(k.items.map((it,j)=>({it,j})));let n=0,err=0;const box=h('div',{class:'sord'});
       items.forEach(o=>{const b=h('button',{class:'opt',type:'button',onclick:()=>{if(b.disabled)return;
-        if(o.j===n){b.disabled=true;b.classList.add('ok');b.append(h('span',{class:'num'},String(n+1)));tone(520+n*110,.15,'sine',.2);n++;
+        if(o.j===n||JSON.stringify(o.it)===JSON.stringify(k.items[n])){b.disabled=true;b.classList.add('ok');b.append(h('span',{class:'num'},String(n+1)));tone(520+n*110,.15,'sine',.2);n++;
           if(n===items.length){sDing();card.append(sHtml('div','sfact',err?'Udało się! Zapamiętaj kolejność: '+k.items.map(x=>x[0]).join(' → '):'Bezbłędnie! '+k.items.map(x=>x[0]).join(' → ')));next();}}
         else{err++;sBuzz();b.classList.remove('shake');void b.offsetWidth;b.classList.add('bad','shake');setTimeout(()=>b.classList.remove('bad'),500);}}},
         h('span',{class:'em'},o.it[0]),h('span',{},o.it[1]));box.append(b);});
@@ -7359,7 +7359,8 @@ function rMatch(q,done){
     const mine=side==='L'?selL:selR,other=side==='L'?selR:selL;
     if(mine===b){b.classList.remove('sel');if(side==='L')selL=null;else selR=null;sTap();return;}
     if(!other){if(mine)mine.classList.remove('sel');b.classList.add('sel');if(side==='L')selL=b;else selR=b;sTap();return;}
-    if(other._o.i===b._o.i){
+    const lo=(side==='L'?b:other)._o,ro=(side==='L'?other:b)._o;
+    if(lo.i===ro.i||lo.t===q.pairs[ro.i][0]||ro.t===q.pairs[lo.i][1]){/* v64: pojęcia/opisy o tym samym tekście są zamienne */
       if(matched<q.pairs.length-1)sStep(matched);const cls='m'+matched%4;
       [b,other].forEach(x=>{x.classList.remove('sel');x.classList.add(cls);x.disabled=true;});
       selL=selR=null;if(mine)mine.classList.remove('sel');matched++;if(matched===q.pairs.length)done(err);
@@ -7376,7 +7377,7 @@ function rOrder(q,done){
   const list=h('div',{class:'opts'});
   items.forEach(o=>{const b=btn('opt',o.t,()=>{
     if(b.disabled)return;
-    if(o.i===k){if(k<items.length-1)sStep(k);b.prepend(h('span',{class:'num'},String(k+1)));b.classList.add('ok');b.disabled=true;k++;if(k===items.length)done(err);}
+    if(o.i===k||o.t===q.items[k]){/* v64: elementy o tym samym tekście (np. dwa „przewód”) są zamienne */if(k<items.length-1)sStep(k);b.prepend(h('span',{class:'num'},String(k+1)));b.classList.add('ok');b.disabled=true;k++;if(k===items.length)done(err);}
     else{err++;sOops();b.classList.remove('shake');void b.offsetWidth;b.classList.add('bad','shake');setTimeout(()=>b.classList.remove('bad'),500);}
   });list.append(b);});
   return h('div',{},h('p',{class:'hint'},'Dotykaj po kolei – od pierwszego do ostatniego.'),list);
