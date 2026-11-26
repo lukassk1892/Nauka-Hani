@@ -5810,8 +5810,8 @@ const FX_CSS=`
 .top .bar.flash i::after{content:'';position:absolute;inset:0;border-radius:8px;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.75) 50%,transparent 80%);background-size:200% 100%;animation:shine .7s ease-out}
 .top .bar.flash i{box-shadow:0 0 12px rgba(38,149,90,.55)}
 @keyframes shine{from{background-position:150% 0}to{background-position:-50% 0}}
-.fb.dock{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:560px;box-sizing:border-box;border-radius:22px 22px 0 0;border-bottom:0;max-height:66vh;overflow:auto;padding:16px 16px calc(14px + env(safe-area-inset-bottom,0px));z-index:15;box-shadow:0 -10px 30px rgba(0,0,0,.18);animation:dockup .28s cubic-bezier(.2,1.2,.4,1)}
-.fb.dock .next{position:sticky;bottom:0;width:100%;min-height:54px;font-size:1.1rem}
+.fb.dock{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:560px;box-sizing:border-box;border-radius:22px 22px 0 0;border-bottom:0;max-height:66vh;overflow:hidden;padding:16px 16px calc(14px + env(safe-area-inset-bottom,0px));z-index:15;box-shadow:0 -10px 30px rgba(0,0,0,.18);animation:dockup .28s cubic-bezier(.2,1.2,.4,1)}
+.fb.dock{display:flex;flex-direction:column;max-height:66dvh}.fb.dock .fbc{display:grid;gap:10px;overflow:auto;min-height:0;flex:1 1 auto;overscroll-behavior:contain}.fb.dock .next{flex:none;width:100%;min-height:54px;font-size:1.1rem}
 .fb.bad{background:var(--g-soft);border:2px solid var(--g);border-bottom:0}
 .fb .fbh{display:flex;align-items:center;gap:12px}
 .fb .fbi{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:1.6rem;font-weight:900;background:var(--t)}
@@ -5878,7 +5878,7 @@ function storyScreen(c,back){
     if(k.t==='order'){
       const items=shuffle(k.items.map((it,j)=>({it,j})));let n=0,err=0;const box=h('div',{class:'sord'});
       items.forEach(o=>{const b=h('button',{class:'opt',type:'button',onclick:()=>{if(b.disabled)return;
-        if(o.j===n){b.disabled=true;b.classList.add('ok');b.append(h('span',{class:'num'},String(n+1)));tone(520+n*110,.15,'sine',.2);n++;
+        if(o.j===n||JSON.stringify(o.it)===JSON.stringify(k.items[n])){b.disabled=true;b.classList.add('ok');b.append(h('span',{class:'num'},String(n+1)));tone(520+n*110,.15,'sine',.2);n++;
           if(n===items.length){sDing();card.append(sHtml('div','sfact',err?'Udało się! Zapamiętaj kolejność: '+k.items.map(x=>x[0]).join(' → '):'Bezbłędnie! '+k.items.map(x=>x[0]).join(' → ')));next();}}
         else{err++;sBuzz();b.classList.remove('shake');void b.offsetWidth;b.classList.add('bad','shake');setTimeout(()=>b.classList.remove('bad'),500);}}},
         h('span',{class:'em'},o.it[0]),h('span',{},o.it[1]));box.append(b);});
@@ -7173,13 +7173,13 @@ function feedback(view,q,errors,extra){
     fb=h('div',{class:'fb plain dock',role:'status'},h('div',{class:'fbh'},h('span',{class:'fbi','aria-hidden':'true'},'✎'),h('h3',{},R.sheet?'Zapisane':ok?'Zapisane ✓':'Zapisane ✗')),h('small',{},R.sheet?'Wynik i wyjaśnienia zobaczysz na końcu arkusza.':'Wyjaśnienia zobaczysz na końcu sprawdzianu.'),btn('next',R.queue.length?'Dalej →':'Zobacz wynik',nextQ));
   }else{
     const title=ok?PRAISE[Math.floor(Math.random()*PRAISE.length)]:part?'Prawie!':(errors>1?'Tu jeszcze trzeba popracować':'Nie tym razem');
-    fb=h('div',{class:'fb dock '+(ok?'good':part?'meh':'bad'),role:'status'},
+    fb=h('div',{class:'fb dock '+(ok?'good':part?'meh':'bad'),role:'status'},h('div',{class:'fbc'},
       h('div',{class:'fbh'},h('span',{class:'fbi','aria-hidden':'true'},ok?'✓':part?'½':'✗'),h('h3',{},title)),
       extra?h('p',{},extra):null,
       ok&&q.e?h('p',{},q.e):null,
       !ok?h('div',{class:'remember'},h('b',{},'Zapamiętaj'),corrText(q)?h('p',{class:'ans'},corrText(q)):null,q.e?h('p',{},q.e):null):null,
       (!ok&&q.k)?h('details',{class:'lesson more'},h('summary',{},'Pokaż całą lekcję: '+LESSONS[q.k].name),lessonBody(q.k)):null,
-      !ok?h('small',{},twin?'Teraz podobne zadanie z tego samego zagadnienia, a to wróci na końcu rundy.':'To zadanie wróci na końcu rundy.'):null,
+      !ok?h('small',{},twin?'Teraz podobne zadanie z tego samego zagadnienia, a to wróci na końcu rundy.':'To zadanie wróci na końcu rundy.'):null),
       btn('next',twin?'Sprawdź się – podobne zadanie →':R.queue.length?'Dalej →':'Zobacz wynik',nextQ));
     if(!ok){if(R.log)R.fbBad=1;const nb=fb.querySelector('.next');nb.disabled=true;nb.classList.add('wait');nb.style.setProperty('--w',FB_WAIT+'s');
       setTimeout(()=>{nb.disabled=false;nb.classList.remove('wait');if(document.activeElement===document.body||!document.activeElement)nb.focus({preventScroll:true});},FB_WAIT*1000);}
@@ -7356,18 +7356,26 @@ function rSort(q,done){
 }
 
 function rMatch(q,done){
+  /* v63: pary w dowolnej kolejności – można zacząć od pojęcia u góry albo od opisu na dole; ponowne dotknięcie odznacza */
   const L=shuffle(q.pairs.map((p,i)=>({t:p[0],i}))),Rt=shuffle(q.pairs.map((p,i)=>({t:p[1],i})));
-  let sel=null,err=0,matched=0;
+  let selL=null,selR=null,err=0,matched=0;
   const chips=h('div',{class:'chips'}),list=h('div',{class:'opts'});
-  const lb=L.map(o=>{const b=btn('mchip',o.t,()=>{if(b.disabled)return;sTap();lb.forEach(x=>x.classList.remove('sel'));sel=o;b.classList.add('sel');});b._o=o;return b;});
-  Rt.forEach(o=>{const b=btn('opt',o.t,()=>{
+  function tap(side,b){
     if(b.disabled)return;
-    if(!sel){lb.forEach(x=>{if(!x.disabled){x.classList.remove('pulse');void x.offsetWidth;x.classList.add('pulse');}});return;}
-    if(sel.i===o.i){if(matched<q.pairs.length-1)sStep(matched);const cls='m'+matched%4;const l=lb.find(x=>x._o===sel);l.classList.remove('sel');l.classList.add(cls);l.disabled=true;b.classList.add(cls);b.disabled=true;sel=null;matched++;if(matched===q.pairs.length)done(err);}
-    else{err++;sOops();b.classList.remove('shake');void b.offsetWidth;b.classList.add('bad','shake');setTimeout(()=>b.classList.remove('bad'),500);}
-  });list.append(b);});
+    const mine=side==='L'?selL:selR,other=side==='L'?selR:selL;
+    if(mine===b){b.classList.remove('sel');if(side==='L')selL=null;else selR=null;sTap();return;}
+    if(!other){if(mine)mine.classList.remove('sel');b.classList.add('sel');if(side==='L')selL=b;else selR=b;sTap();return;}
+    const lo=(side==='L'?b:other)._o,ro=(side==='L'?other:b)._o;
+    if(lo.i===ro.i||lo.t===q.pairs[ro.i][0]||ro.t===q.pairs[lo.i][1]){/* v64: pojęcia/opisy o tym samym tekście są zamienne */
+      if(matched<q.pairs.length-1)sStep(matched);const cls='m'+matched%4;
+      [b,other].forEach(x=>{x.classList.remove('sel');x.classList.add(cls);x.disabled=true;});
+      selL=selR=null;if(mine)mine.classList.remove('sel');matched++;if(matched===q.pairs.length)done(err);
+    }else{err++;sOops();b.classList.remove('shake');void b.offsetWidth;b.classList.add('bad','shake');setTimeout(()=>b.classList.remove('bad'),500);}
+  }
+  const lb=L.map(o=>{const b=btn('mchip',o.t,()=>tap('L',b));b._o=o;return b;});
+  Rt.forEach(o=>{const b=btn('opt',o.t,()=>tap('R',b));b._o=o;list.append(b);});
   chips.append(...lb);
-  return h('div',{},h('p',{class:'hint'},'Dotknij pojęcie u góry, a potem pasujący opis.'),chips,list);
+  return h('div',{},h('p',{class:'hint'},'Dotknij jedno, a potem pasujące drugie – możesz zacząć z góry albo z dołu.'),chips,list);
 }
 
 function rOrder(q,done){
@@ -7375,7 +7383,7 @@ function rOrder(q,done){
   const list=h('div',{class:'opts'});
   items.forEach(o=>{const b=btn('opt',o.t,()=>{
     if(b.disabled)return;
-    if(o.i===k){if(k<items.length-1)sStep(k);b.prepend(h('span',{class:'num'},String(k+1)));b.classList.add('ok');b.disabled=true;k++;if(k===items.length)done(err);}
+    if(o.i===k||o.t===q.items[k]){/* v64: elementy o tym samym tekście (np. dwa „przewód”) są zamienne */if(k<items.length-1)sStep(k);b.prepend(h('span',{class:'num'},String(k+1)));b.classList.add('ok');b.disabled=true;k++;if(k===items.length)done(err);}
     else{err++;sOops();b.classList.remove('shake');void b.offsetWidth;b.classList.add('bad','shake');setTimeout(()=>b.classList.remove('bad'),500);}
   });list.append(b);});
   return h('div',{},h('p',{class:'hint'},'Dotykaj po kolei – od pierwszego do ostatniego.'),list);
