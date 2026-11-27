@@ -291,7 +291,7 @@ details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;pa
 @keyframes dpopIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .dhint{margin:-6px 0 12px;font-size:14px;color:#6b6880}
 .qimg{display:block;max-width:100%;max-height:260px;margin:0 auto 14px;border-radius:12px;object-fit:contain}
-.picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.popt{padding:4px;border-radius:14px;border:3px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:0}.popt img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:10px;display:block}.pcap{font-size:.78rem;line-height:1.2;text-align:center;font-weight:600;min-height:2.4em;display:flex;align-items:center;justify-content:center}.popt.ok{border-color:var(--t);background:var(--t-soft)}.popt.bad{border-color:var(--g);background:var(--g-soft)}.popt.dim{opacity:.6}
+.picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.popt{padding:4px;border-radius:14px;border:3px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:0}.popt img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:10px;display:block}.pcap{font-size:.78rem;line-height:1.2;text-align:center;font-weight:600;min-height:2.4em;display:flex;align-items:center;justify-content:center}.popt.ok{border-color:var(--t);background:var(--t-soft)}.popt.bad{border-color:var(--g);background:var(--g-soft)}.popt.dim{opacity:.6}.picopts.sym{grid-template-columns:1fr 1fr}.picopts.sym .popt img{aspect-ratio:2/1;object-fit:contain;background:#fff}.drawcv{display:block;width:100%;aspect-ratio:2/1;border:2px solid var(--line);border-radius:14px;touch-action:none;background-color:#fff;background-image:linear-gradient(#dbe4f0 1px,transparent 1px),linear-gradient(90deg,#dbe4f0 1px,transparent 1px);background-size:5% 10%;margin:0 0 10px}.drawclr{width:auto;margin:0 0 12px}.drawimg{border:2px solid var(--t);background:#fff}
 /* chemia */
 .tiles{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
 .tile{min-width:56px;min-height:52px;padding:8px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-family:var(--mono);font-size:1.15rem}
@@ -5402,6 +5402,7 @@ const OBW_G={ // znak symbolu wyśrodkowany w (0,0); w = połowa szerokości (ta
  dc:{d:'<path d="M-36-8H36"/><path d="M-36 8H-22M-7 8H7M22 8H36"/>'}
 };
 function obwSvg(vb,inner){return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+vb+'" width="'+(vb.split(' ')[2]*2)+'" height="'+(vb.split(' ')[3]*2)+'"><rect x="'+vb.split(' ')[0]+'" y="'+vb.split(' ')[1]+'" width="100%" height="100%" fill="#fff"/><g fill="none" stroke="#1f2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" font-family="Arial,sans-serif" font-weight="bold" text-anchor="middle">'+inner.replace(/<text /g,'<text fill="#1f2937" stroke="none" ')+'</g></svg>');}
+function obwSymL(k,lab){const g=OBW_G[k];const leads=g.w==null?'':'<path d="M-72 0H'+(-g.w)+'M'+g.w+' 0H72"/>';return obwSvg('-80 -42 160 102',leads+g.d+'<text y="52" font-size="17" font-style="italic">'+lab+'</text>');}
 function obwSym(k){const g=OBW_G[k];const leads=g.w==null?'':'<path d="M-72 0H'+(-g.w)+'M'+g.w+' 0H72"/>';return obwSvg('-80 -40 160 80',leads+g.d);}
 // schemat: lista elementów {h:[y,x1,x2,[[k,x,etykieta?]...]]} albo {v:[x,y1,y2]} albo {dot:[x,y]} albo {t:[x,y,tekst]}
 function obwCirc(vb,parts){let s='';for(const p of parts){
@@ -5614,14 +5615,104 @@ const OBW_PLAN=[
  ['2026-11-29','exam','Kartkówka próbna i słabe punkty'],
  ['2026-11-30','cards','Rano tylko fiszki – powodzenia!']];
 prep(OBW_TOPICS,OBW_KMAP);
+/* ---------- FIZYKA obwody – KOREKTA 27.11.2026 (v65): kartkówka pn. 30.11 TYLKO z symboli (rozpoznawanie i rysowanie)
+   i nazw angielskich → po polsku (zeszyt Hani: fizyka/obwody/notatki/). Tematy obw, mie, sze, row (łączenia, mierniki) są ukryte
+   – zostają w OBW_TOPICS (postępy), ale SUBJECTS.obw pokazuje tylko OBW_VIS. Nowe tematy roz, rys, naz dopisane na końcu. ---------- */
+const OBW_DRAW={zar:['żarówka',['kółko','krzyżyk (X) w środku kółka','przewody z obu stron']],
+ ogn:['ogniwo (źródło prądu stałego)',['dwie kreski w poprzek przewodu','jedna dłuższa i cienka (+), druga krótsza i gruba (−)']],
+ bat:['bateria',['kilka ogniw jedno obok drugiego','w każdym ogniwie: dłuższa cienka i krótsza gruba kreska']],
+ wyl:['przełącznik (wyłącznik)',['dwie kropki na końcach przewodów','kreska odchylona od jednej kropki – przerwa']],
+ prz:['przewód elektryczny',['zwykła prosta linia']],
+ opor:['opornik (rezystor)',['pusty prostokąt','przewody dochodzą do krótszych boków']],
+ bez:['bezpiecznik',['prostokąt','przewód przechodzi przez środek prostokąta']],
+ kon:['kondensator',['dwie RÓWNE kreski w poprzek','przewody z obu stron']],
+ cew:['zwojnica (cewka indukcyjna)',['kilka łuków jak sprężynka','przewody na końcach']],
+ vol:['woltomierz',['kółko','litera V w środku']],
+ amp:['amperomierz',['kółko','litera A w środku']],
+ sil:['silnik (motor)',['kółko','litera M w środku']],
+ ac:['źródło prądu przemiennego',['kółko','falka ~ w środku']],
+ dio:['dioda prostownicza',['trójkąt wskazujący w bok','kreska przy wierzchołku trójkąta']],
+ dzw:['dzwonek',['kopułka (półkole) na górze','dwie nóżki połączone z przewodami']],
+ uzi:['uziemienie',['pionowa kreska','pod nią 3 poziome kreski, coraz krótsze']],
+ trf:['transformator',['dwie zwojnice','między nimi kreski (rdzeń)']],
+ tra:['tranzystor',['pionowa gruba kreska z przewodem z boku','dwie ukośne nóżki, jedna ze strzałką']],
+ dc:['prąd stały (DC)',['kreska ciągła na górze','kreska przerywana pod nią']]};
+const OBW_EN=[['bulb','zar','żarówka',['żarówka','zarowka']],['wire','prz','przewód',['przewód','przewod','przewód elektryczny']],['bell','dzw','dzwonek',['dzwonek']],
+ ['fuse','bez','bezpiecznik',['bezpiecznik']],['electrical cell','ogn','ogniwo',['ogniwo','ogniwo elektryczne','źródło prądu stałego']],['voltmeter','vol','woltomierz',['woltomierz']],
+ ['ammeter','amp','amperomierz',['amperomierz']],['diode','dio','dioda',['dioda','dioda prostownicza']],['motor','sil','silnik',['silnik','wirnik','motor']]];
+const OBW_PL={zar:'żarówka',ogn:'ogniwo',bat:'bateria',wyl:'przełącznik',prz:'przewód',opor:'opornik',bez:'bezpiecznik',kon:'kondensator',cew:'zwojnica',vol:'woltomierz',amp:'amperomierz',sil:'silnik',ac:'źródło prądu przemiennego',dio:'dioda',dzw:'dzwonek',uzi:'uziemienie',trf:'transformator',tra:'tranzystor',dc:'prąd stały (DC)'};
+const OBW_LIKE={zar:['ac','vol','sil'],ogn:['kon','bat','wyl'],bat:['ogn','kon','dc'],wyl:['dio','prz','uzi'],opor:['bez','cew','kon'],bez:['opor','dc','cew'],kon:['ogn','bat','uzi'],cew:['trf','opor','ac'],vol:['amp','sil','zar'],amp:['vol','sil','ac'],sil:['amp','vol','zar'],ac:['zar','sil','cew'],dio:['tra','wyl','uzi'],dzw:['uzi','dio','cew'],uzi:['dzw','kon','dc'],trf:['cew','kon','opor'],tra:['dio','uzi','wyl'],dc:['bez','ac','kon']};
+const OBW_KEYOF={zar:'syz',ogn:'syz',bat:'syz',wyl:'syz',prz:'syz',opor:'sym2',bez:'sym2',vol:'sym2',amp:'sym2',sil:'sym2',dzw:'sym2',kon:'sym3',cew:'sym3',dio:'sym3',uzi:'sym3',ac:'sym3',trf:'sym3',tra:'sym3',dc:'sym3'};
+OBW_TOPICS.push(
+{id:'roz',base:'T',mark:'2',name:'Pokaż właściwy symbol',pages:'zeszyt',qs:
+ ['zar','ogn','kon','wyl','opor','bez','vol','amp','sil','dzw','uzi','ac','dio','cew','bat','trf','tra','dc'].map(s=>({k:OBW_KEYOF[s],t:'pic',sym:true,q:'Pokaż symbol: '+OBW_PL[s]+'.',o:[[obwSym(s),OBW_PL[s]],...OBW_LIKE[s].map(x=>[obwSym(x),OBW_PL[x]])],e:'To jest '+OBW_PL[s]+': '+OBW_DRAW[s][1].join(', ')+'.'}))},
+{id:'rys',base:'A',mark:'3',name:'Narysuj symbol',pages:'zeszyt',qs:
+ ['zar','ogn','wyl','amp','vol','opor','bez','kon','sil','dzw','dio','uzi','ac','cew','bat','prz','trf','tra','dc'].map(s=>({k:OBW_KEYOF[s],t:'draw',q:'Narysuj symbol: '+OBW_DRAW[s][0]+'.',show:obwSym(s),pts:OBW_DRAW[s][1],e:'Symbol: '+OBW_DRAW[s][1].join(', ')+'.'}))
+ .concat([{k:'syz',t:'draw',q:'Narysuj obwód: ogniwo, przełącznik i żarówka połączone przewodami w jedną pętlę.',show:obwCirc('-130 -80 260 160',[{h:[-45,-110,110,[['zar',0]]]},{h:[50,-110,110,[['ogn',-40],['wyl',40]]]},{v:[-110,-45,50]},{v:[110,-45,50]}]),pts:['ogniwo: dłuższa cienka i krótsza gruba kreska','przełącznik: kropki i odchylona kreska','żarówka: kółko z krzyżykiem','przewody to proste linie, tworzą zamkniętą prostokątną pętlę'],e:'Schemat rysujemy prostymi liniami pod kątem prostym, symbole wstawiamy w przewody.'}])},
+{id:'naz',base:'G',mark:'4',name:'Nazwy angielskie po polsku',pages:'zeszyt',qs:
+ OBW_EN.map(([en,s,pl,ans])=>({k:'ang',t:'type',img:obwSymL(s,en),q:'Pod tym symbolem jest podpis „'+en+'”. Jak nazywa się ten element po polsku?',ans,ph:'wpisz po polsku',e:en+' = '+pl+'.'}))
+ .concat(OBW_EN.map(([en,s,pl],i)=>({k:'ang',t:'mc',q:'Co znaczy po polsku „'+en+'”?',o:[pl,...OBW_EN.filter((x,j)=>j!==i).map(x=>x[2]).filter((x,j,A)=>[ (i+1)%8,(i+3)%8,(i+5)%8 ].includes(j))],e:en+' = '+pl+'.'})))
+ .concat([
+ {k:'ang',t:'match',q:'Połącz angielską nazwę z polską.',pairs:[['bulb','żarówka'],['bell','dzwonek'],['motor','silnik'],['wire','przewód']],e:'bulb – żarówka, bell – dzwonek, motor – silnik, wire – przewód.'},
+ {k:'ang',t:'match',q:'Połącz angielską nazwę z polską.',pairs:[['fuse','bezpiecznik'],['diode','dioda'],['electrical cell','ogniwo'],['ammeter','amperomierz']],e:'fuse – bezpiecznik, diode – dioda, cell – ogniwo, ammeter – amperomierz.'},
+ {k:'ang',t:'mc',lab:'Uwaga, pułapka',q:'„Bell” i „bulb” brzmią podobnie. Co oznacza „bell”?',o:['dzwonek','żarówka','bateria','bezpiecznik'],e:'Bell = dzwonek (jak dzwon). Bulb = żarówka.'},
+ {k:'ang',t:'mc',lab:'Uwaga, pułapka',q:'„Voltmeter” czy „ammeter” – który mierzy natężenie prądu i ma literę A?',o:['ammeter – amperomierz','voltmeter – woltomierz','motor – silnik','diode – dioda'],e:'Ammeter = amperomierz (A), voltmeter = woltomierz (V).'},
+ {k:'ang',t:'pic',sym:true,q:'Pokaż symbol podpisany „fuse”.',o:[[obwSym('bez'),'fuse – bezpiecznik'],[obwSym('opor'),'opornik'],[obwSym('dc'),'prąd stały'],[obwSym('cew'),'zwojnica']],e:'Fuse = bezpiecznik: prostokąt przecięty przewodem.'},
+ {k:'ang',t:'pic',sym:true,q:'Pokaż symbol podpisany „electrical cell”.',o:[[obwSym('ogn'),'electrical cell – ogniwo'],[obwSym('kon'),'kondensator'],[obwSym('bat'),'bateria'],[obwSym('wyl'),'przełącznik']],e:'Electrical cell = ogniwo: dłuższa cienka i krótsza gruba kreska.'},
+ {k:'ang',t:'pic',sym:true,q:'Pokaż symbol podpisany „bell”.',o:[[obwSym('dzw'),'bell – dzwonek'],[obwSym('zar'),'żarówka (bulb)'],[obwSym('uzi'),'uziemienie'],[obwSym('sil'),'silnik']],e:'Bell = dzwonek: kopułka na nóżkach. Bulb (żarówka) to kółko z krzyżykiem.'},
+ {k:'ang',t:'pic',sym:true,q:'Pokaż symbol podpisany „diode”.',o:[[obwSym('dio'),'diode – dioda'],[obwSym('tra'),'tranzystor'],[obwSym('wyl'),'przełącznik'],[obwSym('kon'),'kondensator']],e:'Diode = dioda: trójkąt z kreską.'}
+ ])}
+);
+OBW_KMAP.roz=OBW_TOPICS.find(t=>t.id==='roz').qs.map(q=>q.k).join(' ');
+OBW_KMAP.rys=OBW_TOPICS.find(t=>t.id==='rys').qs.map(q=>q.k).join(' ');
+OBW_KMAP.naz=OBW_TOPICS.find(t=>t.id==='naz').qs.map(q=>q.k).join(' ');
+prep(OBW_TOPICS.filter(t=>['roz','rys','naz'].includes(t.id)),OBW_KMAP);
+const OBW_VIS=['sym','roz','rys','naz'].map(id=>OBW_TOPICS.find(t=>t.id===id));
+OBW_VIS[0].mark='1';
+// w temacie sym: zadania spoza zakresu poprawione w miejscu (numery bez zmian)
+(()=>{const S=OBW_TOPICS[0].qs;
+ Object.assign(S[29],{k:'syz',t:'open',q:'Narysuj w zeszycie symbole: żarówka, ogniwo, przełącznik, amperomierz i woltomierz. Potem sprawdź się.',pts:['Żarówka: kółko z krzyżykiem.','Ogniwo: dłuższa cienka kreska (+) i krótsza gruba (−).','Przełącznik: dwie kropki i odchylona kreska.','Amperomierz i woltomierz: kółko z literą A albo V.']});
+ Object.assign(S[24],{k:'sym3',t:'sort',q:'Prąd stały czy przemienny?',cats:['prąd stały (DC)','prąd przemienny (AC)'],items:[['ogniwo',0],['bateria',0],['kółko z falką ~',1],['kreska ciągła nad przerywaną',0],['AC',1],['DC',0]],e:'Ogniwa, baterie i znak DC – prąd stały. Falka ~ i znak AC – prąd przemienny.'});
+})();
+const OBW_LESS2=Object.fromEntries(['syz','sym2','sym3','ang'].map(k=>[k,OBW_LESSONS[k]]));
+OBW_LESS2.ang.gallery=OBW_EN.map(([en,s,pl])=>[obwSym(s),en,pl]);OBW_LESS2.ang.galSym=true;
+OBW_LESS2.ang.pts=['Na kartkówce mogą być symbole podpisane po angielsku – trzeba je nazwać po polsku.','Bell (dzwonek) i bulb (żarówka) łatwo pomylić!'];
+OBW_LESS2.syz.name='Podstawowe symbole: żarówka, ogniwo, bateria, przełącznik';
+const OBW_CARDS2=OBW_CARDS.slice(0,14).concat(OBW_EN.map(([en,,pl])=>[en,pl]),[['AC / DC','prąd przemienny (falka ~) / prąd stały'],['transformator','dwie zwojnice przedzielone kreskami'],['tranzystor','kreska z dwiema ukośnymi nóżkami, jedna ze strzałką'],['bateria','kilka ogniw jedno obok drugiego']]);
+const OBW_PLAN2=[
+ ['2026-11-27','roz','Pokaż właściwy symbol (1 runda) – zakres zmieniony: tylko symbole!'],
+ ['2026-11-28','naz','Nazwy angielskie po polsku (1 runda) + fiszki'],
+ ['2026-11-29','rys','Narysuj symbole (1 runda) i kartkówka próbna'],
+ ['2026-11-30','cards','Rano tylko fiszki – powodzenia!']];
+/* ---------- rysowanie palcem (typ 'draw', od v65): q.show = obrazek wzoru, q.pts = punkty do samooceny ---------- */
+function rDraw(q,done){
+  const cv=h('canvas',{class:'drawcv',width:700,height:350,'aria-label':'Pole do rysowania'});const ctx=cv.getContext('2d');let dn=false,last=null,any=false;
+  ctx.lineWidth=7;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1f2937';
+  const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height];};
+  cv.addEventListener('pointerdown',e=>{if(cv.dataset.lock)return;dn=true;last=pos(e);cv.setPointerCapture(e.pointerId);ctx.beginPath();ctx.arc(last[0],last[1],3.5,0,7);ctx.fillStyle='#1f2937';ctx.fill();any=true;e.preventDefault();});
+  cv.addEventListener('pointermove',e=>{if(!dn)return;const p=pos(e);ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(p[0],p[1]);ctx.stroke();last=p;e.preventDefault();});
+  ['pointerup','pointercancel','pointerleave'].forEach(t=>cv.addEventListener(t,()=>{dn=false;}));
+  const clr=btn('opt drawclr','🧽 Wyczyść',()=>{if(cv.dataset.lock)return;ctx.clearRect(0,0,cv.width,cv.height);any=false;});
+  const wrap=h('div',{class:'drawwrap'});
+  const check=btn('check','Pokaż wzór',()=>{
+    cv.dataset.lock='1';clr.remove();check.remove();
+    const marks=q.pts.map(p=>({p,on:false}));
+    const list=h('div',{class:'opts'},marks.map(m=>{const b=btn('opt','',()=>{if(b.disabled)return;sTap();m.on=!m.on;b.classList.toggle('sel',m.on);b.querySelector('.box').textContent=m.on?'✓':'';});b.append(h('span',{class:'box'},''),m.p);m.b=b;return b;}));
+    const fin=btn('check','Gotowe',()=>{fin.disabled=true;let err=0;marks.forEach(m=>{m.b.disabled=true;m.b.classList.add(m.on?'ok':'miss');if(!m.on)err++;});
+      done(err,err?'Narysuj ten symbol jeszcze raz w zeszycie, patrząc na wzór.':'Symbol narysowany dobrze!');});
+    wrap.append(h('p',{class:'hint'},'Tak powinno wyglądać:'),h('img',{class:'qimg drawimg',src:q.show,alt:'Wzór symbolu'}),h('p',{class:'hint'},'Zaznacz wszystko, co jest na Twoim rysunku. Bądź uczciwa!'),list,fin);
+  });
+  wrap.append(h('p',{class:'hint'},any?'':'Rysuj palcem w kratce. Możesz też narysować w zeszycie.'),cv,clr,check);
+  return wrap;
+}
 prep(BIO_TOPICS,BIO_KMAP);prep(PT_TOPICS,PT_KMAP);prep(GEO_TOPICS,GEO_KMAP);prep(PL_TOPICS,PL_KMAP);prep(HIS_TOPICS,HIS_KMAP);prep(EDB_TOPICS,EDB_KMAP);prep(FIZ_TOPICS,FIZ_KMAP);prep(WOS_TOPICS,WOS_KMAP);prep(ANG_TOPICS,ANG_KMAP);prep(ESP_TOPICS,ESP_KMAP);prep(CHEM_TOPICS,CHEM_KMAP);
 const SUBJECTS={
  sol:{id:'sol',key:'chemia-sole-v1',title:'Sole – wzory i nazwy',subject:'Chemia',sub:'kartkówka śr. 2.12 · wzory i nazwy soli, podręcznik s. 62–65',icon:'🧂',color:'var(--t)',decor:['T','C','A','G'],topics:SOL_TOPICS,lessons:SOL_LESSONS,cards:SOL_CARDS,examName:'Kartkówka próbna',examPer:3,plan:SOL_PLAN,
    tip:'codziennie 15 minut według planu powyżej. Zapamiętaj: kwas bez tlenu → „-ek” (chlorek, siarczek), kwas z tlenem → „-an” (siarczan, azotan, węglan, fosforan). Wzór: metal z przodu, na krzyż, skróć, a dużą resztę w nawias, gdy jest jej więcej niż jedna. Przy Fe i Cu dopisz cyfrę rzymską. W zadaniach „zaznacz wszystkie” sprawdź każdą literę po kolei – tak traciłaś punkty na sprawdzianie z kwasów. Gdy utkniesz, dotknij „Pomóż”. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  lat:{id:'lat',key:'polski-latarnik-v1',title:'Latarnik',subject:'Język polski',sub:'test pn. 7.12 · znajomość lektury, Henryk Sienkiewicz',icon:'⚓',sheet:'lark',color:'var(--t)',decor:['T','C','G','A'],topics:LAT_TOPICS,lessons:LAT_LESSONS,cards:LAT_CARDS,examName:'Test próbny',examPer:2,plan:LAT_PLAN,panel:latPanel,
    tip:'codziennie krótko według planu. Najpierw obejrzyj 🎬 „Latarnik w 2 minuty”, potem przeczytaj nowelę w aplikacji – trzy części, krótkie strony – i po każdej zrób rundę. Najważniejsze: kim był Skawiński (Polak, żołnierz, wieczny tułacz), rozmowa z konsulem Falconbridge’em, życie na wieży, paczka z polskimi książkami i Inwokacja, sen o Polsce, niezapalona latarnia i utrata posady. Zapamiętaj symbole: latarnia = port, książka = ojczyzna, liść = tułacz. Dzień przed testem zrób test próbny i Arkusz – 90% lub więcej znaczy, że jesteś gotowa.'},
- obw:{id:'obw',key:'fizyka-obwody-v1',title:'Obwody elektryczne',subject:'Fizyka',icon:'💡',sub:'kartkówka pn. 30.11 · elementy obwodu, łączenie szeregowe i równoległe',color:'var(--a)',decor:['A','T','C','G'],topics:OBW_TOPICS,lessons:OBW_LESSONS,cards:OBW_CARDS,examName:'Kartkówka próbna',examPer:3,plan:OBW_PLAN,
-   tip:'codziennie jedna krótka runda według planu. Najpierw symbole – na kartkówce trzeba je rozpoznać i narysować, więc przeglądaj też fiszki. Najważniejsze: amperomierz szeregowo, woltomierz równolegle; szeregowo natężenie takie samo, a napięcie się dzieli (U = U₁ + U₂); równolegle napięcie takie samo, a prąd rozdziela się w węźle. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
+ obw:{id:'obw',key:'fizyka-obwody-v1',title:'Symbole w obwodach elektrycznych',subject:'Fizyka',icon:'💡',sub:'kartkówka pn. 30.11 · rozpoznawanie i rysowanie symboli, nazwy angielskie',color:'var(--a)',decor:['A','T','C','G'],topics:OBW_VIS,lessons:OBW_LESS2,cards:OBW_CARDS2,examName:'Kartkówka próbna',examPer:3,plan:OBW_PLAN2,
+   tip:'na kartkówce trzeba rozpoznać i narysować symbole oraz nazwać po polsku elementy podpisane po angielsku (bulb, wire, bell, fuse, electrical cell, voltmeter, ammeter, diode, motor). Codziennie jedna runda według planu i fiszki. Rysuj palcem albo w zeszycie, a potem porównaj ze wzorem. Uważaj na pary: ogniwo i kondensator, opornik i bezpiecznik, bell i bulb. Dzień przed kartkówką zrób kartkówkę próbną – 90% lub więcej znaczy, że jesteś gotowa.'},
  roz:{id:'roz',key:'polski-rozprawka-pt-v1',title:'Rozprawka – „Pan Tadeusz”',subject:'Język polski',sub:'sprawdzian czw. 26.11 · praca literacka, księgi I, II, IV, X–XII',icon:'✍️',tools:'roz',color:'var(--c)',decor:['C','A','G','T'],topics:ROZ_TOPICS,lessons:ROZ_LESSONS,cards:ROZ_CARDS,examName:'Test próbny',examPer:2,plan:ROZ_PLAN,
    tip:'codziennie ok. 15 minut według planu powyżej. Zacznij od 🎬 lekcji „Budowa rozprawki”. W niedzielę napisz próbną rozprawkę w Pisarzu rozprawek, przepisz ją na kartkę i wyślij tacie zdjęcie. Zapamiętaj: teza we wstępie, każdy argument to APW (argument → przykład z lektury → wniosek), zakończenie powtarza tezę, co najmniej 200 słów. Przykłady tylko z ksiąg I, II, IV, X, XI i XII.'},
  hpo:{id:'hpo',key:'historia-okupacja-powstanie-v1',title:'Okupacja, Państwo Podziemne, powstanie',subject:'Historia',sub:'kartkówka śr. 25.11 · rozdziały 8–10 (s. 58–80)',color:'var(--g)',decor:['G','C','A','T'],topics:HPO_TOPICS,lessons:HPO_LESSONS,cards:HPO_CARDS,examName:'Kartkówka próbna',examPer:3,plan:HPO_PLAN,
@@ -7084,7 +7175,7 @@ function startRound(tid){
   nextQ();
 }
 const qMax=q=>q.t==='open'?q.pts.length:1;
-const TYPES={memo:'Na pamięć',pf:'Prawda czy fałsz – oceń każde zdanie',ab:'Wybierz odpowiedź i uzasadnienie',mc:'Wybierz odpowiedź',pic:'Wybierz zdjęcie',tf:'Prawda czy fałsz?',multi:'Zaznacz wszystkie poprawne',type:'Wpisz odpowiedź',open:'Pytanie otwarte',sort:'Przyporządkuj',match:'Połącz w pary',order:'Ułóż po kolei',dna:'Zbuduj nić DNA',build:'Zbuduj wzór',wz:'Napisz wzór',eq:'Ułóż równanie'};
+const TYPES={memo:'Na pamięć',pf:'Prawda czy fałsz – oceń każde zdanie',ab:'Wybierz odpowiedź i uzasadnienie',mc:'Wybierz odpowiedź',pic:'Wybierz zdjęcie',picsym:'Wybierz rysunek',draw:'Narysuj',tf:'Prawda czy fałsz?',multi:'Zaznacz wszystkie poprawne',type:'Wpisz odpowiedź',open:'Pytanie otwarte',sort:'Przyporządkuj',match:'Połącz w pary',order:'Ułóż po kolei',dna:'Zbuduj nić DNA',build:'Zbuduj wzór',wz:'Napisz wzór',eq:'Ułóż równanie'};
 function nextQ(){
   if(!R.queue.length){if(R.log&&R.fbT){fbEnd();}return result();}
   const q=R.queue.shift();R.cur=q;if(R.log&&!R.log.fin)qShown(q);
@@ -7096,11 +7187,11 @@ function nextQ(){
     h('div',{},bar,R.streak>=3&&!R.exam?h('span',{class:'streak'},`Seria: ${R.streak} z rzędu!`):null),
     h('div',{class:'cntw'},sndBtn(),h('span',{class:'count'},`${Math.min(R.done+1,R.total)}/${R.total}`)));
   if(bw0!==bw)requestAnimationFrame(()=>requestAnimationFrame(()=>{const bi=bar.firstChild;if(bi)bi.style.width=bw+'%';}));
-  const lab=R.sheet?`Zadanie ${R.done+1}. (0–${qMax(q)} pkt)`:(retry?'Powtórka · ':'')+(q.lab||TYPES[q.t]);
+  const lab=R.sheet?`Zadanie ${R.done+1}. (0–${qMax(q)} pkt)`:(retry?'Powtórka · ':'')+(q.lab||TYPES[q.sym&&q.t==='pic'?'picsym':q.t]);
   const body=h('div');
   const nudge=h('p',{class:'nudge',hidden:''},'Utknęłaś? Wybierz najlepszą odpowiedź, nawet jeśli nie masz pewności. Błąd to nic złego – zaraz zobaczysz wyjaśnienie.');
   const view=h('div',{},top,h('div',{class:'qtype label'+(q.lab&&!R.sheet?' hot':'')},lab),h('h2',{class:'q'},dictWrap(q.t==='tf'?'„'+q.q+'”':q.q,q)),dictHint(q),q.img?h('img',{class:'qimg',src:q.img,alt:'Zdjęcie do pytania'}):null,nudge,body);
-  body.append({pf:rPF,ab:rAB,mc:rMC,pic:rPic,tf:rTF,multi:rMulti,type:rType,open:rOpen,memo:rMemo,sort:rSort,match:rMatch,order:rOrder,dna:rDNA,build:rBuild,wz:rWz,eq:rEq}[q.t](q,(err,extra)=>feedback(view,q,err,extra)));
+  body.append({pf:rPF,ab:rAB,mc:rMC,pic:rPic,draw:rDraw,tf:rTF,multi:rMulti,type:rType,open:rOpen,memo:rMemo,sort:rSort,match:rMatch,order:rOrder,dna:rDNA,build:rBuild,wz:rWz,eq:rEq}[q.t](q,(err,extra)=>feedback(view,q,err,extra)));
   SCR_Q=!!(SUBJ&&SUBJ.id==='inw');screen(view);
 }
 function answerText(q){
@@ -7114,6 +7205,7 @@ function answerText(q){
   if(q.t==='multi')return q.c.map(i=>q.o[i]).join(', ');
   if(q.t==='dna')return compOf(q.top);
   if(q.t==='open')return q.pts.join(' ');
+  if(q.t==='draw')return q.pts.join(', ');
   if(q.t==='memo')return q.lines.join(' / ');
   if(q.t==='order')return q.items.join(' → ');
   return '';
@@ -7131,6 +7223,7 @@ function corrText(q){
   if(q.t==='match')return q.pairs.map(p=>p[0]+' – '+p[1]).join(' · ');
   if(q.t==='order')return q.items.join(' → ');
   if(q.t==='memo')return q.lines.join(' / ');
+  if(q.t==='draw')return 'Wzór: '+q.pts.join(', ');
   if(q.t==='sort')return q.cats.map((c,i)=>c+': '+q.items.filter(x=>x[1]===i).map(x=>x[0]).join(', ')).join(' · ');
   return '';}
 function feedback(view,q,errors,extra){
@@ -7205,7 +7298,7 @@ function rMC(q,done,fixed){
 }
 /* v59: wybierz zdjęcie – o:[[src,podpis],…], pierwsze poprawne; po odpowiedzi każde zdjęcie dostaje podpis */
 function rPic(q,done){
-  const wrap=h('div',{class:'picopts'});
+  const wrap=h('div',{class:'picopts'+(q.sym?' sym':'')});
   const opts=shuffle(q.o.map((o,i)=>({src:o[0],n:o[1],i})));
   opts.forEach(o=>{
     const cap=h('span',{class:'pcap'},'?');
