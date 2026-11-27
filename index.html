@@ -297,7 +297,7 @@ details.more{margin:8px 0}details.more summary{cursor:pointer;font-weight:600;pa
 @keyframes dpopIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .dhint{margin:-6px 0 12px;font-size:14px;color:#6b6880}
 .qimg{display:block;max-width:100%;max-height:260px;margin:0 auto 14px;border-radius:12px;object-fit:contain}
-.picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.popt{padding:4px;border-radius:14px;border:3px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:0}.popt img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:10px;display:block}.pcap{font-size:.78rem;line-height:1.2;text-align:center;font-weight:600;min-height:2.4em;display:flex;align-items:center;justify-content:center}.popt.ok{border-color:var(--t);background:var(--t-soft)}.popt.bad{border-color:var(--g);background:var(--g-soft)}.popt.dim{opacity:.6}.picopts.sym{grid-template-columns:1fr 1fr}.picopts.sym .popt img{aspect-ratio:2/1;object-fit:contain;background:#fff}.drawcv{display:block;width:100%;aspect-ratio:2/1;border:2px solid var(--line);border-radius:14px;touch-action:none;background-color:#fff;background-image:linear-gradient(#dbe4f0 1px,transparent 1px),linear-gradient(90deg,#dbe4f0 1px,transparent 1px);background-size:5% 10%;margin:0 0 10px}.drawclr{width:auto;margin:0 0 12px}.drawimg{border:2px solid var(--t);background:#fff}
+.picopts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.popt{padding:4px;border-radius:14px;border:3px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:0}.popt img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;border-radius:10px;display:block}.pcap{font-size:.78rem;line-height:1.2;text-align:center;font-weight:600;min-height:2.4em;display:flex;align-items:center;justify-content:center}.popt.ok{border-color:var(--t);background:var(--t-soft)}.popt.bad{border-color:var(--g);background:var(--g-soft)}.popt.dim{opacity:.6}.picopts.sym{grid-template-columns:1fr 1fr}.picopts.sym .popt img{aspect-ratio:2/1;object-fit:contain;background:#fff}.drawcv{display:block;width:100%;aspect-ratio:2/1;border:2px solid var(--line);border-radius:14px;touch-action:none;background-color:#fff;background-image:linear-gradient(#dbe4f0 1px,transparent 1px),linear-gradient(90deg,#dbe4f0 1px,transparent 1px);background-size:5% 10%;margin:0 0 10px}.drawclr{width:auto;margin:0 0 12px}.drawimg{border:2px solid var(--t);background:#fff}.drawv{font-weight:700;font-size:18px;margin:4px 0 10px}.drawv.ok{color:var(--t)}.drawv.bad{color:var(--g)}
 /* chemia */
 .tiles{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
 .tile{min-width:56px;min-height:52px;padding:8px 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-family:var(--mono);font-size:1.15rem}
@@ -5653,8 +5653,8 @@ OBW_TOPICS.push(
 {id:'roz',base:'T',mark:'2',name:'Pokaż właściwy symbol',pages:'zeszyt',qs:
  ['zar','ogn','kon','wyl','opor','bez','vol','amp','sil','dzw','uzi','ac','dio','cew','bat','trf','tra','dc'].map(s=>({k:OBW_KEYOF[s],t:'pic',sym:true,q:'Pokaż symbol: '+OBW_PL[s]+'.',o:[[obwSym(s),OBW_PL[s]],...OBW_LIKE[s].map(x=>[obwSym(x),OBW_PL[x]])],e:'To jest '+OBW_PL[s]+': '+OBW_DRAW[s][1].join(', ')+'.'}))},
 {id:'rys',base:'A',mark:'3',name:'Narysuj symbol',pages:'zeszyt',qs:
- ['zar','ogn','wyl','amp','vol','opor','bez','kon','sil','dzw','dio','uzi','ac','cew','bat','prz','trf','tra','dc'].map(s=>({k:OBW_KEYOF[s],t:'draw',q:'Narysuj symbol: '+OBW_DRAW[s][0]+'.',show:obwSym(s),pts:OBW_DRAW[s][1],e:'Symbol: '+OBW_DRAW[s][1].join(', ')+'.'}))
- .concat([{k:'sym2',t:'draw',q:'Narysuj symbol elementu, który po angielsku nazywa się „fuse”.',show:obwSymL('bez','fuse'),pts:['prostokąt','przewód przechodzi przez środek prostokąta'],e:'Fuse = bezpiecznik: prostokąt przecięty przewodem.'}])},
+ ['zar','ogn','wyl','amp','vol','opor','bez','kon','sil','dzw','dio','uzi','ac','cew','bat','prz','trf','tra','dc'].map(s=>({k:OBW_KEYOF[s],t:'draw',symk:s,q:'Narysuj symbol: '+OBW_DRAW[s][0]+'.',show:obwSym(s),pts:OBW_DRAW[s][1],e:'Symbol: '+OBW_DRAW[s][1].join(', ')+'.'}))
+ .concat([{k:'sym2',t:'draw',symk:'bez',q:'Narysuj symbol elementu, który po angielsku nazywa się „fuse”.',show:obwSymL('bez','fuse'),pts:['prostokąt','przewód przechodzi przez środek prostokąta'],e:'Fuse = bezpiecznik: prostokąt przecięty przewodem.'}])},
 {id:'naz',base:'G',mark:'4',name:'Nazwy angielskie po polsku',pages:'zeszyt',qs:
  OBW_EN.map(([en,s,pl,ans])=>({k:'ang',t:'type',img:obwSymL(s,en),q:'Pod tym symbolem jest podpis „'+en+'”. Jak nazywa się ten element po polsku?',ans,ph:'wpisz po polsku',e:en+' = '+pl+'.'}))
  .concat(OBW_EN.map(([en,s,pl],i)=>({k:'ang',t:'mc',q:'Co znaczy po polsku „'+en+'”?',o:[pl,...OBW_EN.filter((x,j)=>j!==i).map(x=>x[2]).filter((x,j,A)=>[ (i+1)%8,(i+3)%8,(i+5)%8 ].includes(j))],e:en+' = '+pl+'.'})))
@@ -5690,25 +5690,70 @@ const OBW_PLAN2=[
  ['2026-11-28','naz','Nazwy angielskie po polsku (1 runda) + fiszki'],
  ['2026-11-29','rys','Narysuj symbole (1 runda) i kartkówka próbna'],
  ['2026-11-30','cards','Rano tylko fiszki – powodzenia!']];
+/* ---------- rozpoznawanie narysowanego symbolu (v67). Porównanie z wzorami wszystkich symboli (odległość „chamfer” na siatce 40×40
+   po dopasowaniu do ramki rysunku). Łagodnie: „dobrze” tylko gdy najbliższy jest właściwy symbol, „źle” tylko gdy inny jest WYRAŹNIE bliżej,
+   w pozostałych przypadkach samoocena. ---------- */
+const OBW_REC={keys:['zar','ogn','bat','wyl','prz','opor','bez','kon','cew','vol','amp','sil','ac','dio','dzw','uzi','trf','tra','dc'],N:40,tpl:null,BAD:1.45};
+function obwGrid(pts){const N=OBW_REC.N;let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const[x,y]of pts){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+ const w=x1-x0,hh=y1-y0,s=(N-5)/Math.max(w,hh,1e-6),ox=(N-1-w*s)/2,oy=(N-1-hh*s)/2,g=new Uint8Array(N*N);
+ for(const[x,y]of pts){const i=Math.round((x-x0)*s+ox),j=Math.round((y-y0)*s+oy);if(i>=0&&j>=0&&i<N&&j<N)g[j*N+i]=1;}return g;}
+function obwDT(g){const N=OBW_REC.N,d=new Float32Array(N*N).fill(1e9),q=[];for(let i=0;i<N*N;i++)if(g[i]){d[i]=0;q.push(i);}
+ for(let h=0;h<q.length;h++){const i=q[h],x=i%N,y=(i-x)/N;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const X=x+dx,Y=y+dy;if(X<0||Y<0||X>=N||Y>=N)continue;const j=Y*N+X;if(d[j]>d[i]+1){d[j]=d[i]+1;q.push(j);}}}return d;}
+function obwDist(a,da,b,db){let s1=0,n1=0,s2=0,n2=0;for(let i=0;i<a.length;i++){if(a[i]){s1+=db[i];n1++;}if(b[i]){s2+=da[i];n2++;}}return n1&&n2?(s1/n1+s2/n2)/2:99;}
+function obwTpl(){if(OBW_REC.tpl)return OBW_REC.tpl;
+ const one=src=>new Promise(res=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=320;c.height=160;const x=c.getContext('2d');x.drawImage(im,0,0,320,160);
+   const D=x.getImageData(0,0,320,160).data,pts=[];for(let y=0;y<160;y+=2)for(let X=0;X<320;X+=2){const k=(y*320+X)*4;if(D[k+3]>100&&D[k]<110)pts.push([X,y]);}
+   const g=obwGrid(pts),ig=obwInner(pts);res({g,d:obwDT(g),ig,id:ig&&obwDT(ig)});};im.onerror=()=>res(null);im.src=src;});
+ OBW_REC.tpl=Promise.all(OBW_REC.keys.map(async k=>{const G=OBW_G[k],v=[await one(obwSym(k))];if(G.w!=null&&G.w>0)v.push(await one(obwSvg('-80 -40 160 80',G.d)));return [k,v.filter(Boolean)];})).then(a=>Object.fromEntries(a));
+ return OBW_REC.tpl;}
+// środek kółka (do odróżnienia żarówki, V, A, M i ~): punkty wewnątrz koła o średnicy = wysokość rysunku
+function obwInner(pts){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const[x,y]of pts){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+ const cx=(x0+x1)/2,cy=(y0+y1)/2,r=(y1-y0)/2;const ins=pts.filter(([x,y])=>Math.hypot(x-cx,y-cy)<0.62*r);return ins.length>=4?obwGrid(ins):null;}
+const OBW_CIRC=['zar','vol','amp','sil','ac'],OBW_PAIR={ogn:'kon',kon:'ogn',opor:'bez',bez:'opor'},OBW_NOBAD=['trf','tra','cew','bat','dzw'];
+// strokes: tablica kresek [[x,y],...] w dowolnych jednostkach; zwraca {v:'ok'|'bad'|'unsure', best, sc}
+async function obwGrade(strokes,target){const T=await obwTpl();const pts=[];
+ for(const s of strokes){if(s.length===1)pts.push(s[0]);for(let i=1;i<s.length;i++){const[a,b]=[s[i-1],s[i]],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3));for(let t=0;t<=n;t++)pts.push([a[0]+(b[0]-a[0])*t/n,a[1]+(b[1]-a[1])*t/n]);}}
+ if(pts.length<8)return {v:'unsure',sc:{}};
+ const g=obwGrid(pts),d=obwDT(g),sc={};for(const k in T)sc[k]=Math.min(...T[k].map(t=>obwDist(g,d,t.g,t.d)));
+ let order=Object.keys(sc).sort((a,b)=>sc[a]-sc[b]),best=order[0];
+ if(!(target in sc))return {v:'unsure',best,sc};
+ if(OBW_CIRC.includes(best)){const ig=obwInner(pts);if(!ig)return {v:'unsure',best,sc};const id=obwDT(ig),isc={};
+  for(const k of OBW_CIRC)isc[k]=Math.min(...T[k].filter(t=>t.ig).map(t=>obwDist(ig,id,t.ig,t.id)));
+  const io=OBW_CIRC.slice().sort((a,b)=>isc[a]-isc[b]);
+  if(OBW_CIRC.includes(target)){if(io[0]===target&&isc[io[1]]>=1.15*isc[target])return {v:'ok',best:target,sc,isc};
+   if(io[0]!==target&&isc[target]>=1.6*isc[io[0]])return {v:'bad',best:io[0],sc,isc};return {v:'unsure',best:io[0],sc,isc};}
+  best=io[0];}
+ const sec=order.find(k=>k!==target);
+ if(best===target&&sc[target]<4&&!(OBW_PAIR[target]&&sc[OBW_PAIR[target]]<1.12*sc[target]))return {v:'ok',best,sc};
+ if(best!==target&&!OBW_NOBAD.includes(target)&&sc[target]>=OBW_REC.BAD*sc[best]&&sc[best]<2.5)return {v:'bad',best,sc};
+ return {v:'unsure',best,sc};}
 /* ---------- rysowanie palcem (typ 'draw', od v65): q.show = obrazek wzoru, q.pts = punkty do samooceny ---------- */
 function rDraw(q,done){
-  const cv=h('canvas',{class:'drawcv',width:700,height:350,'aria-label':'Pole do rysowania'});const ctx=cv.getContext('2d');let dn=false,last=null,any=false;
+  const cv=h('canvas',{class:'drawcv',width:700,height:350,'aria-label':'Pole do rysowania'});const ctx=cv.getContext('2d');let dn=false,last=null;const strokes=[];
   ctx.lineWidth=7;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1f2937';
   const pos=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height];};
-  cv.addEventListener('pointerdown',e=>{if(cv.dataset.lock)return;dn=true;last=pos(e);cv.setPointerCapture(e.pointerId);ctx.beginPath();ctx.arc(last[0],last[1],3.5,0,7);ctx.fillStyle='#1f2937';ctx.fill();any=true;e.preventDefault();});
-  cv.addEventListener('pointermove',e=>{if(!dn)return;const p=pos(e);ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(p[0],p[1]);ctx.stroke();last=p;e.preventDefault();});
+  cv.addEventListener('pointerdown',e=>{if(cv.dataset.lock)return;dn=true;last=pos(e);strokes.push([last]);try{cv.setPointerCapture(e.pointerId);}catch(x){}ctx.beginPath();ctx.arc(last[0],last[1],3.5,0,7);ctx.fillStyle='#1f2937';ctx.fill();e.preventDefault();});
+  cv.addEventListener('pointermove',e=>{if(!dn)return;const p=pos(e);ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(p[0],p[1]);ctx.stroke();last=p;strokes[strokes.length-1].push(p);e.preventDefault();});
   ['pointerup','pointercancel','pointerleave'].forEach(t=>cv.addEventListener(t,()=>{dn=false;}));
-  const clr=btn('opt drawclr','🧽 Wyczyść',()=>{if(cv.dataset.lock)return;ctx.clearRect(0,0,cv.width,cv.height);any=false;});
-  const wrap=h('div',{class:'drawwrap'});
-  const check=btn('check','Pokaż wzór',()=>{
-    cv.dataset.lock='1';clr.remove();check.remove();
+  const clr=btn('opt drawclr','🧽 Wyczyść',()=>{if(cv.dataset.lock)return;ctx.clearRect(0,0,cv.width,cv.height);strokes.length=0;});
+  const wrap=h('div',{class:'drawwrap'}),msg=h('p',{class:'hint'},'Rysuj palcem w kratce. Gdy skończysz, dotknij „Sprawdź”.');
+  const selfCheck=note=>{
     const marks=q.pts.map(p=>({p,on:false}));
     const list=h('div',{class:'opts'},marks.map(m=>{const b=btn('opt','',()=>{if(b.disabled)return;sTap();m.on=!m.on;b.classList.toggle('sel',m.on);b.querySelector('.box').textContent=m.on?'✓':'';});b.append(h('span',{class:'box'},''),m.p);m.b=b;return b;}));
     const fin=btn('check','Gotowe',()=>{fin.disabled=true;let err=0;marks.forEach(m=>{m.b.disabled=true;m.b.classList.add(m.on?'ok':'miss');if(!m.on)err++;});
       done(err,err?'Narysuj ten symbol jeszcze raz w zeszycie, patrząc na wzór.':'Symbol narysowany dobrze!');});
-    wrap.append(h('p',{class:'hint'},'Tak powinno wyglądać:'),h('img',{class:'qimg drawimg',src:q.show,alt:'Wzór symbolu'}),h('p',{class:'hint'},'Zaznacz wszystko, co jest na Twoim rysunku. Bądź uczciwa!'),list,fin);
+    wrap.append(h('p',{class:'hint'},note),list,fin);};
+  const check=btn('check','Sprawdź',async()=>{
+    if(!strokes.some(s=>s.length>2)){msg.textContent='Najpierw narysuj symbol palcem w kratce 🙂';return;}
+    cv.dataset.lock='1';clr.remove();check.remove();
+    let g={v:'unsure'};if(q.symk&&typeof obwGrade==='function'){try{g=await obwGrade(strokes,q.symk);}catch(x){g={v:'unsure'};}}
+    const nm=k=>(typeof OBW_PL!=='undefined'&&OBW_PL[k])||k;
+    wrap.append(h('p',{class:'hint'},'Wzór:'),h('img',{class:'qimg drawimg',src:q.show,alt:'Wzór symbolu'}));
+    if(g.v==='ok'){wrap.append(h('p',{class:'drawv ok'},'✅ Rozpoznałam: '+nm(q.symk)+'!'));done(0,'Aplikacja rozpoznała Twój rysunek. Porównaj go jeszcze ze wzorem.');}
+    else if(g.v==='bad'){wrap.append(h('p',{class:'drawv bad'},'🤔 To bardziej przypomina: '+nm(g.best)+'.'));done(1,'Pamiętaj: '+q.pts.join(', ')+'.');}
+    else selfCheck('🤷 Nie umiem ocenić tego rysunku na pewno. Porównaj ze wzorem i zaznacz wszystko, co jest na Twoim rysunku. Bądź uczciwa!');
   });
-  wrap.append(h('p',{class:'hint'},any?'':'Rysuj palcem w kratce. Możesz też narysować w zeszycie.'),cv,clr,check);
+  wrap.append(msg,cv,clr,check);
   return wrap;
 }
 prep(BIO_TOPICS,BIO_KMAP);prep(PT_TOPICS,PT_KMAP);prep(GEO_TOPICS,GEO_KMAP);prep(PL_TOPICS,PL_KMAP);prep(HIS_TOPICS,HIS_KMAP);prep(EDB_TOPICS,EDB_KMAP);prep(FIZ_TOPICS,FIZ_KMAP);prep(WOS_TOPICS,WOS_KMAP);prep(ANG_TOPICS,ANG_KMAP);prep(ESP_TOPICS,ESP_KMAP);prep(CHEM_TOPICS,CHEM_KMAP);
